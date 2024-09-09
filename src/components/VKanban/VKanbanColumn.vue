@@ -1,0 +1,87 @@
+<script setup lang="ts">
+import VKanbanCard from '@/components/VKanban/VKanbanCard.vue'
+import { type EStatusKeys } from '@/types/EStatus'
+import type { TKanbanCard } from '@/types/TKanban'
+import { inject, ref } from 'vue'
+import VKanbanDropzone from './VKanbanDropzone.vue'
+
+interface IProps {
+  items: TKanbanCard[]
+  column: EStatusKeys
+}
+const props = defineProps<IProps>()
+
+const emit = defineEmits<{
+  (e: 'onDropDragEvent', event: DragEvent, column: EStatusKeys): void
+  (e: 'onDragStart', event: DragEvent, item: TKanbanCard): void
+}>()
+
+const titles: Record<EStatusKeys, string> = {
+  Done: 'Готово',
+  InProgress: 'В работе',
+  NeedDone: 'Нужно сделать',
+  NoStatus: 'Без статуса',
+  Testing: 'Тестирование',
+}
+
+const isDropzoneSelected = ref(false)
+
+const onDragEnter = () => {
+  isDropzoneSelected.value = true
+}
+
+const onDragLeave = () => {
+  isDropzoneSelected.value = false
+}
+
+const onDrop = (event: DragEvent) => {
+  isDropzoneSelected.value = false
+  emit('onDropDragEvent', event, props.column)
+}
+
+const isDragging = inject<{
+  value: boolean
+  id: number | null
+  isHided: boolean
+}>('isDragging')!
+</script>
+
+<template>
+  <section class="column">
+    <h3 class="column__title">{{ titles[column] }}</h3>
+
+    <VKanbanCard
+      v-for="item in props.items"
+      v-bind="item"
+      :key="item.id"
+      @dragstart="emit('onDragStart', $event, item)"
+      :class="{
+        'column__card--dragging': isDragging.value && isDragging.id === item.id,
+      }"
+      draggable="true"
+    />
+    <VKanbanDropzone
+      v-if="isDragging.value"
+      :is-selected="isDropzoneSelected"
+      @drop="onDrop($event)"
+      @dragover.prevent
+      @dragenter.prevent="onDragEnter"
+      @dragleave="onDragLeave"
+    />
+  </section>
+</template>
+
+<style lang="scss" scoped>
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 38.5px;
+  &__title {
+    color: rgb(148, 166, 190);
+    font-size: 1.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+}
+</style>
