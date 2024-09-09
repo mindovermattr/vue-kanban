@@ -21,6 +21,7 @@ const onStartDragEvent = (event: DragEvent, item: TKanbanCard) => {
   isDragging.id = item.id
 
   setTimeout(() => {
+    //ts-ignore
     event.target.classList.add('hide')
     isDragging.isHided = true
   }, 0)
