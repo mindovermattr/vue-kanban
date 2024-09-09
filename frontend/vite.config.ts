@@ -8,8 +8,8 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
   css: {
     preprocessorOptions: {
@@ -17,8 +17,8 @@ export default defineConfig({
         additionalData: `
         @import "@/assets/Variables.scss";
         @import "@/assets/Global.scss";
-        `
-      }
-    }
-  }
+        `,
+      },
+    },
+  },
 })
