@@ -6,10 +6,7 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: '/',
-  build: {
-    assetsDir: 'assets',
-  },
+  base: '/vue-kanban/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
