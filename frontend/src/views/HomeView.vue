@@ -13,6 +13,6 @@ import Vkanban from '@/components/VKanban/VKanban.vue'
 <style lang="scss" scoped>
 .main {
   background-color: $bg-gray-color;
-  height: calc(100vh - 77px);
+  height: max(calc(100vh - 77px), 100%);
 }
 </style>

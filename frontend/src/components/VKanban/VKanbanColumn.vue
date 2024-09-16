@@ -49,17 +49,18 @@ const isDragging = inject<{
 <template>
   <section class="column">
     <h3 class="column__title">{{ titles[column] }}</h3>
-
-    <VKanbanCard
-      v-for="item in props.items"
-      v-bind="item"
-      :key="item.id"
-      @dragstart="emit('onDragStart', $event, item)"
-      :class="{
-        'column__card--dragging': isDragging.value && isDragging.id === item.id,
-      }"
-      draggable="true"
-    />
+    <TransitionGroup name="list" tag="div" class="cards">
+      <VKanbanCard
+        v-for="item in props.items"
+        v-bind="item"
+        :key="item.id"
+        @dragstart="emit('onDragStart', $event, item)"
+        :class="{
+          // 'column__card--dragging': isDragging && isDragging.id === item.id,
+        }"
+        draggable="true"
+      />
+    </TransitionGroup>
     <VKanbanDropzone
       v-if="isDragging.value"
       :is-selected="isDropzoneSelected"
@@ -73,9 +74,6 @@ const isDragging = inject<{
 
 <style lang="scss" scoped>
 .column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
   margin-top: 38.5px;
   &__title {
     color: rgb(148, 166, 190);
@@ -83,5 +81,28 @@ const isDragging = inject<{
     font-weight: 600;
     text-transform: uppercase;
   }
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.4s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(15px);
+}
+
+.list-leave-active {
+  position: absolute;
 }
 </style>
