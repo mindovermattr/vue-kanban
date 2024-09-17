@@ -11,9 +11,14 @@ interface IProps {
 }
 const props = defineProps<IProps>()
 
+const width = window.innerWidth
+
 const emit = defineEmits<{
   (e: 'onDropDragEvent', event: DragEvent, column: EStatusKeys): void
   (e: 'onDragStart', event: DragEvent, item: TKanbanCard): void
+  (e: 'onDropDragEventMobile', event: TouchEvent): void
+  (e: 'onStartDragEventMobile', event: TouchEvent, item: TKanbanCard): void
+  (e: 'touchMove', event: TouchEvent): void
 }>()
 
 const titles: Record<EStatusKeys, string> = {
@@ -47,28 +52,44 @@ const isDragging = inject<{
 </script>
 
 <template>
-  <section class="column">
+  <section
+    class="column"
+    :class="{
+      'column--dragging': isDragging.value,
+    }"
+    :data-section="column"
+  >
     <h3 class="column__title">{{ titles[column] }}</h3>
+
     <TransitionGroup name="list" tag="div" class="cards">
+      <VKanbanDropzone
+        v-if="isDragging.value && width < 900"
+        :is-selected="isDropzoneSelected"
+        @drop="onDrop($event)"
+        @dragover.prevent
+        @dragenter.prevent="onDragEnter"
+        @dragleave="onDragLeave"
+        @touchend="emit('onDropDragEventMobile', $event)"
+      />
       <VKanbanCard
         v-for="item in props.items"
         v-bind="item"
         :key="item.id"
         @dragstart="emit('onDragStart', $event, item)"
-        :class="{
-          // 'column__card--dragging': isDragging && isDragging.id === item.id,
-        }"
         draggable="true"
+        @touchstart.self="emit('onStartDragEventMobile', $event, item)"
+        @touchend="emit('onDropDragEventMobile', $event)"
+        @touchmove.self="emit('touchMove', $event)"
+      />
+      <VKanbanDropzone
+        v-if="isDragging.value && width >= 900"
+        :is-selected="isDropzoneSelected"
+        @drop="onDrop($event)"
+        @dragover.prevent
+        @dragenter.prevent="onDragEnter"
+        @dragleave="onDragLeave"
       />
     </TransitionGroup>
-    <VKanbanDropzone
-      v-if="isDragging.value"
-      :is-selected="isDropzoneSelected"
-      @drop="onDrop($event)"
-      @dragover.prevent
-      @dragenter.prevent="onDragEnter"
-      @dragleave="onDragLeave"
-    />
   </section>
 </template>
 
@@ -81,6 +102,13 @@ const isDragging = inject<{
     font-weight: 600;
     text-transform: uppercase;
   }
+  &--dragging {
+    padding-bottom: 70px;
+  }
+}
+
+.anim {
+  animation: none !important;
 }
 
 .cards {
@@ -99,10 +127,17 @@ const isDragging = inject<{
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
-  transform: translateX(15px);
+  transform: translateX(20px);
 }
 
 .list-leave-active {
   position: absolute;
+}
+
+@media (max-width: $tablet-width) {
+  .cards {
+    flex-direction: row;
+    overflow-x: scroll;
+  }
 }
 </style>
