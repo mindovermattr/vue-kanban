@@ -55,33 +55,6 @@ const onDragEnd = () => {
   isDragging.isHided = false
 }
 
-const onDropDragEventMobile = (event: TouchEvent) => {
-  event.target!.style.position = 'static'
-  event.target!.style.top = null
-  event.target!.style.left = null
-  document.body.classList.remove('body--modal-open')
-  console.log(event.currentTarget)
-  onDragEnd()
-}
-let moving
-const onStartDragEventMobile = (event: TouchEvent, item: TKanbanCard) => {
-  isDragging.value = true
-  isDragging.id = item.id
-  // event.target!.style.position = 'absolute'
-  moving = event.target
-
-  moving.style.height = moving.clientHeight
-  moving.style.width = moving.clientWidth
-  moving.style.position = 'fixed'
-}
-
-const touchMove = (event: TouchEvent) => {
-  if (isDragging.id) {
-    moving.style.left = event.changedTouches[0].clientX - moving.clientWidth / 2 + 'px'
-    moving.style.top = event.changedTouches[0].clientY - moving.clientHeight / 2 + 'px'
-  }
-}
-
 provide('isDragging', isDragging)
 </script>
 
@@ -96,9 +69,6 @@ provide('isDragging', isDragging)
       @onDropDragEvent="onDropDragEvent"
       @onDragStart="onStartDragEvent"
       @dragend="onDragEnd"
-      @touchMove="touchMove"
-      @onDropDragEventMobile="onDropDragEventMobile"
-      @onStartDragEventMobile="onStartDragEventMobile"
     />
   </div>
 </template>

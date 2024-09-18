@@ -16,9 +16,6 @@ const width = window.innerWidth
 const emit = defineEmits<{
   (e: 'onDropDragEvent', event: DragEvent, column: EStatusKeys): void
   (e: 'onDragStart', event: DragEvent, item: TKanbanCard): void
-  (e: 'onDropDragEventMobile', event: TouchEvent): void
-  (e: 'onStartDragEventMobile', event: TouchEvent, item: TKanbanCard): void
-  (e: 'touchMove', event: TouchEvent): void
 }>()
 
 const titles: Record<EStatusKeys, string> = {
@@ -69,7 +66,6 @@ const isDragging = inject<{
         @dragover.prevent
         @dragenter.prevent="onDragEnter"
         @dragleave="onDragLeave"
-        @touchend="emit('onDropDragEventMobile', $event)"
       />
       <VKanbanCard
         v-for="item in props.items"
@@ -77,9 +73,6 @@ const isDragging = inject<{
         :key="item.id"
         @dragstart="emit('onDragStart', $event, item)"
         draggable="true"
-        @touchstart.self="emit('onStartDragEventMobile', $event, item)"
-        @touchend="emit('onDropDragEventMobile', $event)"
-        @touchmove.self="emit('touchMove', $event)"
       />
       <VKanbanDropzone
         v-if="isDragging.value && width >= 900"
