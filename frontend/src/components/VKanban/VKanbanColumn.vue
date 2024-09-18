@@ -11,8 +11,6 @@ interface IProps {
 }
 const props = defineProps<IProps>()
 
-const width = window.innerWidth
-
 const emit = defineEmits<{
   (e: 'onDropDragEvent', event: DragEvent, column: EStatusKeys): void
   (e: 'onDragStart', event: DragEvent, item: TKanbanCard): void
@@ -74,15 +72,15 @@ const isDragging = inject<{
         @dragstart="emit('onDragStart', $event, item)"
         draggable="true"
       />
-      <VKanbanDropzone
-        v-if="isDragging.value && width >= 900"
-        :is-selected="isDropzoneSelected"
-        @drop="onDrop($event)"
-        @dragover.prevent
-        @dragenter.prevent="onDragEnter"
-        @dragleave="onDragLeave"
-      />
     </TransitionGroup>
+    <VKanbanDropzone
+      v-if="isDragging.value"
+      :is-selected="isDropzoneSelected"
+      @drop="onDrop($event)"
+      @dragover.prevent
+      @dragenter.prevent="onDragEnter"
+      @dragleave="onDragLeave"
+    />
   </section>
 </template>
 

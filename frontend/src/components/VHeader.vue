@@ -14,7 +14,7 @@ const closeModalHandler = () => {
 
 <template>
   <header class="header container">
-    <h1 class="header__title">Kam Bam board</h1>
+    <h1 class="header__title">KamBam</h1>
 
     <div class="header__controls controls">
       <button @click="openModalHandler" class="controls__button controls__button--contained">
