@@ -1,5 +1,6 @@
 <template>
   <button
+    :disabled="disabled"
     :class="{
       'button--contained': variant === 'contained',
       'button--outlined': variant === 'outlined',
@@ -13,6 +14,7 @@
 <script setup lang="ts">
 type IProps = {
   variant: 'contained' | 'outlined' | 'text'
+  disabled?: boolean
 }
 defineProps<IProps>()
 </script>
@@ -25,6 +27,9 @@ defineProps<IProps>()
     padding: 10px 14px 10px 14px;
     font-size: 1.75rem;
     font-weight: 500;
+  }
+  &:disabled {
+    background-color: $bg-gray-color;
   }
 }
 </style>
