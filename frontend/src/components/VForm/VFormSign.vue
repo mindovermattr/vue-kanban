@@ -20,10 +20,9 @@
         </fieldset>
       </div>
       <VButton :disabled="!meta.valid" class="form__button" variant="contained">Войти</VButton>
-      <div class="form__validation-errors">
+      <div v-if="!meta.valid" class="form__validation-errors">
         <ErrorMessage as="p" class="form__error" name="email" />
         <ErrorMessage as="p" class="form__error" name="password" />
-
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="userName" />
       </div>
       <footer class="form__footer footer">
@@ -118,13 +117,15 @@ const submitHandler = (values: TFormValues) => {
     font-weight: 500;
     text-align: center;
     &:disabled {
-      background: gray;
+      background: $gray-text-color;
+      cursor: auto;
     }
   }
   &__validation-errors {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 55px;
   }
 
   &__error {
