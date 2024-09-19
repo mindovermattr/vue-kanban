@@ -21,8 +21,7 @@ const onStartDragEvent = (event: DragEvent, item: TKanbanCard) => {
   isDragging.id = item.id
 
   setTimeout(() => {
-    //ts-ignore
-    event.target.classList.add('hide')
+    event.target!.classList.add('hide')
     isDragging.isHided = true
   }, 0)
   event.dataTransfer.dropEffect = 'move'
@@ -79,5 +78,12 @@ provide('isDragging', isDragging)
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
+}
+@media (max-width: $tablet-width) {
+  .container--kanban {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
 }
 </style>
