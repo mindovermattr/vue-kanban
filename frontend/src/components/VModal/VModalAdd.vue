@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { EKanbanCategory } from '@/types/EKanbanCategory'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import VButton from '../VButton.vue'
 import VCalendar from '../VCalendar/VCalendar.vue'
 import VCategory from '../VCategory.vue'
@@ -22,14 +22,6 @@ const setDate = (selectedDate: Date) => {
 const setCategory = (category: EKanbanCategory) => {
   selectedCategory.value = category
 }
-
-watch(props, () => {
-  if (props.isVisible) {
-    document.body.classList.add('body--modal-open')
-  } else {
-    document.body.classList.remove('body--modal-open')
-  }
-})
 </script>
 
 <template>
@@ -89,7 +81,7 @@ watch(props, () => {
 
   &-wrapper {
     position: absolute;
-    width: 100vw;
+    width: calc((#{100vw}) - 18px);
     height: 100vh;
     top: 0;
     background-color: rgba($color: #000000, $alpha: 0.5);
@@ -167,8 +159,4 @@ watch(props, () => {
 }
 </style>
 
-<style lang="scss">
-.body--modal-open {
-  overflow: hidden !important;
-}
-</style>
+<style lang="scss"></style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import VModalAdd from './VModal/VModalAdd.vue'
 
 const isModalVisible = ref(false)
@@ -9,6 +10,10 @@ const openModalHandler = () => {
 }
 const closeModalHandler = () => {
   isModalVisible.value = false
+}
+const router = useRouter()
+const clickHander = () => {
+  router.push('/SignUp/')
 }
 </script>
 
@@ -20,7 +25,9 @@ const closeModalHandler = () => {
       <button @click="openModalHandler" class="controls__button controls__button--contained">
         Создать новую задачу
       </button>
-      <button class="controls__button controls__button--text">Ivan ivanov</button>
+      <button @click="clickHander" class="controls__button controls__button--text">
+        Ivan ivanov
+      </button>
     </div>
   </header>
   <VModalAdd @closeModal="closeModalHandler" :is-visible="isModalVisible" />
