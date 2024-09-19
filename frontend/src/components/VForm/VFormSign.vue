@@ -1,16 +1,15 @@
 <template>
   <div class="form-wrapper">
     <Form
-      :validate-on-mount="true"
       :validation-schema="formScheme"
       @submit="submitHandler"
       class="form"
-      v-slot="{ meta }"
+      v-slot="{ meta, errors }"
     >
-      <h2 class="form__title">Вход</h2>
+      <h2 class="form__title">{{ signUp ? 'Регистрация' : 'Вход' }}</h2>
       <div class="form__fields">
         <fieldset v-if="signUp" class="form__field">
-          <Field name="userName" type="text" class="form__input" placeholder="Имя" />
+          <Field v-if="signUp" name="userName" type="text" class="form__input" placeholder="Имя" />
         </fieldset>
         <fieldset class="form__field">
           <Field name="email" type="email" class="form__input" placeholder="Эл. почта" />
@@ -19,7 +18,13 @@
           <Field name="password" type="password" class="form__input" placeholder="Пароль" />
         </fieldset>
       </div>
-      <VButton :disabled="!meta.valid" class="form__button" variant="contained">Войти</VButton>
+      <VButton
+        :disabled="Object.keys(errors).length && !meta.valid"
+        class="form__button"
+        variant="contained"
+      >
+        Войти
+      </VButton>
       <div v-if="!meta.valid" class="form__validation-errors">
         <ErrorMessage as="p" class="form__error" name="email" />
         <ErrorMessage as="p" class="form__error" name="password" />
@@ -53,14 +58,13 @@ const props = defineProps<IProps>()
 
 const formScheme = computed(() => {
   if (!props.signUp) {
-    console.log('object')
-    return object({
+    return object<TFormValues>({
       email: string().required().email(),
       password: string().required().min(6),
     })
   } else {
     console.log('object')
-    return object({
+    return object<TFormValues>({
       userName: string().required().min(4),
       email: string().required().email(),
       password: string().required().min(6),
@@ -125,7 +129,6 @@ const submitHandler = (values: TFormValues) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 55px;
   }
 
   &__error {
