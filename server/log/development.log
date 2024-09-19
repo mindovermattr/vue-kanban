@@ -313,3 +313,183 @@ Processing by TasksController#index as HTML
 Completed 200 OK in 57ms (Views: 33.5ms | ActiveRecord: 15.1ms | Allocations: 20854)
 
 
+Started GET "/" for 127.0.0.1 at 2024-09-19 20:14:08 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (3.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by TasksController#index as HTML
+  [1m[36mTask Load (1.2ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks"[0m
+  ↳ app/controllers/tasks_controller.rb:5:in `index'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (1.1ms)
+Completed 200 OK in 74ms (Views: 27.3ms | ActiveRecord: 36.8ms | Allocations: 20911)
+
+
+Started GET "/we" for 127.0.0.1 at 2024-09-19 20:14:14 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/we"):
+  
+Started POST "/task" for 127.0.0.1 at 2024-09-19 20:29:08 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by TasksController#create as HTML
+Completed 400 Bad Request in 7ms (ActiveRecord: 0.0ms | Allocations: 7110)
+
+
+  
+ActionController::ParameterMissing (param is missing or the value is empty: task):
+  
+app/controllers/tasks_controller.rb:31:in `task_params'
+app/controllers/tasks_controller.rb:9:in `create'
+Started POST "/task" for 127.0.0.1 at 2024-09-19 20:32:53 +0300
+Processing by TasksController#create as HTML
+  Parameters: {"name"=>"Frontend", "body"=>"Dimon napishet", "category"=>"Web design", "status"=>"work", "period"=>"22.12.2024", "task"=>{"name"=>"Frontend", "body"=>"Dimon napishet", "category"=>"Web design", "status"=>"work", "period"=>"22.12.2024"}}
+Completed 500 Internal Server Error in 16ms (ActiveRecord: 20.9ms | Allocations: 7896)
+
+
+  
+NoMethodError (undefined method `save' for nil:NilClass):
+  
+app/controllers/tasks_controller.rb:11:in `create'
+Started POST "/task" for 127.0.0.1 at 2024-09-19 20:33:25 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by TasksController#create as HTML
+  Parameters: {"name"=>"Frontend", "body"=>"Dimon napishet", "category"=>"Web design", "status"=>"work", "period"=>"22.12.2024", "task"=>{"name"=>"Frontend", "body"=>"Dimon napishet", "category"=>"Web design", "status"=>"work", "period"=>"22.12.2024"}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+  [1m[36mTask Create (3.2ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "body", "category", "status", "period", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["name", "Frontend"], ["body", "Dimon napishet"], ["category", "Web design"], ["status", "work"], ["period", "2024-12-22"], ["created_at", "2024-09-19 17:33:25.611638"], ["updated_at", "2024-09-19 17:33:25.611638"]]
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+  [1m[36mTRANSACTION (3.9ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+[active_model_serializers] Rendered TaskSerializer with ActiveModelSerializers::Adapter::Attributes (0.19ms)
+Completed 201 Created in 28ms (Views: 3.6ms | ActiveRecord: 17.3ms | Allocations: 13125)
+
+
+Started POST "/task" for 127.0.0.1 at 2024-09-19 20:33:47 +0300
+Processing by TasksController#create as HTML
+Completed 400 Bad Request in 4ms (ActiveRecord: 0.0ms | Allocations: 130)
+
+
+  
+ActionController::ParameterMissing (param is missing or the value is empty: task):
+  
+app/controllers/tasks_controller.rb:31:in `task_params'
+app/controllers/tasks_controller.rb:9:in `create'
+Started POST "/task" for 127.0.0.1 at 2024-09-19 20:34:07 +0300
+Processing by TasksController#create as HTML
+  Parameters: {"name"=>"Frontend", "body"=>"Dimon napishet", "category"=>"Web design", "status"=>"work", "period"=>"22.12.2024", "task"=>{"name"=>"Frontend", "body"=>"Dimon napishet", "category"=>"Web design", "status"=>"work", "period"=>"22.12.2024"}}
+  [1m[36mTRANSACTION (23.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+  [1m[36mTask Create (25.0ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "body", "category", "status", "period", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["name", "Frontend"], ["body", "Dimon napishet"], ["category", "Web design"], ["status", "work"], ["period", "2024-12-22"], ["created_at", "2024-09-19 17:34:07.652387"], ["updated_at", "2024-09-19 17:34:07.652387"]]
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+[active_model_serializers] Rendered TaskSerializer with ActiveModelSerializers::Adapter::Attributes (0.48ms)
+Completed 201 Created in 32ms (Views: 1.6ms | ActiveRecord: 48.9ms | Allocations: 1920)
+
+
+Started DELETE "/task/3" for 127.0.0.1 at 2024-09-19 20:38:44 +0300
+  
+ActionController::RoutingError (No route matches [DELETE] "/task/3"):
+  
+Started DELETE "/task&id=3" for 127.0.0.1 at 2024-09-19 20:43:30 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (No route matches [DELETE] "/task&id=3"):
+  
+Started DELETE "/task" for 127.0.0.1 at 2024-09-19 20:43:43 +0300
+Processing by TasksController#destroy as HTML
+  Parameters: {"exept"=>[:new, :show]}
+  [1m[36mTask Load (0.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:19:in `destroy'
+[active_model_serializers] Rendered ActiveModel::Serializer::Null with Hash (0.07ms)
+Completed 400 Bad Request in 37ms (Views: 2.0ms | ActiveRecord: 13.7ms | Allocations: 11840)
+
+
+Started DELETE "/task" for 127.0.0.1 at 2024-09-19 20:45:20 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+SyntaxError (/Users/kuper/Documents/vue-kanban/server/app/controllers/tasks_controller.rb:21: syntax error, unexpected label, expecting `do' or '{' or '('
+... ? @task.destroy : render json: { error: 'Некоррект...
+...                          ^~~~~
+/Users/kuper/Documents/vue-kanban/server/app/controllers/tasks_controller.rb:29: syntax error, unexpected end-of-input):
+  
+app/controllers/tasks_controller.rb:21: syntax error, unexpected label, expecting `do' or '{' or '('
+app/controllers/tasks_controller.rb:29: syntax error, unexpected end-of-input
+Started DELETE "/task" for 127.0.0.1 at 2024-09-19 20:46:24 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (3.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+SyntaxError (/Users/kuper/Documents/vue-kanban/server/app/controllers/tasks_controller.rb:21: syntax error, unexpected label, expecting `do' or '{' or '('
+... ? @task.destroy : render json: { error: 'Некоррект...
+...                          ^~~~~
+):
+  
+app/controllers/tasks_controller.rb:21: syntax error, unexpected label, expecting `do' or '{' or '('
+Started DELETE "/task" for 127.0.0.1 at 2024-09-19 20:49:09 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by TasksController#destroy as HTML
+  Parameters: {"exept"=>[:new, :show]}
+  [1m[36mTask Load (0.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:19:in `destroy'
+[active_model_serializers] Rendered ActiveModel::Serializer::Null with Hash (0.06ms)
+Completed 400 Bad Request in 40ms (Views: 1.1ms | ActiveRecord: 9.8ms | Allocations: 13927)
+
+
+Started DELETE "/task/3" for 127.0.0.1 at 2024-09-19 20:49:14 +0300
+  
+ActionController::RoutingError (No route matches [DELETE] "/task/3"):
+  
+Started GET "/" for 127.0.0.1 at 2024-09-19 20:51:10 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (2.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by TasksController#index as HTML
+  [1m[36mTask Load (0.7ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks"[0m
+  ↳ app/controllers/tasks_controller.rb:5:in `index'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (0.37ms)
+Completed 200 OK in 49ms (Views: 18.4ms | ActiveRecord: 19.5ms | Allocations: 21074)
+
+
+Started DELETE "/task/3" for 127.0.0.1 at 2024-09-19 20:51:17 +0300
+  
+ActionController::RoutingError (uninitialized constant TaskController):
+  
+Started GET "/we" for 127.0.0.1 at 2024-09-19 20:51:27 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/we"):
+  
+Started GET "/we" for 127.0.0.1 at 2024-09-19 20:52:09 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (No route matches [GET] "/we"):
+  
+Started DELETE "/task/3" for 127.0.0.1 at 2024-09-19 20:52:32 +0300
+  
+ActionController::RoutingError (uninitialized constant TaskController):
+  
+Started GET "/" for 127.0.0.1 at 2024-09-19 20:53:24 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by TasksController#index as HTML
+  [1m[36mTask Load (12.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks"[0m
+  ↳ app/controllers/tasks_controller.rb:5:in `index'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (1.14ms)
+Completed 200 OK in 57ms (Views: 20.7ms | ActiveRecord: 27.0ms | Allocations: 21074)
+
+
+Started DELETE "/task/3" for 127.0.0.1 at 2024-09-19 20:53:31 +0300
+  
+ActionController::RoutingError (No route matches [DELETE] "/task/3"):
+  
+Started DELETE "/tasks/3" for 127.0.0.1 at 2024-09-19 20:53:45 +0300
+Processing by TasksController#destroy as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mTask Load (0.6ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:19:in `destroy'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/tasks_controller.rb:22:in `destroy'
+  [1m[36mTask Destroy (4.5ms)[0m  [1m[31mDELETE FROM "tasks" WHERE "tasks"."id" = $1[0m  [["id", 3]]
+  ↳ app/controllers/tasks_controller.rb:22:in `destroy'
+  [1m[36mTRANSACTION (3.1ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/tasks_controller.rb:22:in `destroy'
+Completed 204 No Content in 63ms (ActiveRecord: 9.0ms | Allocations: 2695)
+
+
+Started GET "/we" for 127.0.0.1 at 2024-09-19 20:54:25 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (No route matches [GET] "/we"):
+  
