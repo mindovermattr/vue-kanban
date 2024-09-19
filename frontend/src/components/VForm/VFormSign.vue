@@ -19,7 +19,7 @@
         </fieldset>
       </div>
       <VButton
-        :disabled="Object.keys(errors).length && !meta.valid"
+        :disabled="Object.keys(errors).length !== 0 && !meta.valid"
         class="form__button"
         variant="contained"
       >
