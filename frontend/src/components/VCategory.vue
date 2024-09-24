@@ -1,13 +1,13 @@
 <template>
   <div
-    @click="emit('setCategory', category)"
+    @click="handleChange(category)"
     class="category"
     :class="{
       'category--web': category === EKanbanCategory.Web,
       'category--research': category === EKanbanCategory.Research,
       'category--copywriting': category === EKanbanCategory.Copywriting,
-      'category--selection': selectedCategory,
-      'category--selected': category === selectedCategory,
+      'category--selection': !checked,
+      'category--selected': checked,
     }"
   >
     {{ category }}
@@ -16,15 +16,24 @@
 
 <script setup lang="ts">
 import { EKanbanCategory } from '@/types/EKanbanCategory'
+import { useField } from 'vee-validate'
+import { toRefs } from 'vue'
 
 interface IProps {
+  name: string
   category: EKanbanCategory
-  selectedCategory?: EKanbanCategory
 }
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
+
+const { category, name } = toRefs(props)
 
 const emit = defineEmits<(e: 'setCategory', item: EKanbanCategory) => void>()
+
+const { handleChange, checked } = useField(name, undefined, {
+  type: 'radio',
+  checkedValue: category,
+})
 </script>
 
 <style lang="scss" scoped>

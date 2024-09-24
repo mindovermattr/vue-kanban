@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { useCardStore } from '@/store/useCardsStore'
 import { EKanbanCategory } from '@/types/EKanbanCategory'
+import type { TKanbanCard } from '@/types/TKanban'
+import { ErrorMessage, Form } from 'vee-validate'
 import { ref } from 'vue'
+import { array, object, string, date as yupDate } from 'yup'
 import VButton from '../VButton.vue'
 import VCalendar from '../VCalendar/VCalendar.vue'
 import VCategory from '../VCategory.vue'
@@ -9,6 +13,8 @@ interface IProps {
   isVisible: boolean
 }
 const props = defineProps<IProps>()
+
+const cards = useCardStore()
 
 const date = ref<Date | null>(null)
 const selectedCategory = ref<EKanbanCategory>(EKanbanCategory.Web)
@@ -22,38 +28,67 @@ const setDate = (selectedDate: Date) => {
 const setCategory = (category: EKanbanCategory) => {
   selectedCategory.value = category
 }
+
+const addCardHandler = async (card: TKanbanCard) => {
+  // await cards.addCard(card)
+  // emit('closeModal')
+}
+
+const validationScheme = object({
+  name: string().required().min(4),
+  description: string(),
+  category: array().of(string().required().nullable()).required(),
+  selectedDate: yupDate().min(new Date()).required(),
+})
+
+const submitHandler = (values) => {
+  console.log(values)
+}
 </script>
 
 <template>
   <div v-if="isVisible" class="modal-wrapper" @click="emit('closeModal')">
-    <form @click.stop action="POST" class="modal">
+    <Form
+      :validation-schema="validationScheme"
+      @click.stop=""
+      @submit="submitHandler"
+      class="modal"
+    >
       <h2 class="modal__title">Создание задачи</h2>
       <div class="modal__fields fields">
         <div class="fields__wrapper">
           <fieldset class="fields__item field">
             <legend class="field__title title">Название задачи</legend>
-            <input placeholder="Введите название задачи..." class="field__input" type="text" />
+            <input
+              name="name"
+              placeholder="Введите название задачи..."
+              class="field__input"
+              type="text"
+            />
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Описание задачи</legend>
-            <textarea class="field__textarea" type="text" />
+            <textarea name="description" class="field__textarea" type="text" />
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Категория</legend>
             <div class="field__categories categories">
+              <!-- Был button нужно сделать radio -->
               <button
                 class="categories__button"
                 type="button"
                 v-for="category in EKanbanCategory"
                 :key="category"
+                :name="category"
               >
                 <VCategory
-                  :selected-category="selectedCategory"
+                  :name="'category'"
                   class="categories__item"
                   :category="category"
                   @setCategory="setCategory"
                 />
               </button>
+              <ErrorMessage name="category" />
             </div>
           </fieldset>
         </div>
@@ -61,11 +96,12 @@ const setCategory = (category: EKanbanCategory) => {
         <VCalendar @set-date="setDate" />
       </div>
       <div class="modal__button-wrapper">
-        <VButton type="submit" @click="emit('closeModal')" class="modal__button" variant="contained"
+        <VButton type="submit" @click="addCardHandler" class="modal__button" variant="contained"
           >Создать задачу</VButton
         >
+        <button type="submit">asdasd</button>
       </div>
-    </form>
+    </Form>
   </div>
 </template>
 
