@@ -2,9 +2,9 @@
 import { useCardStore } from '@/store/useCardsStore'
 import { EKanbanCategory } from '@/types/EKanbanCategory'
 import type { TKanbanCard } from '@/types/TKanban'
-import { ErrorMessage, Form } from 'vee-validate'
+import { ErrorMessage, Field, Form } from 'vee-validate'
 import { ref } from 'vue'
-import { array, object, string, date as yupDate } from 'yup'
+import { object, string, date as yupDate } from 'yup'
 import VButton from '../VButton.vue'
 import VCalendar from '../VCalendar/VCalendar.vue'
 import VCategory from '../VCategory.vue'
@@ -37,12 +37,18 @@ const addCardHandler = async (card: TKanbanCard) => {
 const validationScheme = object({
   name: string().required().min(4),
   description: string(),
-  category: array().of(string().required().nullable()).required(),
+  category: string().required(),
   selectedDate: yupDate().min(new Date()).required(),
 })
 
 const submitHandler = (values) => {
-  console.log(values)
+  cards.addCard({
+    status: 'noStatus',
+    category: 'Research',
+    date: values.selectedDate,
+    name: values.name,
+    period: values.selectedDate,
+  })
 }
 </script>
 
@@ -53,13 +59,15 @@ const submitHandler = (values) => {
       @click.stop=""
       @submit="submitHandler"
       class="modal"
+      v-slot="{ errors }"
     >
+      {{ errors }}
       <h2 class="modal__title">Создание задачи</h2>
       <div class="modal__fields fields">
         <div class="fields__wrapper">
           <fieldset class="fields__item field">
             <legend class="field__title title">Название задачи</legend>
-            <input
+            <Field
               name="name"
               placeholder="Введите название задачи..."
               class="field__input"
@@ -73,7 +81,6 @@ const submitHandler = (values) => {
           <fieldset class="fields__item field">
             <legend class="field__title title">Категория</legend>
             <div class="field__categories categories">
-              <!-- Был button нужно сделать radio -->
               <button
                 class="categories__button"
                 type="button"
@@ -99,7 +106,6 @@ const submitHandler = (values) => {
         <VButton type="submit" @click="addCardHandler" class="modal__button" variant="contained"
           >Создать задачу</VButton
         >
-        <button type="submit">asdasd</button>
       </div>
     </Form>
   </div>

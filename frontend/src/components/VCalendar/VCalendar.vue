@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import { formatDate } from '@/helpers/formatDate'
 import { getDate, type TDays } from '@/helpers/getDate'
+import { useField } from 'vee-validate'
 import { computed, reactive, ref } from 'vue'
 
 const emit = defineEmits<(e: 'setDate', date: Date) => void>()
@@ -83,9 +84,15 @@ const dayClickHandler = (item: TDays) => {
   selectedDay.date = item.date
   selectedDay.monthName = item.monthName
   date.value.setDate(item.date)
+  handleChange(date.value)
   formatedDate.value = formatDate(date)
   emit('setDate', date.value)
 }
+
+const { checked, handleChange } = useField('selectedDate', undefined, {
+  type: 'radio',
+  checkedValue: date.value,
+})
 </script>
 
 <style lang="scss" scoped>
