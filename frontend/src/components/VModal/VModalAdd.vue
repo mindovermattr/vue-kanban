@@ -3,6 +3,7 @@ import { useCardStore } from '@/store/useCardsStore'
 import { EKanbanCategory } from '@/types/EKanbanCategory'
 import { ErrorMessage, Field, Form } from 'vee-validate'
 import { ref } from 'vue'
+import { object, string, date as yupDate } from 'yup'
 import VButton from '../VButton.vue'
 import VCalendar from '../VCalendar/VCalendar.vue'
 import VCategory from '../VCategory.vue'
@@ -16,6 +17,28 @@ const cards = useCardStore()
 
 const date = ref<Date | null>(null)
 const selectedCategory = ref<EKanbanCategory>(EKanbanCategory.Web)
+
+const addCardHandler = async (card: TKanbanCard) => {
+  // await cards.addCard(card)
+  // emit('closeModal')
+}
+const validationScheme = object({
+  name: string().required().min(4),
+  body: string(),
+  category: string().required(),
+  selectedDate: yupDate().min(new Date()).required(),
+})
+const submitHandler = async (values) => {
+  const newCard = {
+    status: 'noStatus',
+    category: 'Research',
+    name: values.name,
+    period: values.selectedDate,
+    body: values.body,
+  }
+  await cards.addCard(newCard)
+  console.log('Карточка:', newCard)
+}
 
 const emit = defineEmits<(e: 'closeModal') => void>()
 
@@ -52,7 +75,7 @@ const setCategory = (category: EKanbanCategory) => {
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Описание задачи</legend>
-            <textarea class="field__textarea" type="text" />
+            <Field name="body" class="field__textarea" as="textarea" />
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Категория</legend>
