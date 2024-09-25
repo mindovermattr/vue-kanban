@@ -36,19 +36,21 @@ const addCardHandler = async (card: TKanbanCard) => {
 
 const validationScheme = object({
   name: string().required().min(4),
-  description: string(),
+  body: string(),
   category: string().required(),
   selectedDate: yupDate().min(new Date()).required(),
 })
 
-const submitHandler = (values) => {
-  cards.addCard({
+const submitHandler = async (values) => {
+  const newCard = {
     status: 'noStatus',
     category: 'Research',
-    date: values.selectedDate,
     name: values.name,
     period: values.selectedDate,
-  })
+    body: values.body,
+  }
+  await cards.addCard(newCard)
+  console.log('Карточка:', newCard)
 }
 </script>
 
@@ -76,7 +78,7 @@ const submitHandler = (values) => {
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Описание задачи</legend>
-            <textarea name="description" class="field__textarea" type="text" />
+            <Field name="body" class="field__textarea" as="textarea" />
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Категория</legend>
