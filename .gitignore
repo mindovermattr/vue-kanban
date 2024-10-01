@@ -35,3 +35,4 @@
 .idea
 .DS_Store
 /server/tmp
+/server/test

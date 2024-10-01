@@ -11,7 +11,17 @@ class TasksController < ApplicationController
     if @task.save
       render json: @task, status: :created, location: @task
     else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+      unprocessable_entity(@task)
+    end
+  end
+
+  def update
+    @task = Task.find_by(id: params[:id])
+
+    if @task.update(task_params)
+      render json: @task, status: :created, location: @task
+    else
+      unprocessable_entity(@task)
     end
   end
 
@@ -28,6 +38,6 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :body, :category, :status, :period)
+    params.require(:task).permit(:name, :body, :category_id, :status, :period)
   end
 end
