@@ -1,17 +1,19 @@
 <script setup lang="ts">
+import VButton from '@/components/VButton.vue'
+import VCalendar from '@/components/VCalendar/VCalendar.vue'
+import VCategory from '@/components/VCategory.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { EKanbanCategory } from '@/types/EKanbanCategory'
-import { ErrorMessage, Field, Form } from 'vee-validate'
+import { Field, Form } from 'vee-validate'
 import { ref } from 'vue'
 import { object, string, date as yupDate } from 'yup'
-import VButton from '../VButton.vue'
-import VCalendar from '../VCalendar/VCalendar.vue'
-import VCategory from '../VCategory.vue'
+import VModal from '../VModal.vue'
 
 interface IProps {
   isVisible: boolean
 }
-const props = defineProps<IProps>()
+defineProps<IProps>()
+const emit = defineEmits<(e: 'closeModal') => void>()
 
 const cards = useCardStore()
 
@@ -23,15 +25,16 @@ const addCardHandler = async (card: TKanbanCard) => {
   // emit('closeModal')
 }
 const validationScheme = object({
-  name: string().required().min(4),
+  name: string().required('Нужно ввести название').min(4, 'Минимум 4 символа'),
   body: string(),
-  category: string().required(),
-  selectedDate: yupDate().min(new Date()).required(),
+  category: string().required('Нужно выбрать одну из категорий'),
+  selectedDate: yupDate().min(new Date()).required('Нужно выбрать дату'),
 })
+
 const submitHandler = async (values) => {
   const newCard = {
     status: 'noStatus',
-    category: 'Research',
+    category: 'kuper',
     name: values.name,
     period: values.selectedDate,
     body: values.body,
@@ -39,8 +42,6 @@ const submitHandler = async (values) => {
   await cards.addCard(newCard)
   console.log('Карточка:', newCard)
 }
-
-const emit = defineEmits<(e: 'closeModal') => void>()
 
 const setDate = (selectedDate: Date) => {
   date.value = selectedDate
@@ -52,15 +53,13 @@ const setCategory = (category: EKanbanCategory) => {
 </script>
 
 <template>
-  <div v-if="isVisible" class="modal-wrapper" @click="emit('closeModal')">
+  <VModal v-if="isVisible" @closeModal="emit('closeModal')">
     <Form
       :validation-schema="validationScheme"
-      @click.stop=""
+      @click.stop
       @submit="submitHandler"
-      class="modal"
       v-slot="{ errors }"
     >
-      {{ errors }}
       <h2 class="modal__title">Создание задачи</h2>
       <div class="modal__fields fields">
         <div class="fields__wrapper">
@@ -72,6 +71,9 @@ const setCategory = (category: EKanbanCategory) => {
               class="field__input"
               type="text"
             />
+            <Transition name="slide-fade" class="field__error"
+              ><p v-if="errors.name">{{ errors.name }}</p></Transition
+            >
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Описание задачи</legend>
@@ -90,16 +92,23 @@ const setCategory = (category: EKanbanCategory) => {
                 <VCategory
                   :name="'category'"
                   class="categories__item"
+                  :is-field="true"
                   :category="category"
                   @setCategory="setCategory"
                 />
               </button>
-              <ErrorMessage name="category" />
             </div>
+            <Transition name="slide-fade" class="field__error field__error--categories"
+              ><p v-if="errors.category">{{ errors.category }}</p></Transition
+            >
           </fieldset>
         </div>
-
-        <VCalendar @set-date="setDate" />
+        <div>
+          <VCalendar @set-date="setDate" />
+          <Transition name="slide-fade" class="field__error field__error--categories"
+            ><p v-if="errors.selectedDate">{{ errors.selectedDate }}</p></Transition
+          >
+        </div>
       </div>
       <div class="modal__button-wrapper">
         <VButton type="submit" @click="addCardHandler" class="modal__button" variant="contained"
@@ -107,26 +116,11 @@ const setCategory = (category: EKanbanCategory) => {
         >
       </div>
     </Form>
-  </div>
+  </VModal>
 </template>
 
 <style lang="scss" scoped>
 .modal {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  padding: 40px 30px;
-  background-color: $bg-white-color;
-  transform: translate(-50%, -50%);
-  width: 630px;
-
-  &-wrapper {
-    position: absolute;
-    width: calc((#{100vw}) - 18px);
-    height: 100vh;
-    top: 0;
-    background-color: rgba($color: #000000, $alpha: 0.5);
-  }
   &__title {
     font-size: 2.5rem;
     font-weight: 600;
@@ -197,7 +191,28 @@ const setCategory = (category: EKanbanCategory) => {
       outline: none;
     }
   }
+  &__error {
+    color: red;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 16px;
+    &--categories {
+      margin-top: 20px;
+    }
+  }
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>
-
-<style lang="scss"></style>

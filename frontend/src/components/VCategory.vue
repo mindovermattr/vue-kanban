@@ -6,8 +6,7 @@
       'category--web': category === EKanbanCategory.Web,
       'category--research': category === EKanbanCategory.Research,
       'category--copywriting': category === EKanbanCategory.Copywriting,
-      'category--selection': !checked,
-      'category--selected': checked,
+      'category--selection': isField && !checked,
     }"
   >
     {{ category }}
@@ -21,6 +20,7 @@ import { toRefs } from 'vue'
 
 interface IProps {
   name: string
+  isField?: boolean
   category: EKanbanCategory
 }
 
@@ -41,9 +41,11 @@ const { handleChange, checked } = useField(name, undefined, {
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 10px;
+  padding: 10px 20px;
 
   border-radius: 18px;
   transition: 0.3s;
+  opacity: 1;
   &--selection {
     opacity: 0.4;
   }
@@ -58,9 +60,6 @@ const { handleChange, checked } = useField(name, undefined, {
   &--copywriting {
     background: $bg-mint-color;
     color: $mint-text-color;
-  }
-  &--selected {
-    opacity: 1;
   }
 }
 </style>

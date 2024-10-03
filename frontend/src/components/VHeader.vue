@@ -1,15 +1,24 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import VModalAdd from './VModal/VModalAdd.vue'
+import VButton from './VButton.vue'
+import VModalAdd from './VModal/Add/VModalAdd.vue'
+import VModalUpdate from './VModal/Update/VModalUpdate.vue'
 
-const isModalVisible = ref(false)
+const isAddModalVisible = ref(false)
+const isUpdateModalVisible = ref(false)
 
-const openModalHandler = () => {
-  isModalVisible.value = true
+const openAddModalHandler = () => {
+  isAddModalVisible.value = true
 }
-const closeModalHandler = () => {
-  isModalVisible.value = false
+const openUpdateModalHandler = () => {
+  isUpdateModalVisible.value = true
+}
+const closeAddModalHandler = () => {
+  isAddModalVisible.value = false
+}
+const closeUpdateModalHandler = () => {
+  isUpdateModalVisible.value = false
 }
 const router = useRouter()
 const clickHander = () => {
@@ -22,15 +31,15 @@ const clickHander = () => {
     <h1 class="header__title">KamBam</h1>
 
     <div class="header__controls controls">
-      <button @click="openModalHandler" class="controls__button controls__button--contained">
-        Создать новую задачу
-      </button>
-      <button @click="clickHander" class="controls__button controls__button--text">
+      <VButton variant="contained" @click="openUpdateModalHandler"> Создать категорию </VButton>
+      <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
+      <VButton variant="text" @click="clickHander" class="controls__button controls__button--text">
         Ivan ivanov
-      </button>
+      </VButton>
     </div>
   </header>
-  <VModalAdd @closeModal="closeModalHandler" :is-visible="isModalVisible" />
+  <VModalAdd @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
+  <VModalUpdate @closeModal="closeUpdateModalHandler" :is-visible="isUpdateModalVisible" />
 </template>
 
 <style lang="scss" scoped>
