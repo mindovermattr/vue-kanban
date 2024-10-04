@@ -12,10 +12,8 @@
 !/.env*.erb
 
 # Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+/server/log
+/server/tmp
 
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
@@ -34,5 +32,4 @@
 
 .idea
 .DS_Store
-/server/tmp
 /server/test
