@@ -26,10 +26,18 @@ export const useCardStore = defineStore('cards', {
     },
 
     setFiltredCardsByStatus(cards: TCardResponse[]) {
-      const filted = {} as TKanbanItems
+      const filtred = {
+        done: [],
+        inProgress: [],
+        needDone: [],
+        noStatus: [],
+        testing: [],
+      } as TKanbanItems
       cards.forEach((el, idx) => {
-        console.log(el.category)
+        filtred[el.status].push(el)
       })
+      this.filtredCards = filtred
+      console.log(filtred)
     },
     async fetchCards() {
       const cards = await getCardsApi()

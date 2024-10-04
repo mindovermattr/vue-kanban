@@ -30,6 +30,7 @@ const validationScheme = object<TKanbanCard & { category_id: number }>({
 })
 
 const submitHandler = async (values: TKanbanCard & { category_id: number; body: string }) => {
+  console.log(values.category_id)
   const newCard = {
     status: EStatus.NoStatus,
     category_id: values.category_id,
@@ -89,16 +90,15 @@ onMounted(async () => {
                 :key="category.id"
               >
                 <VCategory
-                  :name="'category_id'"
+                  :field-name="'category_id'"
                   class="categories__item"
                   :is-field="true"
-                  :category
-                  :category_id="category.id"
+                  v-bind="category"
                 />
               </button>
             </div>
             <Transition name="slide-fade" class="field__error field__error--categories"
-              ><p v-if="errors.category">{{ errors.category_id }}</p></Transition
+              ><p v-if="errors.category_id">{{ errors.category_id }}</p></Transition
             >
           </fieldset>
         </div>

@@ -1,12 +1,13 @@
 <template>
   <div
-    @click="handleChange(category)"
+    @click="handleChange(id)"
     class="category"
     :class="{
       'category--selection': isField && !checked,
     }"
+    :style="{ backgroundColor: accent_color, color: main_color }"
   >
-    {{ category.name }}
+    {{ name }}
   </div>
 </template>
 
@@ -15,20 +16,18 @@ import type { TCategory } from '@/types/TKanban'
 import { useField } from 'vee-validate'
 import { toRefs } from 'vue'
 
-interface IProps {
-  name: string
+interface IProps extends TCategory {
+  fieldName: string
   isField?: boolean
-  category: TCategory
-  category_id: number
 }
 
 const props = defineProps<IProps>()
 
-const { category, name, category_id } = toRefs(props)
+const { fieldName } = toRefs(props)
 
-const { handleChange, checked } = useField(name, undefined, {
+const { handleChange, checked } = useField(fieldName, undefined, {
   type: 'radio',
-  checkedValue: category_id,
+  checkedValue: props.id,
 })
 </script>
 
