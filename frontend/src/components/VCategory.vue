@@ -23,7 +23,7 @@ const props = defineProps<IProps>()
 
 console.log(props.name)
 
-const { handleChange, checked } = useField('category', undefined, {
+const { handleChange, checked } = useField('category_id', undefined, {
   type: 'radio',
   checkedValue: props.id,
 })
