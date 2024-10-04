@@ -1,8 +1,9 @@
+import { useCardStore } from '@/store/useCardsStore'
 import { EStatus, type EStatusKeys } from '@/types/EStatus'
-import type { TKanbanCard, TKanbanItems } from '@/types/TKanban'
+import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { reactive } from 'vue'
 
-export const useDND = (kanbanCards: TKanbanItems) => {
+export const useDND = () => {
   const isDragging = reactive<{
     value: boolean
     id: number | null
@@ -13,7 +14,9 @@ export const useDND = (kanbanCards: TKanbanItems) => {
     isHided: false,
   })
 
-  const onStartDragEvent = (event: DragEvent, item: TKanbanCard) => {
+  const cards = useCardStore()
+
+  const onStartDragEvent = (event: DragEvent, item: TCardResponse) => {
     if (!event.dataTransfer) return
     isDragging.value = true
     isDragging.id = item.id
@@ -33,17 +36,7 @@ export const useDND = (kanbanCards: TKanbanItems) => {
     const itemID = event.dataTransfer.getData('itemID')
     const itemStatus = event.dataTransfer.getData('itemStatus') as EStatus
 
-    let cardIndex
-    const card = kanbanCards[itemStatus].find((card, idx) => {
-      cardIndex = idx
-      return `${card.id}` === itemID
-    })
-    if (cardIndex! >= 0) kanbanCards[itemStatus].splice(cardIndex!, 1)
-    if (card) {
-      const newStatus = EStatus[selectedStatus]
-      card.status = newStatus
-      kanbanCards[newStatus].push(card)
-    }
+    cards.replaceCard(selectedStatus, itemStatus, itemID)
     onDragEnd()
   }
 

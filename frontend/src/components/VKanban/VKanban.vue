@@ -10,7 +10,7 @@ const card = useCardStore()
 
 const kanbanCards = ref<TKanbanItems>({} as TKanbanItems)
 
-const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(kanbanCards.value)
+const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(card.filtredCards)
 
 onMounted(async () => {
   await card.fetchCards()
