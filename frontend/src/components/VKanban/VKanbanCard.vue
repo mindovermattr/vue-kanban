@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
-import type { TCategory } from '@/types/TKanban'
+import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { inject } from 'vue'
 import VCategory from '../VCategory.vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 
-interface IProps {
-  id: number
-  category: TCategory
-  name: String
-  period: String
-}
+interface IProps extends TCardResponse {}
 
 const props = defineProps<IProps>()
 
@@ -31,13 +26,7 @@ const onDragEnd = () => {
   <VKanbanDropzone v-if="isDragging?.isHided && isDragging?.id === id" />
   <article v-else class="card" @dragend="onDragEnd">
     <header class="card__header">
-      <VCategory
-        name="category"
-        :is-field="false"
-        class="card__category"
-        :category_id="category.id"
-        v-bind:category="category"
-      />
+      <VCategory :is-field="false" class="card__category" v-bind="category" />
       <button class="card__button">...</button>
     </header>
     <h4 class="card__title">{{ name }}</h4>

@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
 import VModalAdd from './VModal/Add/VModalAdd.vue'
-import VModalUpdate from './VModal/Update/VModalUpdate.vue'
 
 const isAddModalVisible = ref(false)
 const isUpdateModalVisible = ref(false)
@@ -39,7 +38,7 @@ const clickHander = () => {
     </div>
   </header>
   <VModalAdd @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
-  <VModalUpdate @closeModal="closeUpdateModalHandler" :is-visible="isUpdateModalVisible" />
+  <!-- <VModalUpdate @closeModal="closeUpdateModalHandler" :is-visible="isUpdateModalVisible" /> -->
 </template>
 
 <style lang="scss" scoped>

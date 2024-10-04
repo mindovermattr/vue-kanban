@@ -22,7 +22,7 @@ const categories = useCategoryStore()
 
 const date = ref<Date | null>(null)
 
-const validationScheme = object<TKanbanCard & { category_id: number }>({
+const validationScheme = object({
   name: string().required('Нужно ввести название').min(4, 'Минимум 4 символа'),
   body: string(),
   category_id: number().required('Нужно выбрать одну из категорий'),
@@ -30,7 +30,7 @@ const validationScheme = object<TKanbanCard & { category_id: number }>({
 })
 
 const submitHandler = async (values: TKanbanCard & { category_id: number; body: string }) => {
-  console.log(values.category_id)
+  console.log(values)
   const newCard = {
     status: EStatus.NoStatus,
     category_id: values.category_id,
@@ -49,6 +49,7 @@ const setDate = (selectedDate: Date) => {
 
 onMounted(async () => {
   await categories.fetchCategories()
+  console.log(categories.categories)
 })
 </script>
 
@@ -89,12 +90,7 @@ onMounted(async () => {
                 v-for="category in categories.categories"
                 :key="category.id"
               >
-                <VCategory
-                  :field-name="'category_id'"
-                  class="categories__item"
-                  :is-field="true"
-                  v-bind="category"
-                />
+                <VCategory class="categories__item" :is-field="true" v-bind="category" />
               </button>
             </div>
             <Transition name="slide-fade" class="field__error field__error--categories"

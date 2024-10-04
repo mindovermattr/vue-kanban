@@ -14,18 +14,16 @@
 <script setup lang="ts">
 import type { TCategory } from '@/types/TKanban'
 import { useField } from 'vee-validate'
-import { toRefs } from 'vue'
 
 interface IProps extends TCategory {
-  fieldName: string
   isField?: boolean
 }
 
 const props = defineProps<IProps>()
 
-const { fieldName } = toRefs(props)
+console.log(props.name)
 
-const { handleChange, checked } = useField(fieldName, undefined, {
+const { handleChange, checked } = useField('category', undefined, {
   type: 'radio',
   checkedValue: props.id,
 })
