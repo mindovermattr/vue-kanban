@@ -1,20 +1,27 @@
-import type { EKanbanCategory } from './EKanbanCategory'
 import type { EStatus } from './EStatus'
+import type { TCardResponse } from './responses/TCardResponse'
 
 type TKanbanCard = {
   id: number
-  title: string
-  date: string
-  category: EKanbanCategory
+  name: string
+  period: string
+  body: string
   status: EStatus
 }
 
-type TKanbanItems = {
-  noStatus: TKanbanCard[]
-  needDone: TKanbanCard[]
-  inProgress: TKanbanCard[]
-  testing: TKanbanCard[]
-  done: TKanbanCard[]
+type TCategory = {
+  name: string
+  id: number
+  main_color: string
+  accent_color: string
 }
 
-export type { TKanbanCard, TKanbanItems }
+type TKanbanItems = {
+  noStatus: TCardResponse[]
+  needDone: TCardResponse[]
+  inProgress: TCardResponse[]
+  testing: TCardResponse[]
+  done: TCardResponse[]
+}
+
+export type { TCategory, TKanbanCard, TKanbanItems }

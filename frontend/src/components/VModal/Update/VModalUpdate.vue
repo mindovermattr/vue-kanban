@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import VButton from '@/components/VButton.vue'
 import VCategory from '@/components/VCategory.vue'
-import { EKanbanCategory } from '@/types/EKanbanCategory'
 import { EStatus } from '@/types/EStatus'
 import { Form } from 'vee-validate'
 import { ref } from 'vue'
@@ -21,7 +20,7 @@ const isRedacting = ref(false)
     <Form @click.stop class="modal__update update-modal">
       <div class="update-modal__header">
         <h3 class="update-modal__title">Название задачи</h3>
-        <VCategory :checked="true" name="web" :category="EKanbanCategory.Web" />
+        <VCategory :category_id="1" :checked="true" name="web" :category="{}" />
       </div>
       <div class="update-modal__status status">
         <h4 class="status__name">Статус</h4>

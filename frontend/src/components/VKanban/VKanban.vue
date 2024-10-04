@@ -13,7 +13,7 @@ const kanbanCards = ref<TKanbanItems>({} as TKanbanItems)
 const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(kanbanCards.value)
 
 onMounted(async () => {
-  // await card.fetchCards()
+  await card.fetchCards()
 })
 
 provide('isDragging', isDragging)

@@ -3,11 +3,13 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 </script>
 
 <template>
-  <div class="modal-wrapper" @click="emit('closeModal')">
-    <div class="modal">
-      <slot> </slot>
+  <Teleport to="body">
+    <div class="modal-wrapper" @click="emit('closeModal')">
+      <div class="modal">
+        <slot> </slot>
+      </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <style lang="scss" scoped>

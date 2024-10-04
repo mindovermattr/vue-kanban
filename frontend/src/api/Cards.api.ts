@@ -1,20 +1,19 @@
+import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { type TKanbanCard } from '@/types/TKanban'
-import axios from 'axios'
+import { instance } from './instance'
 
-const BASE_URL = 'http://localhost:3000'
-
-export const getCards = async (): Promise<TKanbanCard[] | undefined> => {
+export const getCards = async (): Promise<TCardResponse[] | undefined> => {
   try {
-    const response = await axios.get<TKanbanCard[]>(`${BASE_URL}/tasks`)
+    const response = await instance.get<TCardResponse[]>(`/tasks`)
     return response.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export const addCard = async (card: TKanbanCard) => {
+export const addCard = async (card: TKanbanCard & { category_id: number }) => {
   try {
-    await axios.post<TKanbanCard[]>(`${BASE_URL}/tasks`, JSON.stringify(card))
+    await instance.post<TKanbanCard>(`/tasks`, card)
   } catch (error) {
     console.log(error)
   }

@@ -3,10 +3,12 @@ import VButton from '@/components/VButton.vue'
 import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
 import { useCardStore } from '@/store/useCardsStore'
-import { EKanbanCategory } from '@/types/EKanbanCategory'
+import { useCategoryStore } from '@/store/useCategoryStore'
+import { EStatus } from '@/types/EStatus'
+import type { TKanbanCard } from '@/types/TKanban'
 import { Field, Form } from 'vee-validate'
-import { ref } from 'vue'
-import { object, string, date as yupDate } from 'yup'
+import { onMounted, ref } from 'vue'
+import { number, object, string, date as yupDate } from 'yup'
 import VModal from '../VModal.vue'
 
 interface IProps {
@@ -16,40 +18,37 @@ defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
 const cards = useCardStore()
+const categories = useCategoryStore()
 
 const date = ref<Date | null>(null)
-const selectedCategory = ref<EKanbanCategory>(EKanbanCategory.Web)
 
-const addCardHandler = async (card: TKanbanCard) => {
-  // await cards.addCard(card)
-  // emit('closeModal')
-}
-const validationScheme = object({
+const validationScheme = object<TKanbanCard & { category_id: number }>({
   name: string().required('Нужно ввести название').min(4, 'Минимум 4 символа'),
   body: string(),
-  category: string().required('Нужно выбрать одну из категорий'),
+  category_id: number().required('Нужно выбрать одну из категорий'),
   selectedDate: yupDate().min(new Date()).required('Нужно выбрать дату'),
 })
 
-const submitHandler = async (values) => {
+const submitHandler = async (values: TKanbanCard & { category_id: number; body: string }) => {
   const newCard = {
-    status: 'noStatus',
-    category: 'kuper',
+    status: EStatus.NoStatus,
+    category_id: values.category_id,
     name: values.name,
     period: values.selectedDate,
     body: values.body,
   }
+
   await cards.addCard(newCard)
-  console.log('Карточка:', newCard)
+  emit('closeModal')
 }
 
 const setDate = (selectedDate: Date) => {
   date.value = selectedDate
 }
 
-const setCategory = (category: EKanbanCategory) => {
-  selectedCategory.value = category
-}
+onMounted(async () => {
+  await categories.fetchCategories()
+})
 </script>
 
 <template>
@@ -85,21 +84,21 @@ const setCategory = (category: EKanbanCategory) => {
               <button
                 class="categories__button"
                 type="button"
-                v-for="category in EKanbanCategory"
-                :key="category"
-                :name="category"
+                :name="'category_id'"
+                v-for="category in categories.categories"
+                :key="category.id"
               >
                 <VCategory
-                  :name="'category'"
+                  :name="'category_id'"
                   class="categories__item"
                   :is-field="true"
-                  :category="category"
-                  @setCategory="setCategory"
+                  :category
+                  :category_id="category.id"
                 />
               </button>
             </div>
             <Transition name="slide-fade" class="field__error field__error--categories"
-              ><p v-if="errors.category">{{ errors.category }}</p></Transition
+              ><p v-if="errors.category">{{ errors.category_id }}</p></Transition
             >
           </fieldset>
         </div>
@@ -111,9 +110,7 @@ const setCategory = (category: EKanbanCategory) => {
         </div>
       </div>
       <div class="modal__button-wrapper">
-        <VButton type="submit" @click="addCardHandler" class="modal__button" variant="contained"
-          >Создать задачу</VButton
-        >
+        <VButton type="submit" class="modal__button" variant="contained">Создать задачу</VButton>
       </div>
     </Form>
   </VModal>

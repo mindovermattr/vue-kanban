@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import VKanbanCard from '@/components/VKanban/VKanbanCard.vue'
 import { type EStatusKeys } from '@/types/EStatus'
+import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanCard } from '@/types/TKanban'
 import { inject, ref } from 'vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps {
-  items: TKanbanCard[]
+  items: TCardResponse[]
   column: EStatusKeys
 }
 const props = defineProps<IProps>()
@@ -57,16 +58,16 @@ const isDragging = inject<{
     <h3 class="column__title">{{ titles[column] }}</h3>
 
     <TransitionGroup name="list" tag="div" class="cards">
-      <VKanbanDropzone
-        v-if="isDragging.value && width < 900"
+      <!-- <VKanbanDropzone
+        v-if="isDragging.value"
         :is-selected="isDropzoneSelected"
         @drop="onDrop($event)"
         @dragover.prevent
         @dragenter.prevent="onDragEnter"
         @dragleave="onDragLeave"
-      />
+      /> -->
       <VKanbanCard
-        v-for="item in props.items"
+        v-for="item in items"
         v-bind="item"
         :key="item.id"
         @dragstart="emit('onDragStart', $event, item)"

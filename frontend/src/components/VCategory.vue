@@ -3,36 +3,32 @@
     @click="handleChange(category)"
     class="category"
     :class="{
-      'category--web': category === EKanbanCategory.Web,
-      'category--research': category === EKanbanCategory.Research,
-      'category--copywriting': category === EKanbanCategory.Copywriting,
       'category--selection': isField && !checked,
     }"
   >
-    {{ category }}
+    {{ category.name }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { EKanbanCategory } from '@/types/EKanbanCategory'
+import type { TCategory } from '@/types/TKanban'
 import { useField } from 'vee-validate'
 import { toRefs } from 'vue'
 
 interface IProps {
   name: string
   isField?: boolean
-  category: EKanbanCategory
+  category: TCategory
+  category_id: number
 }
 
 const props = defineProps<IProps>()
 
-const { category, name } = toRefs(props)
-
-const emit = defineEmits<(e: 'setCategory', item: EKanbanCategory) => void>()
+const { category, name, category_id } = toRefs(props)
 
 const { handleChange, checked } = useField(name, undefined, {
   type: 'radio',
-  checkedValue: category,
+  checkedValue: category_id,
 })
 </script>
 
