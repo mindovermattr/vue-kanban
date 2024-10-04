@@ -7,7 +7,7 @@
     }"
     :style="{ backgroundColor: accent_color, color: main_color }"
   >
-    {{ name }}
+    {{ name }} {{ id }}
   </div>
 </template>
 

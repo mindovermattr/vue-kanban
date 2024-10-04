@@ -52,6 +52,7 @@ export const useCardStore = defineStore('cards', {
       if (card) {
         const newStatus = EStatus[selectedStatus]
         card.status = newStatus
+
         this.filtredCards[newStatus].push(card)
       }
     },
@@ -59,9 +60,6 @@ export const useCardStore = defineStore('cards', {
       const cards = await getCardsApi()
       if (cards) {
         this.setCards(cards)
-        cards.forEach((cardResonse) => {
-          this.filtredCards[cardResonse.status].push(cardResonse)
-        })
       }
     },
 
