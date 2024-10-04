@@ -59,9 +59,6 @@ export const useCardStore = defineStore('cards', {
       const cards = await getCardsApi()
       if (cards) {
         this.setCards(cards)
-        cards.forEach((cardResonse) => {
-          this.filtredCards[cardResonse.status].push(cardResonse)
-        })
       }
     },
 
