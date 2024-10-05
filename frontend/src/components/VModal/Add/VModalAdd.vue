@@ -7,7 +7,7 @@ import { useCategoryStore } from '@/store/useCategoryStore'
 import { EStatus } from '@/types/EStatus'
 import type { TKanbanCard } from '@/types/TKanban'
 import { Field, Form } from 'vee-validate'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { number, object, string, date as yupDate } from 'yup'
 import VModal from '../VModal.vue'
 
@@ -20,13 +20,15 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 const cards = useCardStore()
 const categories = useCategoryStore()
 
-const date = ref<Date | null>(null)
+const date = new Date()
 
 const validationScheme = object({
   name: string().required('Нужно ввести название').min(4, 'Минимум 4 символа'),
   body: string(),
   category_id: number().required('Нужно выбрать одну из категорий'),
-  selectedDate: yupDate().min(new Date()).required('Нужно выбрать дату'),
+  selectedDate: yupDate()
+    .min(date, 'Минимальный срок выполнения задачи - следующий день')
+    .required('Нужно выбрать дату'),
 })
 
 const submitHandler = async (values: TKanbanCard & { category_id: number; body: string }) => {
@@ -43,13 +45,9 @@ const submitHandler = async (values: TKanbanCard & { category_id: number; body: 
   emit('closeModal')
 }
 
-const setDate = (selectedDate: Date) => {
-  date.value = selectedDate
-}
-
 onMounted(async () => {
   await categories.fetchCategories()
-  console.log(categories.categories)
+  date.setDate(date.getDate() + 1)
 })
 </script>
 
@@ -99,7 +97,7 @@ onMounted(async () => {
           </fieldset>
         </div>
         <div>
-          <VCalendar @set-date="setDate" />
+          <VCalendar />
           <Transition name="slide-fade" class="field__error field__error--categories"
             ><p v-if="errors.selectedDate">{{ errors.selectedDate }}</p></Transition
           >
