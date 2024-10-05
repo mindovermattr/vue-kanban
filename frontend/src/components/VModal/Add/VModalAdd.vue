@@ -52,7 +52,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <VModal v-if="isVisible" @closeModal="emit('closeModal')">
+  <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
     <Form
       :validation-schema="validationScheme"
       @click.stop
