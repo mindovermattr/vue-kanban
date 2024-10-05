@@ -1,26 +1,34 @@
 <script setup lang="ts">
 import VButton from '@/components/VButton.vue'
 import VCategory from '@/components/VCategory.vue'
+import { useCardStore } from '@/store/useCardsStore'
+import { useCategoryStore } from '@/store/useCategoryStore'
 import { EStatus } from '@/types/EStatus'
+import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { Form } from 'vee-validate'
 import { ref } from 'vue'
 import VModal from '../VModal.vue'
 
 interface IProps {
   isVisible: boolean
+  cardId: number
 }
-defineProps<IProps>()
+
+const categories = useCategoryStore()
+const cards = useCardStore()
+const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
 const isRedacting = ref(false)
+const currentCard = ref<TCardResponse | undefined>(cards.cards.find((el) => el.id === props.cardId))
 </script>
 
 <template>
-  <VModal v-if="isVisible" @closeModal="emit('closeModal')">
+  <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
     <Form @click.stop class="modal__update update-modal">
       <div class="update-modal__header">
         <h3 class="update-modal__title">Название задачи</h3>
-        <VCategory :category_id="1" :checked="true" name="web" :category="{}" />
+        <VCategory v-bind="currentCard?.category" :checked="true" />
       </div>
       <div class="update-modal__status status">
         <h4 class="status__name">Статус</h4>
@@ -39,16 +47,7 @@ const isRedacting = ref(false)
           </template>
         </TransitionGroup>
       </div>
-      <VButton
-        type="button"
-        @click="
-          () => {
-            isRedacting = !isRedacting
-          }
-        "
-        variant="contained"
-        >asd</VButton
-      >
+      <VButton type="button" variant="contained">asd</VButton>
     </Form>
   </VModal>
 </template>

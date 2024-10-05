@@ -3,12 +3,9 @@ import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
 import { useDND } from '@/helpers/useDND'
 import { useCardStore } from '@/store/useCardsStore'
 import { EStatus } from '@/types/EStatus'
-import { type TKanbanItems } from '@/types/TKanban'
-import { onMounted, provide, ref } from 'vue'
+import { onMounted, provide } from 'vue'
 
 const card = useCardStore()
-
-const kanbanCards = ref<TKanbanItems>({} as TKanbanItems)
 
 const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(card.filtredCards)
 

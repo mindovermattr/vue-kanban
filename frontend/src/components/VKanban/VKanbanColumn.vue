@@ -88,6 +88,9 @@ const isDragging = inject<{
 <style lang="scss" scoped>
 .column {
   margin-top: 38.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   &__title {
     color: rgb(148, 166, 190);
     font-size: 1.75rem;
@@ -107,7 +110,7 @@ const isDragging = inject<{
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .list-move,

@@ -1,19 +1,30 @@
 <script setup lang="ts">
 import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import VCategory from '../VCategory.vue'
+import VModalUpdate from '../VModal/Update/VModalUpdate.vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps extends TCardResponse {}
 
-const props = defineProps<IProps>()
+defineProps<IProps>()
 
 const isDragging = inject<{
   value: boolean
   id: number | null
   isHided: boolean
 }>('isDragging')!
+
+const isModalVisible = ref(false)
+
+const closeModal = () => {
+  isModalVisible.value = false
+}
+
+const openModal = () => {
+  isModalVisible.value = true
+}
 
 const onDragEnd = () => {
   isDragging.value = false
@@ -27,13 +38,14 @@ const onDragEnd = () => {
   <article v-else class="card" @dragend="onDragEnd">
     <header class="card__header">
       <VCategory :is-field="false" class="card__category" v-bind="category" />
-      <button class="card__button">...</button>
+      <button @click="openModal" class="card__button">...</button>
     </header>
     <h4 class="card__title">{{ name }}</h4>
     <footer class="card__footer">
       <CalendarIcon />
       <p class="card__date">{{ period }}</p>
     </footer>
+    <VModalUpdate :card-id="id" :is-visible="isModalVisible" @closeModal="closeModal" />
   </article>
 </template>
 
