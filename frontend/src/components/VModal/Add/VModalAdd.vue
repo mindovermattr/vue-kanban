@@ -149,6 +149,7 @@ onMounted(async () => {
   margin-top: 14px;
   max-width: 376px;
   overflow-x: scroll;
+  padding-bottom: 20px;
   &__item {
     padding: 10px 20px;
     white-space: nowrap;
@@ -173,7 +174,7 @@ onMounted(async () => {
     margin-top: 14px;
 
     height: 200px;
-    width: 376px;
+    width: 100%;
 
     border: 0.7px solid rgba(148, 166, 190, 0.4);
     border-radius: 8px;
