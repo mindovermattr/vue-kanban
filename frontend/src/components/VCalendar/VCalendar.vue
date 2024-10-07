@@ -42,6 +42,7 @@
       </div>
       <p class="calendar__text">
         Срок исполнения: <span class="calendar__text calendar__text--bold">{{ formatedDate }}</span>
+        {{ value }}
       </p>
     </div>
   </fieldset>
@@ -89,9 +90,8 @@ const dayClickHandler = (item: TDays) => {
   emit('setDate', date.value)
 }
 
-const { handleChange } = useField('selectedDate', undefined, {
+const { handleChange, value } = useField('selectedDate', undefined, {
   type: 'radio',
-  checkedValue: date.value,
 })
 </script>
 

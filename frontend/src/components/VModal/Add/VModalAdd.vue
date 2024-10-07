@@ -31,7 +31,10 @@ const validationScheme = object({
     .required('Нужно выбрать дату'),
 })
 
-const submitHandler = async (values: TKanbanCard & { category_id: number; body: string }) => {
+const submitHandler = async (
+  values: TKanbanCard & { category_id: number; body: string; selectedDate: Date }
+) => {
+  console.log(values.selectedDate)
   const newCard = {
     status: EStatus.NoStatus,
     category_id: values.category_id,
