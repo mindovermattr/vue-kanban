@@ -2,22 +2,23 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
+import VModalAddCategory from './VModal/Add/Category/VModalAddCategory.vue'
 import VModalAdd from './VModal/Add/VModalAdd.vue'
 
 const isAddModalVisible = ref(false)
-const isUpdateModalVisible = ref(false)
+const isCategoryModal = ref(false)
 
 const openAddModalHandler = () => {
   isAddModalVisible.value = true
 }
-const openUpdateModalHandler = () => {
-  isUpdateModalVisible.value = true
+const openCategoryModalHandler = () => {
+  isCategoryModal.value = true
 }
 const closeAddModalHandler = () => {
   isAddModalVisible.value = false
 }
-const closeUpdateModalHandler = () => {
-  isUpdateModalVisible.value = false
+const closeCategoryModalHandler = () => {
+  isCategoryModal.value = false
 }
 const router = useRouter()
 const clickHander = () => {
@@ -30,7 +31,7 @@ const clickHander = () => {
     <h1 class="header__title">KamBam</h1>
 
     <div class="header__controls controls">
-      <VButton variant="contained" @click="openUpdateModalHandler"> Создать категорию </VButton>
+      <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
       <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
       <VButton variant="text" @click="clickHander" class="controls__button controls__button--text">
         Ivan ivanov
@@ -38,7 +39,7 @@ const clickHander = () => {
     </div>
   </header>
   <VModalAdd @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
-  <!-- <VModalUpdate @closeModal="closeUpdateModalHandler" :is-visible="isUpdateModalVisible" /> -->
+  <VModalAddCategory @closeModal="closeCategoryModalHandler" :is-visible="isCategoryModal" />
 </template>
 
 <style lang="scss" scoped>

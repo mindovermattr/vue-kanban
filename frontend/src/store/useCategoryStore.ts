@@ -22,8 +22,9 @@ export const useCategoryStore = defineStore('categories', {
       }
     },
 
-    async addCategory(category: TCategory) {
+    async addCategory(category: Omit<TCategory, 'id'>) {
       await categoriesApi.addCategory(category)
+      await this.fetchCategories()
     },
   },
 })

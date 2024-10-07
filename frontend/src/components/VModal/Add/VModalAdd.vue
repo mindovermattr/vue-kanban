@@ -32,7 +32,6 @@ const validationScheme = object({
 })
 
 const submitHandler = async (values: TKanbanCard & { category_id: number; body: string }) => {
-  console.log(values)
   const newCard = {
     status: EStatus.NoStatus,
     category_id: values.category_id,

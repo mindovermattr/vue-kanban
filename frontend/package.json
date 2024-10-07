@@ -19,6 +19,7 @@
     "vee-validate": "^4.13.2",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
+    "vue3-colorpicker": "^2.3.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {

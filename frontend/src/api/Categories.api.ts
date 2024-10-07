@@ -10,9 +10,11 @@ export const getCategories = async (): Promise<TCategory[] | undefined> => {
   }
 }
 
-export const addCategory = async (category: TCategory): Promise<TCategory | undefined> => {
+export const addCategory = async (
+  category: TCategory
+): Promise<Omit<TCategory, 'id'> | undefined> => {
   try {
-    const response = await instance.post<TCategory>(`/categories`, category)
+    const response = await instance.post<Omit<TCategory, 'id'>>(`/categories`, category)
     return response.data
   } catch (error) {
     console.log(error)
