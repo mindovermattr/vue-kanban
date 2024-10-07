@@ -147,8 +147,11 @@ onMounted(async () => {
   display: flex;
   gap: 8px;
   margin-top: 14px;
+  max-width: 376px;
+  overflow-x: scroll;
   &__item {
     padding: 10px 20px;
+    white-space: nowrap;
   }
 }
 .field {
