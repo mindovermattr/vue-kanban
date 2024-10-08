@@ -65,7 +65,7 @@ export const useCardStore = defineStore('cards', {
 
     async addCard(card: TKanbanCard & { category_id: number }) {
       await addCardApi(card)
-      console.log(await getCardsApi())
+      await this.fetchCards()
     },
   },
 })
