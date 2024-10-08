@@ -136,11 +136,7 @@ const { handleChange, value } = useField('selectedDate', undefined, {
         grid-column: $i;
       }
     }
-    @for $i from 1 through 31 {
-      &--delay-#{$i} {
-        animation-delay: $i * 0.05s;
-      }
-    }
+
     &--0 {
       grid-column: 7;
     }

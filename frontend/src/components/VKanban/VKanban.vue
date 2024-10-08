@@ -7,7 +7,7 @@ import { onMounted, provide } from 'vue'
 
 const card = useCardStore()
 
-const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(card.filtredCards)
+const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND()
 
 onMounted(async () => {
   await card.fetchCards()

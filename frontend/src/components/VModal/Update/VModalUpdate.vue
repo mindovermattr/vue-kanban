@@ -20,15 +20,17 @@ const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
 const isRedacting = ref(false)
-const currentCard = ref<TCardResponse | undefined>(cards.cards.find((el) => el.id === props.cardId))
+const currentCard = ref<TCardResponse | undefined>(
+  cards.cards.find((el) => el.category_id === props.cardId)
+)
 </script>
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <Form @click.stop class="modal__update update-modal">
+    <Form class="modal__update update-modal">
       <div class="update-modal__header">
         <h3 class="update-modal__title">Название задачи</h3>
-        <VCategory v-bind="currentCard?.category" :checked="true" />
+        <VCategory v-bind="currentCard!.category" />
       </div>
       <div class="update-modal__status status">
         <h4 class="status__name">Статус</h4>

@@ -2,7 +2,6 @@
 import VKanbanCard from '@/components/VKanban/VKanbanCard.vue'
 import { type EStatusKeys } from '@/types/EStatus'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
-import type { TKanbanCard } from '@/types/TKanban'
 import { inject, ref } from 'vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 
@@ -14,7 +13,7 @@ const props = defineProps<IProps>()
 
 const emit = defineEmits<{
   (e: 'onDropDragEvent', event: DragEvent, column: EStatusKeys): void
-  (e: 'onDragStart', event: DragEvent, item: TKanbanCard): void
+  (e: 'onDragStart', event: DragEvent, item: TCardResponse): void
 }>()
 
 const titles: Record<EStatusKeys, string> = {

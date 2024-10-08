@@ -6,7 +6,7 @@ import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { EStatus } from '@/types/EStatus'
 import type { TKanbanCard } from '@/types/TKanban'
-import { Field, Form } from 'vee-validate'
+import { Field, Form, useForm } from 'vee-validate'
 import { onMounted } from 'vue'
 import { number, object, string, date as yupDate } from 'yup'
 import VModal from '../VModal.vue'
@@ -14,6 +14,9 @@ import VModal from '../VModal.vue'
 interface IProps {
   isVisible: boolean
 }
+
+type IForm = TKanbanCard & { selectedDate: Date }
+
 defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
@@ -22,7 +25,7 @@ const categories = useCategoryStore()
 
 const date = new Date()
 
-const validationScheme = object({
+const validationScheme = object<IForm>({
   name: string().required('Нужно ввести название').min(4, 'Минимум 4 символа'),
   body: string(),
   category_id: number().required('Нужно выбрать одну из категорий'),
@@ -30,12 +33,10 @@ const validationScheme = object({
     .min(date, 'Минимальный срок выполнения задачи - следующий день')
     .required('Нужно выбрать дату'),
 })
+const { handleSubmit } = useForm<IForm>()
 
-const submitHandler = async (
-  values: TKanbanCard & { category_id: number; body: string; selectedDate: Date }
-) => {
-  console.log(values.selectedDate)
-  const newCard = {
+const submitHandler = handleSubmit(async (values: IForm) => {
+  const newCard: TKanbanCard = {
     status: EStatus.NoStatus,
     category_id: values.category_id,
     name: values.name,
@@ -45,7 +46,7 @@ const submitHandler = async (
 
   await cards.addCard(newCard)
   emit('closeModal')
-}
+})
 
 onMounted(async () => {
   await categories.fetchCategories()
@@ -55,12 +56,7 @@ onMounted(async () => {
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <Form
-      :validation-schema="validationScheme"
-      @click.stop
-      @submit="submitHandler"
-      v-slot="{ errors }"
-    >
+    <Form :validation-schema="validationScheme" @submit="submitHandler" v-slot="{ errors }">
       <h2 class="modal__title">Создание задачи</h2>
       <div class="modal__fields fields">
         <div class="fields__wrapper">

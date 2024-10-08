@@ -28,12 +28,11 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 
 <template>
   <VModal :is-visible="isVisible" @close-modal="emit('closeModal')">
-    <form class="modal-update__form form" @click.stop>
+    <form class="modal-update__form form">
       <h2 class="form__title">Создать новую категорию</h2>
-      {{ name }}
       <fieldset class="form__field field">
         <legend class="field__title">Имя категории</legend>
-        <input v-model="name" type="text" />
+        <input class="field__input" v-model="name" type="text" />
       </fieldset>
       <div class="colors">
         <fieldset class="form__field field">
@@ -70,6 +69,12 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   &__title {
     font-size: 1.75rem;
     margin-bottom: 10px;
+  }
+  &__input {
+    width: 100%;
+    padding: 14px;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    border-radius: 8px;
   }
 }
 

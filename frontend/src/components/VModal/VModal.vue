@@ -11,7 +11,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   <Teleport to="body">
     <Transition name="fade">
       <div v-if="isVisible" class="modal-wrapper" @click="emit('closeModal')">
-        <div class="modal">
+        <div @click.stop class="modal">
           <slot> </slot>
         </div>
       </div>
