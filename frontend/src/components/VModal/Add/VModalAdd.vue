@@ -35,7 +35,7 @@ const validationScheme = object<IForm>({
 })
 const { handleSubmit } = useForm<IForm>()
 
-const submitHandler = handleSubmit(async (values: IForm) => {
+const submitHandler = async (values: IForm) => {
   const newCard: TKanbanCard = {
     status: EStatus.NoStatus,
     category_id: values.category_id,
@@ -44,9 +44,10 @@ const submitHandler = handleSubmit(async (values: IForm) => {
     body: values.body,
   }
 
+  console.log(values)
   await cards.addCard(newCard)
   emit('closeModal')
-})
+}
 
 onMounted(async () => {
   await categories.fetchCategories()

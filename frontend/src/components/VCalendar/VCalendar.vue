@@ -42,7 +42,6 @@
       </div>
       <p class="calendar__text">
         Срок исполнения: <span class="calendar__text calendar__text--bold">{{ formatedDate }}</span>
-        {{ value }}
       </p>
     </div>
   </fieldset>

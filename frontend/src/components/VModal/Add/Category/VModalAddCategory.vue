@@ -72,9 +72,12 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   }
   &__input {
     width: 100%;
+    height: 100%;
     padding: 14px;
     border: 0.7px solid rgba(148, 166, 190, 0.4);
     border-radius: 8px;
+
+    font-size: 1.75rem;
   }
 }
 

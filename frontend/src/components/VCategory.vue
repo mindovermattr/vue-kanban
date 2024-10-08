@@ -33,6 +33,9 @@ const { handleChange, checked } = useField('category_id', undefined, {
   font-weight: 600;
   line-height: 10px;
   padding: 10px 20px;
+  max-width: 70px;
+
+  overflow: hidden;
 
   border-radius: 18px;
   transition: 0.3s;

@@ -11,7 +11,7 @@ export const getCards = async (): Promise<TCardResponse[] | undefined> => {
   }
 }
 
-export const addCard = async (card: TKanbanCard & { category_id: number }) => {
+export const addCard = async (card: TKanbanCard) => {
   try {
     await instance.post<TKanbanCard>(`/tasks`, card)
   } catch (error) {
