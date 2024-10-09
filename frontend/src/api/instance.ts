@@ -3,3 +3,7 @@ import axios from 'axios'
 export const instance = axios.create({
   baseURL: 'http://localhost:3000',
 })
+
+export const protectedInstance = axios.create({
+  baseURL: 'http://localhost:3000',
+})
