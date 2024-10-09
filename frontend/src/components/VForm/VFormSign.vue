@@ -8,14 +8,24 @@
     >
       <h2 class="form__title">{{ signUp ? 'Регистрация' : 'Вход' }}</h2>
       <div class="form__fields">
-        <fieldset v-if="signUp" class="form__field">
-          <Field v-if="signUp" name="userName" type="text" class="form__input" placeholder="Имя" />
-        </fieldset>
+        <template v-if="signUp">
+          <fieldset class="form__field">
+            <Field name="userName" type="text" class="form__input" placeholder="Имя" />
+          </fieldset>
+        </template>
         <fieldset class="form__field">
           <Field name="email" type="email" class="form__input" placeholder="Эл. почта" />
         </fieldset>
         <fieldset class="form__field">
           <Field name="password" type="password" class="form__input" placeholder="Пароль" />
+        </fieldset>
+        <fieldset v-if="signUp" class="form__field">
+          <Field
+            name="passwordConfirm"
+            type="password"
+            class="form__input"
+            placeholder="Подтверждение пароля"
+          />
         </fieldset>
       </div>
       <VButton
@@ -29,6 +39,7 @@
         <ErrorMessage as="p" class="form__error" name="email" />
         <ErrorMessage as="p" class="form__error" name="password" />
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="userName" />
+        <ErrorMessage as="p" v-if="signUp" class="form__error" name="passwordConfirm" />
       </div>
       <footer class="form__footer footer">
         <p class="footer__text">{{ signUp ? 'Уже есть аккаунт' : 'Еще нет аккаунта?' }}</p>
@@ -47,7 +58,7 @@ import type { TFormValues } from '@/types/TFormValues'
 import { ErrorMessage, Field, Form } from 'vee-validate'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { object, string } from 'yup'
+import { object, ref, string } from 'yup'
 import VButton from '../VButton.vue'
 
 interface IProps {
@@ -59,15 +70,26 @@ const props = defineProps<IProps>()
 const formScheme = computed(() => {
   if (!props.signUp) {
     return object<TFormValues>({
-      email: string().required().email(),
-      password: string().required().min(6),
+      email: string()
+        .required('Поле email обязательно к заполнению')
+        .email('В поле email некорректная почта'),
+      password: string()
+        .required('Поле пароль обязательно к заполнению')
+        .min(6, 'Минимум 6 символов у пароля'),
     })
   } else {
     console.log('object')
     return object<TFormValues>({
-      userName: string().required().min(4),
-      email: string().required().email(),
-      password: string().required().min(6),
+      userName: string().required('Поле имя обязательно к заполнению'),
+      email: string()
+        .required('Поле email пароль к заполнению')
+        .email('В поле email некорректная почта'),
+      password: string()
+        .required('Поле пароль обязательно к заполнению')
+        .min(6, 'Минимум 6 символов у пароля'),
+      passwordConfirm: string()
+        .required('Поле подтверждение пароля должно быть заполнено')
+        .oneOf([ref('password')], 'Пароли должны совпадать'),
     })
   }
 })
