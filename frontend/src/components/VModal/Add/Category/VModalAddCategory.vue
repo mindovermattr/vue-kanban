@@ -30,7 +30,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   <VModal :is-visible="isVisible" @close-modal="emit('closeModal')">
     <form class="modal-update__form form">
       <h2 class="form__title">Создать новую категорию</h2>
-      <fieldset class="form__field field">
+      <fieldset class="form__field field field--fix">
         <legend class="field__title">Имя категории</legend>
         <input class="field__input" v-model="name" type="text" />
       </fieldset>
@@ -42,7 +42,12 @@ const emit = defineEmits<(e: 'closeModal') => void>()
         </fieldset>
         <fieldset class="form__field field">
           <legend class="field__title">Цвет фона</legend>
-          <ColorPicker pickerType="chrome" format="hex" v-model:pureColor="accentColor" />
+          <ColorPicker
+            class="color"
+            pickerType="chrome"
+            format="hex"
+            v-model:pureColor="accentColor"
+          />
           {{ accentColor }}
         </fieldset>
       </div>
@@ -59,7 +64,6 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   display: flex;
   flex-direction: column;
   gap: 15px;
-  padding: 20px 40px;
   &__title {
     font-size: 2.5rem;
   }
@@ -78,6 +82,9 @@ const emit = defineEmits<(e: 'closeModal') => void>()
     border-radius: 8px;
 
     font-size: 1.75rem;
+  }
+  &--fix {
+    max-height: 71px;
   }
 }
 

@@ -7,7 +7,7 @@
     }"
     :style="{ backgroundColor: accent_color, color: main_color }"
   >
-    {{ name }} {{ id }}
+    {{ name }}
   </div>
 </template>
 
@@ -33,7 +33,7 @@ const { handleChange, checked } = useField('category_id', undefined, {
   font-weight: 600;
   line-height: 10px;
   padding: 10px 20px;
-  max-width: 70px;
+  max-width: 75px;
 
   overflow: hidden;
 
