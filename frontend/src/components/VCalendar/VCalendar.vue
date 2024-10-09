@@ -89,7 +89,7 @@ const dayClickHandler = (item: TDays) => {
   emit('setDate', date.value)
 }
 
-const { handleChange, value } = useField('selectedDate', undefined, {
+const { handleChange } = useField('selectedDate', undefined, {
   type: 'radio',
 })
 </script>

@@ -16,6 +16,7 @@ type IProps = {
   variant: 'contained' | 'outlined' | 'text'
   disabled?: boolean
 }
+
 defineProps<IProps>()
 </script>
 

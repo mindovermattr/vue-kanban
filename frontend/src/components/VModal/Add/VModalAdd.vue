@@ -6,7 +6,7 @@ import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { EStatus } from '@/types/EStatus'
 import type { TKanbanCard } from '@/types/TKanban'
-import { Field, Form, useForm } from 'vee-validate'
+import { Field, Form } from 'vee-validate'
 import { onMounted } from 'vue'
 import { number, object, string, date as yupDate } from 'yup'
 import VModal from '../VModal.vue'
@@ -33,7 +33,6 @@ const validationScheme = object<IForm>({
     .min(date, 'Минимальный срок выполнения задачи - следующий день')
     .required('Нужно выбрать дату'),
 })
-const { handleSubmit } = useForm<IForm>()
 
 const submitHandler = async (values: IForm) => {
   const newCard: TKanbanCard = {
