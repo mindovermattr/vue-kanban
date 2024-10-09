@@ -1,4 +1,4 @@
-import { signUp } from '@/api/User.api'
+import { login, signUp } from '@/api/User.api'
 import type { TUser } from '@/types/User'
 import { defineStore } from 'pinia'
 
@@ -25,8 +25,15 @@ export const useUserStore = defineStore('user', {
         )
     },
     login: async (user: { user: TUser }) => {
-      const u = JSON.parse(localStorage.getItem('user')!).token
-      console.log(u)
+      const response = await login(user)
+      if (response?.data)
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            user: response?.data,
+            token: response?.token,
+          })
+        )
     },
   },
 })

@@ -40,6 +40,7 @@ const { handleChange, checked } = useField('category_id', undefined, {
   border-radius: 18px;
   transition: 0.3s;
   opacity: 1;
+  text-overflow: ellipsis;
   &--selection {
     opacity: 0.4;
   }

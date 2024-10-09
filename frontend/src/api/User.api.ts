@@ -18,7 +18,10 @@ export const login = async (user: TUser) => {
   try {
     const response = await instance.post('login', user)
 
-    console.log(respose)
+    return {
+      data: response.data,
+      token: response.headers['authorization'].split(' ')[1],
+    }
   } catch (error) {
     console.error(error)
   }

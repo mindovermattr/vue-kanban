@@ -102,7 +102,7 @@ const submitHandler = async (values: TFormValues) => {
         class="form__button"
         variant="contained"
       >
-        Войти
+        {{ signUp ? 'Зарегистироваться' : 'Войти' }}
       </VButton>
       <div v-if="!meta.valid" class="form__validation-errors">
         <ErrorMessage as="p" class="form__error" name="email" />
