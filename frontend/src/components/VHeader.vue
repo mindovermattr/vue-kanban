@@ -22,7 +22,7 @@ const closeCategoryModalHandler = () => {
 }
 const router = useRouter()
 const clickHander = () => {
-  router.push('/SignUp/')
+  router.push('/sign-up/')
 }
 </script>
 

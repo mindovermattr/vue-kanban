@@ -44,7 +44,7 @@
       <footer class="form__footer footer">
         <p class="footer__text">{{ signUp ? 'Уже есть аккаунт' : 'Еще нет аккаунта?' }}</p>
         <p class="footer__text">
-          <RouterLink class="footer__link" :to="signUp ? '/signIn' : '/signUp'">{{
+          <RouterLink class="footer__link" :to="signUp ? '/sign-in' : '/sign-up'">{{
             signUp ? 'Войдите здесь' : 'Регистрируйтесь здесь'
           }}</RouterLink>
         </p>
