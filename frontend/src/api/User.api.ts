@@ -6,7 +6,7 @@ export const signUp = async (user: TUser) => {
     const response = await instance.post('signup', user)
 
     return {
-      data: response.data,
+      data: response.data.data,
       token: response.headers['authorization'].split(' ')[1],
     }
   } catch (error) {

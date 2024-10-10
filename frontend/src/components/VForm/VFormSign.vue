@@ -27,7 +27,6 @@ const formScheme = computed(() => {
         .min(6, 'Минимум 6 символов у пароля'),
     })
   } else {
-    console.log('object')
     return object<TFormValues>({
       userName: string().required('Поле имя обязательно к заполнению'),
       email: string()
@@ -55,8 +54,6 @@ const submitHandler = async (values: TFormValues) => {
     }
 
     await user.register(newUser)
-    router.push({ name: 'home' })
-    return
   } else {
     const loginUser = {
       user: {
@@ -65,9 +62,8 @@ const submitHandler = async (values: TFormValues) => {
       },
     }
     await user.login(loginUser)
-    router.push({ name: 'home' })
-    return
   }
+  router.push({ name: 'home' })
 }
 </script>
 <template>

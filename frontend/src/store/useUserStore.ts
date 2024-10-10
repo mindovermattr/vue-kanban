@@ -23,7 +23,6 @@ export const useUserStore = defineStore('user', {
             token: resp?.token,
           })
         )
-        localStorage.setItem('password', JSON.stringify(user.user.password))
       }
     },
     login: async (user: { user: TUser }) => {
@@ -37,7 +36,6 @@ export const useUserStore = defineStore('user', {
             token: response?.token,
           })
         )
-        localStorage.setItem('password', JSON.stringify(user.user.password))
       }
     },
   },
