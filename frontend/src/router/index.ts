@@ -1,3 +1,4 @@
+import { getUserFromLS } from '@/helpers/getUserFromLS'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
@@ -22,6 +23,19 @@ const router = createRouter({
       props: { signUp: true },
     },
   ],
+})
+
+router.beforeEach((to) => {
+  const isAuth = getUserFromLS()
+  if (isAuth) {
+    return { name: to.name }
+  } else {
+    if (to.name === 'SignIn' || to.name === 'SignUp') {
+      return true
+    } else {
+      return { name: 'SignIn' }
+    }
+  }
 })
 
 export default router
