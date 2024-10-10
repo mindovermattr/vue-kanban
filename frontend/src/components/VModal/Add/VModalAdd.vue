@@ -5,6 +5,7 @@ import VCategory from '@/components/VCategory.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { EStatus } from '@/types/EStatus'
+import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanCard } from '@/types/TKanban'
 import { Field, Form } from 'vee-validate'
 import { onMounted } from 'vue'
@@ -35,7 +36,7 @@ const validationScheme = object<IForm>({
 })
 
 const submitHandler = async (values: IForm) => {
-  const newCard: TKanbanCard = {
+  const newCard: Omit<TCardResponse, 'id' | 'category'> = {
     status: EStatus.NoStatus,
     category_id: values.category_id,
     name: values.name,
@@ -43,7 +44,6 @@ const submitHandler = async (values: IForm) => {
     body: values.body,
   }
 
-  console.log(values)
   await cards.addCard(newCard)
   emit('closeModal')
 }

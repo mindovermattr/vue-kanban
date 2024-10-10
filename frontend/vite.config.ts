@@ -7,10 +7,14 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [vue()],
   base: '/vue-kanban/',
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+  },
+  define: {
+    VITE_BACKEND_URL: JSON.stringify(process.env.VITE_BACKEND_URL),
   },
   css: {
     preprocessorOptions: {
@@ -21,5 +25,12 @@ export default defineConfig({
         `,
       },
     },
+  },
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    host: true,
+    port: 5173,
   },
 })

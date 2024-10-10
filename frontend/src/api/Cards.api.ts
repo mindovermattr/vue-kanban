@@ -4,22 +4,25 @@ import { protectedInstance } from './instance'
 
 export const getCards = async (): Promise<TCardResponse[] | undefined> => {
   try {
-    console.log(JSON.parse(localStorage.getItem('user')).token)
-    const response = await protectedInstance.get<TCardResponse[]>(`/tasks`, {
-      headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('user')).token}` },
-    })
+    const response = await protectedInstance.get<TCardResponse[]>(`/tasks`)
     return response.data
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
 export const addCard = async (card: TKanbanCard) => {
   try {
-    await protectedInstance.post<TKanbanCard>(`/tasks`, card, {
-      headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('user')).token}` },
-    })
+    await protectedInstance.post<TKanbanCard>(`/tasks`, card)
   } catch (error) {
-    console.log(error)
+    console.error(error)
+  }
+}
+
+export const updateCard = async (card: TCardResponse) => {
+  try {
+    await protectedInstance.put('/tasks', card)
+  } catch (e) {
+    console.error(e)
   }
 }
