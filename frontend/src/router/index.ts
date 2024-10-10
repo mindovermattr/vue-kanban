@@ -28,7 +28,7 @@ const router = createRouter({
 router.beforeEach((to) => {
   const isAuth = getUserFromLS()
   if (isAuth) {
-    return { name: to.name }
+    return true
   } else {
     if (to.name === 'SignIn' || to.name === 'SignUp') {
       return true

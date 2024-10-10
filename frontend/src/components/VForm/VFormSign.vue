@@ -3,7 +3,7 @@ import { useUserStore } from '@/store/useUserStore'
 import type { TFormValues } from '@/types/TFormValues'
 import { ErrorMessage, Field, Form } from 'vee-validate'
 import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { object, ref, string } from 'yup'
 import VButton from '../VButton.vue'
 
@@ -11,6 +11,7 @@ interface IProps {
   signUp: boolean
 }
 
+const router = useRouter()
 const props = defineProps<IProps>()
 
 const user = useUserStore()
@@ -54,6 +55,7 @@ const submitHandler = async (values: TFormValues) => {
     }
 
     await user.register(newUser)
+    router.push({ name: 'home' })
     return
   } else {
     const loginUser = {
@@ -63,6 +65,8 @@ const submitHandler = async (values: TFormValues) => {
       },
     }
     await user.login(loginUser)
+    router.push({ name: 'home' })
+    return
   }
 }
 </script>
@@ -104,7 +108,7 @@ const submitHandler = async (values: TFormValues) => {
       >
         {{ signUp ? 'Зарегистироваться' : 'Войти' }}
       </VButton>
-      <div v-if="!meta.valid" class="form__validation-errors">
+      <div class="form__validation-errors">
         <ErrorMessage as="p" class="form__error" name="email" />
         <ErrorMessage as="p" class="form__error" name="password" />
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="userName" />

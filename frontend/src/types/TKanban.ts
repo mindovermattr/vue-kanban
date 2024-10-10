@@ -5,7 +5,7 @@ type TKanbanCard = {
   id: number
   category_id: number
   name: string
-  period: Date
+  period: Date | string
   body: string
   status: EStatus
 }

@@ -15,18 +15,21 @@ export const useUserStore = defineStore('user', {
   actions: {
     register: async (user: { user: TUser }) => {
       const resp = await signUp(user)
-      if (resp?.data)
+      if (resp?.data) {
         localStorage.setItem(
           'user',
           JSON.stringify({
-            user: resp?.data,
+            user: resp?.data.data,
             token: resp?.token,
           })
         )
+        localStorage.setItem('password', JSON.stringify(user.user.password))
+      }
     },
     login: async (user: { user: TUser }) => {
       const response = await login(user)
-      if (response?.data)
+
+      if (response?.data) {
         localStorage.setItem(
           'user',
           JSON.stringify({
@@ -34,6 +37,8 @@ export const useUserStore = defineStore('user', {
             token: response?.token,
           })
         )
+        localStorage.setItem('password', JSON.stringify(user.user.password))
+      }
     },
   },
 })

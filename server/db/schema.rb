@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_07_211811) do
     t.string "name", null: false
     t.text "body", null: false
     t.bigint "category_id", null: false
-    t.string "status", default: "noStatus", null: false
+    t.string "status", null: false
     t.date "period", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

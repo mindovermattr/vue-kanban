@@ -14,12 +14,11 @@ export const signUp = async (user: TUser) => {
   }
 }
 
-export const login = async (user: TUser) => {
+export const login = async (user: { user: TUser }) => {
   try {
     const response = await instance.post('login', user)
-
     return {
-      data: response.data,
+      data: response.data.data,
       token: response.headers['authorization'].split(' ')[1],
     }
   } catch (error) {

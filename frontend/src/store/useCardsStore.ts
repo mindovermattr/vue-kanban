@@ -35,10 +35,12 @@ export const useCardStore = defineStore('cards', {
         testing: [],
       } as TKanbanItems
       cards.forEach((el) => {
-        filtred[el.status].push(el)
+        filtred[el.status].push({
+          ...el,
+          category_id: el.category.id,
+        })
       })
       this.filtredCards = filtred
-      console.log(filtred)
     },
 
     replaceCard(selectedStatus: EStatusKeys, itemStatus: EStatus, itemID: string) {
