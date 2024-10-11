@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
+import VModalAdd from './VModal/Add/Card/VModalAddCard.vue'
 import VModalAddCategory from './VModal/Add/Category/VModalAddCategory.vue'
-import VModalAdd from './VModal/Add/VModalAdd.vue'
 
 const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)
