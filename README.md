@@ -4,8 +4,7 @@
 ## Первая итерация макета:
 https://www.figma.com/design/hsD0zFp8xZOeXRqwggfrpP/Дизайн-макета-сайта.-React.-Веб-разработчик-(Copy)?node-id=0-1&node-type=canvas&t=5ZpOwFpXTZ4VSlmT-0
 
-## UI-kit
-https://www.figma.com/design/kkdTr0WiJ5wzcoWXjMpwD7/dm?node-id=5-1836&node-type=frame&t=dlADPFwFCcm1MaTX-0
+
 
 ## Основная работа ведется в Гитхабе:
 https://github.com/mindovermattr/vue-kanban
