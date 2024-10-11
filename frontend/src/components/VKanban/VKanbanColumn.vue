@@ -57,14 +57,6 @@ const isDragging = inject<{
     <h3 class="column__title">{{ titles[column] }}</h3>
 
     <TransitionGroup name="list" tag="div" class="cards">
-      <!-- <VKanbanDropzone
-        v-if="isDragging.value"
-        :is-selected="isDropzoneSelected"
-        @drop="onDrop($event)"
-        @dragover.prevent
-        @dragenter.prevent="onDragEnter"
-        @dragleave="onDragLeave"
-      /> -->
       <VKanbanCard
         v-for="item in items"
         v-bind="item"
@@ -99,10 +91,6 @@ const isDragging = inject<{
   &--dragging {
     padding-bottom: 70px;
   }
-}
-
-.anim {
-  animation: none !important;
 }
 
 .cards {

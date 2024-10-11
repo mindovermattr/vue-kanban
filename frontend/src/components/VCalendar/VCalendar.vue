@@ -102,9 +102,7 @@ const { handleChange } = useField('selectedDate', undefined, {
   margin-top: 19px;
   &__title {
     color: $gray-text-color;
-    font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 16px;
+    @include font-h5();
   }
   &__controls {
     font-size: 2rem;
@@ -127,7 +125,7 @@ const { handleChange } = useField('selectedDate', undefined, {
 
   &__item {
     color: $gray-text-color;
-    font-size: 1.25rem;
+    @include font-h7();
     text-align: center;
     transition: 0.4s;
     @for $i from 1 through 7 {

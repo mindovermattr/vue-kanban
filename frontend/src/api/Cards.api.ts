@@ -8,6 +8,7 @@ export const getCards = async (): Promise<TCardResponse[] | undefined> => {
     return response.data
   } catch (error) {
     console.error(error)
+    return error
   }
 }
 
@@ -16,13 +17,15 @@ export const addCard = async (card: TKanbanCard) => {
     await protectedInstance.post<TKanbanCard>(`/tasks`, card)
   } catch (error) {
     console.error(error)
+    return error
   }
 }
 
 export const updateCard = async (card: TCardResponse) => {
   try {
     await protectedInstance.put('/tasks', card)
-  } catch (e) {
-    console.error(e)
+  } catch (error) {
+    console.error(error)
+    return error
   }
 }

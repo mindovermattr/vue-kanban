@@ -1,4 +1,8 @@
-import { addCard as addCardApi, getCards as getCardsApi } from '@/api/Cards.api'
+import {
+  addCard as addCardApi,
+  getCards as getCardsApi,
+  updateCard as updateCardApi,
+} from '@/api/Cards.api'
 import { EStatus, type EStatusKeys } from '@/types/EStatus'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanItems } from '@/types/TKanban'
@@ -63,6 +67,9 @@ export const useCardStore = defineStore('cards', {
       if (cards) {
         this.setCards(cards)
       }
+    },
+    async updateCard(card: TCardResponse) {
+      updateCardApi(card)
     },
 
     async addCard(card: TCardResponse) {

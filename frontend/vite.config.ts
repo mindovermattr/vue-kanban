@@ -22,6 +22,7 @@ export default defineConfig({
         additionalData: `
         @import "@/assets/Variables.scss";
         @import "@/assets/Global.scss";
+        @import "@/assets/mixins/Typography.scss";
         `,
       },
     },

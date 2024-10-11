@@ -13,6 +13,6 @@ export const protectedInstance = axios.create({
 
 protectedInstance.interceptors.request.use((config) => {
   const user = getUserFromLS()
-  config.headers.Authorization = `Bearer ${user.token}`
+  if (user) config.headers.Authorization = `Bearer ${user.token}`
   return config
 })
