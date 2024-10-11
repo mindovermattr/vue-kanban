@@ -11,8 +11,6 @@ const isCategoryModal = ref(false)
 
 const userStore = useUserStore()
 
-console.log(userStore.user)
-
 const openAddModalHandler = () => {
   isAddModalVisible.value = true
 }

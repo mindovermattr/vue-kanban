@@ -111,9 +111,6 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
-* {
-  border: 1px solid red;
-}
 .modal {
   &__title {
     font-size: 2.5rem;
@@ -159,6 +156,7 @@ onMounted(async () => {
   }
 }
 .field {
+  max-height: fit-content;
   &__input {
     font-size: 1.75rem;
     font-weight: 600;
@@ -188,8 +186,7 @@ onMounted(async () => {
       outline: none;
     }
   }
-  &--category {
-  }
+
   &__error {
     color: red;
     font-size: 1.5rem;
