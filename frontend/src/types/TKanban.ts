@@ -2,9 +2,10 @@ import type { EStatus } from './EStatus'
 import type { TCardResponse } from './responses/TCardResponse'
 
 type TKanbanCard = {
+  id: number
   category_id: number
   name: string
-  period: Date
+  period: Date | string
   body: string
   status: EStatus
 }

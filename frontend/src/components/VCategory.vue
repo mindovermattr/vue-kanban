@@ -1,16 +1,3 @@
-<template>
-  <div
-    @click="handleChange(id)"
-    class="category"
-    :class="{
-      'category--selection': isField && !checked,
-    }"
-    :style="{ backgroundColor: accent_color, color: main_color }"
-  >
-    {{ name }}
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { TCategory } from '@/types/TKanban'
 import { useField } from 'vee-validate'
@@ -27,6 +14,19 @@ const { handleChange, checked } = useField('category_id', undefined, {
 })
 </script>
 
+<template>
+  <div
+    @click="handleChange(id)"
+    class="category"
+    :class="{
+      'category--selection': isField && !checked,
+    }"
+    :style="{ backgroundColor: accent_color, color: main_color }"
+  >
+    {{ name }}
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .category {
   font-size: 1.5rem;
@@ -40,6 +40,7 @@ const { handleChange, checked } = useField('category_id', undefined, {
   border-radius: 18px;
   transition: 0.3s;
   opacity: 1;
+  text-overflow: ellipsis;
   &--selection {
     opacity: 0.4;
   }

@@ -1,20 +1,28 @@
 import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { type TKanbanCard } from '@/types/TKanban'
-import { instance } from './instance'
+import { protectedInstance } from './instance'
 
 export const getCards = async (): Promise<TCardResponse[] | undefined> => {
   try {
-    const response = await instance.get<TCardResponse[]>(`/tasks`)
+    const response = await protectedInstance.get<TCardResponse[]>(`/tasks`)
     return response.data
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
 export const addCard = async (card: TKanbanCard) => {
   try {
-    await instance.post<TKanbanCard>(`/tasks`, card)
+    await protectedInstance.post<TKanbanCard>(`/tasks`, card)
   } catch (error) {
-    console.log(error)
+    console.error(error)
+  }
+}
+
+export const updateCard = async (card: TCardResponse) => {
+  try {
+    await protectedInstance.put('/tasks', card)
+  } catch (e) {
+    console.error(e)
   }
 }

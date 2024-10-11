@@ -27,7 +27,6 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   padding: 40px 30px;
   background-color: $bg-white-color;
   transform: translate(-50%, -50%);
-  max-width: 630px;
 
   &-wrapper {
     position: fixed;

@@ -2,14 +2,15 @@
 import VButton from '@/components/VButton.vue'
 import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
+import VModal from '@/components/VModal/VModal.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { EStatus } from '@/types/EStatus'
+import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanCard } from '@/types/TKanban'
 import { Field, Form } from 'vee-validate'
 import { onMounted } from 'vue'
 import { number, object, string, date as yupDate } from 'yup'
-import VModal from '../VModal.vue'
 
 interface IProps {
   isVisible: boolean
@@ -35,7 +36,7 @@ const validationScheme = object<IForm>({
 })
 
 const submitHandler = async (values: IForm) => {
-  const newCard: TKanbanCard = {
+  const newCard: Omit<TCardResponse, 'id' | 'category'> = {
     status: EStatus.NoStatus,
     category_id: values.category_id,
     name: values.name,
@@ -43,7 +44,6 @@ const submitHandler = async (values: IForm) => {
     body: values.body,
   }
 
-  console.log(values)
   await cards.addCard(newCard)
   emit('closeModal')
 }
@@ -76,7 +76,7 @@ onMounted(async () => {
             <legend class="field__title title">Описание задачи</legend>
             <Field name="body" class="field__textarea" as="textarea" />
           </fieldset>
-          <fieldset class="fields__item field">
+          <fieldset class="fields__item field field--category">
             <legend class="field__title title">Категория</legend>
             <div class="field__categories categories">
               <button
@@ -89,15 +89,17 @@ onMounted(async () => {
                 <VCategory class="categories__item" :is-field="true" v-bind="category" />
               </button>
             </div>
-            <Transition name="slide-fade" class="field__error field__error--categories"
-              ><p v-if="errors.category_id">{{ errors.category_id }}</p></Transition
-            >
+            <Transition name="slide-fade" class="field__error field__error--categories">
+              <p v-if="errors.category_id">{{ errors.category_id }}</p>
+            </Transition>
           </fieldset>
         </div>
         <div>
           <VCalendar />
           <Transition name="slide-fade" class="field__error field__error--categories"
-            ><p v-if="errors.selectedDate">{{ errors.selectedDate }}</p></Transition
+            ><p class="error-date" v-if="errors.selectedDate">
+              {{ errors.selectedDate }}
+            </p></Transition
           >
         </div>
       </div>
@@ -129,7 +131,7 @@ onMounted(async () => {
 }
 .fields {
   display: flex;
-  gap: 21px;
+  gap: 20px;
   justify-content: space-between;
   &__wrapper {
     margin-top: 20px;
@@ -148,13 +150,13 @@ onMounted(async () => {
   margin-top: 14px;
   max-width: 376px;
   overflow-x: scroll;
-  padding-bottom: 20px;
   &__item {
+    max-width: 100%;
     padding: 10px 20px;
-    white-space: nowrap;
   }
 }
 .field {
+  max-height: fit-content;
   &__input {
     font-size: 1.75rem;
     font-weight: 600;
@@ -173,7 +175,7 @@ onMounted(async () => {
     margin-top: 14px;
 
     height: 200px;
-    width: 100%;
+    width: 370px;
 
     border: 0.7px solid rgba(148, 166, 190, 0.4);
     border-radius: 8px;
@@ -184,6 +186,7 @@ onMounted(async () => {
       outline: none;
     }
   }
+
   &__error {
     color: red;
     font-size: 1.5rem;
@@ -193,6 +196,9 @@ onMounted(async () => {
       margin-top: 20px;
     }
   }
+}
+.error-date {
+  max-width: 192px;
 }
 
 .slide-fade-enter-active {

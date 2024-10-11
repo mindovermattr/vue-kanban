@@ -1,7 +1,7 @@
 import { addCard as addCardApi, getCards as getCardsApi } from '@/api/Cards.api'
 import { EStatus, type EStatusKeys } from '@/types/EStatus'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
-import type { TKanbanCard, TKanbanItems } from '@/types/TKanban'
+import type { TKanbanItems } from '@/types/TKanban'
 import { defineStore } from 'pinia'
 
 export const useCardStore = defineStore('cards', {
@@ -35,10 +35,12 @@ export const useCardStore = defineStore('cards', {
         testing: [],
       } as TKanbanItems
       cards.forEach((el) => {
-        filtred[el.status].push(el)
+        filtred[el.status].push({
+          ...el,
+          category_id: el.category.id,
+        })
       })
       this.filtredCards = filtred
-      console.log(filtred)
     },
 
     replaceCard(selectedStatus: EStatusKeys, itemStatus: EStatus, itemID: string) {
@@ -63,7 +65,7 @@ export const useCardStore = defineStore('cards', {
       }
     },
 
-    async addCard(card: TKanbanCard & { category_id: number }) {
+    async addCard(card: TCardResponse) {
       await addCardApi(card)
       await this.fetchCards()
     },

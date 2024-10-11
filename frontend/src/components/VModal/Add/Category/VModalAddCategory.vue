@@ -88,6 +88,10 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   }
 }
 
+.color {
+  border: 10px solid black;
+}
+
 .colors {
   display: flex;
   justify-content: space-between;

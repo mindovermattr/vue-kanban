@@ -1,3 +1,72 @@
+<script setup lang="ts">
+import { useUserStore } from '@/store/useUserStore'
+import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
+import type { TFormValues } from '@/types/TFormValues'
+import { ErrorMessage, Field, Form } from 'vee-validate'
+import { computed } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { object, ref, string } from 'yup'
+import VButton from '../VButton.vue'
+
+interface IProps {
+  signUp: boolean
+}
+
+const router = useRouter()
+const props = defineProps<IProps>()
+
+const user = useUserStore()
+
+const formScheme = computed(() => {
+  if (!props.signUp) {
+    return object<TFormValues>({
+      email: string()
+        .required('Поле email обязательно к заполнению')
+        .email('В поле email некорректная почта'),
+      password: string()
+        .required('Поле пароль обязательно к заполнению')
+        .min(6, 'Минимум 6 символов у пароля'),
+    })
+  } else {
+    return object<TFormValues>({
+      userName: string().required('Поле имя обязательно к заполнению'),
+      email: string()
+        .required('Поле email пароль к заполнению')
+        .email('В поле email некорректная почта'),
+      password: string()
+        .required('Поле пароль обязательно к заполнению')
+        .min(6, 'Минимум 6 символов у пароля'),
+      passwordConfirm: string()
+        .required('Поле подтверждение пароля должно быть заполнено')
+        .oneOf([ref('password')], 'Пароли должны совпадать'),
+    })
+  }
+})
+
+const submitHandler = async (values: TFormValues) => {
+  if (props.signUp) {
+    const newUser: TUserRegistration = {
+      user: {
+        username: values.userName,
+        password: values.password,
+        email: values.email,
+        password_confirmation: values?.passwordConfirm,
+      },
+    }
+
+    await user.register(newUser)
+  } else {
+    const loginUser: TUserLogin = {
+      user: {
+        email: values.email,
+        password: values.password,
+      },
+    }
+    await user.login(loginUser)
+  }
+  router.push({ name: 'home' })
+}
+</script>
 <template>
   <div class="form-wrapper">
     <Form
@@ -29,13 +98,14 @@
         </fieldset>
       </div>
       <VButton
+        type="submit"
         :disabled="Object.keys(errors).length !== 0 && !meta.valid"
         class="form__button"
         variant="contained"
       >
-        Войти
+        {{ signUp ? 'Зарегистироваться' : 'Войти' }}
       </VButton>
-      <div v-if="!meta.valid" class="form__validation-errors">
+      <div class="form__validation-errors">
         <ErrorMessage as="p" class="form__error" name="email" />
         <ErrorMessage as="p" class="form__error" name="password" />
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="userName" />
@@ -52,52 +122,6 @@
     </Form>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { TFormValues } from '@/types/TFormValues'
-import { ErrorMessage, Field, Form } from 'vee-validate'
-import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
-import { object, ref, string } from 'yup'
-import VButton from '../VButton.vue'
-
-interface IProps {
-  signUp: boolean
-}
-
-const props = defineProps<IProps>()
-
-const formScheme = computed(() => {
-  if (!props.signUp) {
-    return object<TFormValues>({
-      email: string()
-        .required('Поле email обязательно к заполнению')
-        .email('В поле email некорректная почта'),
-      password: string()
-        .required('Поле пароль обязательно к заполнению')
-        .min(6, 'Минимум 6 символов у пароля'),
-    })
-  } else {
-    console.log('object')
-    return object<TFormValues>({
-      userName: string().required('Поле имя обязательно к заполнению'),
-      email: string()
-        .required('Поле email пароль к заполнению')
-        .email('В поле email некорректная почта'),
-      password: string()
-        .required('Поле пароль обязательно к заполнению')
-        .min(6, 'Минимум 6 символов у пароля'),
-      passwordConfirm: string()
-        .required('Поле подтверждение пароля должно быть заполнено')
-        .oneOf([ref('password')], 'Пароли должны совпадать'),
-    })
-  }
-})
-
-const submitHandler = (values: TFormValues) => {
-  console.log(values)
-}
-</script>
 
 <style lang="scss" scoped>
 .form {
@@ -126,10 +150,12 @@ const submitHandler = (values: TFormValues) => {
     display: flex;
     flex-direction: column;
     gap: 7px;
+    width: 370px;
   }
 
   &__input {
-    padding: 5px 180px 5px 10px;
+    padding: 5px 0px 5px 10px;
+    width: 100%;
     color: $gray-text-color;
     font-size: 1.75rem;
     line-height: 150%;
