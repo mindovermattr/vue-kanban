@@ -37,3 +37,5 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Add your .env file with backend url

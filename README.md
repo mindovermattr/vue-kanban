@@ -1,8 +1,8 @@
 # Документация к учебному проекту:
 Канбан-доска
 
-## Первая итерация макета:
-https://www.figma.com/design/hsD0zFp8xZOeXRqwggfrpP/Дизайн-макета-сайта.-React.-Веб-разработчик-(Copy)?node-id=0-1&node-type=canvas&t=5ZpOwFpXTZ4VSlmT-0
+## Вторая итерация макета:
+https://www.figma.com/design/hsD0zFp8xZOeXRqwggfrpP/Канбан-доска?node-id=0-1&node-type=canvas&t=9PFJTiZ0rbwY0Tch-0
 
 ## Основная работа ведется в Гитхабе:
 https://github.com/mindovermattr/vue-kanban
