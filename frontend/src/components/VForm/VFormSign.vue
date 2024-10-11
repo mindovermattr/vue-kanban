@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store/useUserStore'
+import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TFormValues } from '@/types/TFormValues'
 import { ErrorMessage, Field, Form } from 'vee-validate'
 import { computed } from 'vue'
@@ -44,7 +45,7 @@ const formScheme = computed(() => {
 
 const submitHandler = async (values: TFormValues) => {
   if (props.signUp) {
-    const newUser = {
+    const newUser: TUserRegistration = {
       user: {
         username: values.userName,
         password: values.password,
@@ -55,7 +56,7 @@ const submitHandler = async (values: TFormValues) => {
 
     await user.register(newUser)
   } else {
-    const loginUser = {
+    const loginUser: TUserLogin = {
       user: {
         email: values.email,
         password: values.password,

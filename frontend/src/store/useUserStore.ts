@@ -1,4 +1,5 @@
 import { login, signUp } from '@/api/User.api'
+import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TUser } from '@/types/User'
 import { defineStore } from 'pinia'
 
@@ -13,29 +14,32 @@ export const useUserStore = defineStore('user', {
     getToken: (state) => state.token,
   },
   actions: {
-    register: async (user: { user: TUser }) => {
-      const resp = await signUp(user)
-      if (resp?.data) {
-        localStorage.setItem(
-          'user',
-          JSON.stringify({
-            user: resp?.data.data,
-            token: resp?.token,
-          })
-        )
-      }
-    },
-    login: async (user: { user: TUser }) => {
-      const response = await login(user)
-
+    async register(user: TUserRegistration) {
+      const response = await signUp(user)
       if (response?.data) {
         localStorage.setItem(
           'user',
           JSON.stringify({
-            user: response?.data,
-            token: response?.token,
+            user: response.data,
+            token: response.token,
           })
         )
+        this.user = response.data
+        this.token = response.token
+      }
+    },
+    async login(user: TUserLogin) {
+      const response = await login(user)
+      if (response?.data) {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            user: response.data,
+            token: response.token,
+          })
+        )
+        this.user = response.data
+        this.token = response.token
       }
     },
   },

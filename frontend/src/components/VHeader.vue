@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useUserStore } from '@/store/useUserStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
@@ -7,6 +8,10 @@ import VModalAddCategory from './VModal/Add/Category/VModalAddCategory.vue'
 
 const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)
+
+const userStore = useUserStore()
+
+console.log(userStore.user)
 
 const openAddModalHandler = () => {
   isAddModalVisible.value = true
@@ -34,7 +39,7 @@ const clickHander = () => {
       <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
       <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
       <VButton variant="text" @click="clickHander" class="controls__button controls__button--text">
-        Ivan ivanov
+        {{ userStore.user?.username }}
       </VButton>
     </div>
   </header>
