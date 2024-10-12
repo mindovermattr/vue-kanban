@@ -13,6 +13,7 @@ const userStore = useUserStore()
 
 const openAddModalHandler = () => {
   isAddModalVisible.value = true
+  console.log(userStore.user)
 }
 const openCategoryModalHandler = () => {
   isCategoryModal.value = true
@@ -59,17 +60,16 @@ const clickHander = () => {
   display: flex;
   gap: 20px;
   &__button {
-    font-size: 1.75rem;
-    font-weight: 500;
+    @include font-h4();
 
     &--contained {
       border-radius: 4px;
-      background-color: $purple-color;
+      background-color: $blue-color;
       color: white;
       padding: 10px 14px;
     }
     &--text {
-      color: $purple-color;
+      color: $blue-color;
       &::after {
         content: '↓';
       }

@@ -74,7 +74,7 @@ const currentCard = ref<TCardResponse | undefined>(
     line-height: 16px;
   }
   &__button {
-    background-color: $gray-text-color-selected;
+    background-color: $gray-color-100;
     border-radius: 24px;
     font-size: 1.75rem;
   }

@@ -25,7 +25,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   left: 50%;
   top: 50%;
   padding: 40px 30px;
-  background-color: $bg-white-color;
+  background-color: $white-color;
   transform: translate(-50%, -50%);
 
   &-wrapper {

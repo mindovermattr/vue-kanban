@@ -44,13 +44,13 @@ const formScheme = computed(() => {
 })
 
 const submitHandler = async (values: TFormValues) => {
-  if (props.signUp) {
+  if (props.signUp && values?.passwordConfirm) {
     const newUser: TUserRegistration = {
       user: {
         username: values.userName,
         password: values.password,
         email: values.email,
-        password_confirmation: values?.passwordConfirm,
+        password_confirmation: values.passwordConfirm,
       },
     }
 
@@ -129,14 +129,14 @@ const submitHandler = async (values: TFormValues) => {
   flex-direction: column;
   gap: 20px;
   padding: 50px 60px;
-  background-color: $bg-white-color;
+  background-color: $white-color;
 
   &-wrapper {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $bg-gray-color;
+    background-color: $gray-color-40;
   }
 
   &__title {
@@ -156,20 +156,20 @@ const submitHandler = async (values: TFormValues) => {
   &__input {
     padding: 5px 0px 5px 10px;
     width: 100%;
-    color: $gray-text-color;
+    color: $gray-color-100;
     font-size: 1.75rem;
     line-height: 150%;
-    border: 0.7px solid rgba($gray-text-color, 0.4);
+    border: 0.7px solid $gray-color-40;
     border-radius: 8px;
   }
   &__button {
     border-radius: 4px;
-    color: $bg-white-color;
+    color: $white-color;
     font-size: 1.75rem;
     font-weight: 500;
     text-align: center;
     &:disabled {
-      background: $gray-text-color;
+      background: $gray-color-100;
       cursor: auto;
     }
   }
@@ -180,7 +180,7 @@ const submitHandler = async (values: TFormValues) => {
   }
 
   &__error {
-    color: $red-text-color;
+    color: $error-color;
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 150%;
@@ -189,7 +189,7 @@ const submitHandler = async (values: TFormValues) => {
 
 .footer {
   &__text {
-    color: rgba($gray-text-color, 0.4);
+    color: $gray-color-40;
     font-size: 1.75rem;
     line-height: 150%;
     text-align: center;

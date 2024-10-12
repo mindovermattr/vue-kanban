@@ -101,14 +101,14 @@ const { handleChange } = useField('selectedDate', undefined, {
 
   margin-top: 19px;
   &__title {
-    color: $gray-text-color;
+    color: $gray-color-100;
     @include font-h5();
   }
   &__controls {
     font-size: 2rem;
     display: flex;
     gap: 16px;
-    color: $gray-text-color;
+    color: $gray-color-100;
   }
 }
 
@@ -124,7 +124,7 @@ const { handleChange } = useField('selectedDate', undefined, {
   grid-template-columns: repeat(7, 1fr);
 
   &__item {
-    color: $gray-text-color;
+    color: $gray-color-100;
     @include font-h7();
     text-align: center;
     transition: 0.4s;
@@ -141,7 +141,7 @@ const { handleChange } = useField('selectedDate', undefined, {
       font-weight: 500;
       padding: 8px;
       &:hover {
-        background-color: $bg-gray-color;
+        background-color: $gray-color-40;
         border-radius: 50%;
       }
     }
@@ -149,8 +149,8 @@ const { handleChange } = useField('selectedDate', undefined, {
       font-weight: 700;
     }
     &--selected {
-      background-color: $gray-text-color-selected;
-      color: $bg-white-color;
+      background-color: $gray-color-100;
+      color: $white-color;
       border-radius: 50%;
     }
   }
@@ -183,7 +183,7 @@ const { handleChange } = useField('selectedDate', undefined, {
 }
 .calendar {
   &__text {
-    color: $gray-text-color;
+    color: $gray-color-100;
     font-size: 1.25rem;
     margin-top: 14px;
     &--bold {

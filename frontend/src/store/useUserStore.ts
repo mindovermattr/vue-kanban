@@ -1,12 +1,20 @@
 import { login, signUp } from '@/api/User.api'
+import { getUserFromLS } from '@/helpers/getUserFromLS'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TUser } from '@/types/User'
 import { defineStore } from 'pinia'
 
+const setInitialUser = (isUser: boolean) => {
+  const data = getUserFromLS()
+
+  if (isUser) return data?.user
+  else return data?.token
+}
+
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null as TUser | null,
-    token: null as string | null,
+    user: setInitialUser(true) as TUser | null,
+    token: setInitialUser(false) as string | null,
   }),
 
   getters: {
@@ -16,6 +24,9 @@ export const useUserStore = defineStore('user', {
   actions: {
     async register(user: TUserRegistration) {
       const response = await signUp(user)
+      if (response instanceof String) {
+        return
+      }
       if (response?.data) {
         localStorage.setItem(
           'user',

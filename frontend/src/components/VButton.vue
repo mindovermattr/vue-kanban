@@ -23,7 +23,7 @@ defineProps<IProps>()
 <style scoped lang="scss">
 .button {
   &--contained {
-    background-color: $purple-color;
+    background-color: $blue-color;
     color: #fff;
     padding: 10px 14px 10px 14px;
     font-size: 1.75rem;

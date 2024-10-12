@@ -54,7 +54,7 @@ const onDragEnd = () => {
   cursor: grab;
   min-height: 133px;
   min-width: 220px;
-  background-color: $bg-white-color;
+  background-color: $white-color;
   padding: 13px 13px 19px 11px;
   border-radius: 10px;
 
