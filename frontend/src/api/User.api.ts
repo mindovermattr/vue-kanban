@@ -4,8 +4,8 @@ import type {
   TUserRespLogin,
   TUserRespRegistration,
 } from '@/types/responses/TUserResponse'
-import axios from 'axios'
-import { instance } from './instance'
+import axios, { AxiosError } from 'axios'
+import { instance, protectedInstance } from './instance'
 
 export const signUp = async (user: TUserRegistration): TUserResp<TUserRespRegistration> => {
   try {
@@ -17,7 +17,7 @@ export const signUp = async (user: TUserRegistration): TUserResp<TUserRespRegist
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      return error
+      return error as AxiosError<{ error: string }>
     }
     return 'Неизвестная ошибка'
   }
@@ -32,7 +32,20 @@ export const login = async (user: TUserLogin): TUserResp<TUserRespLogin> => {
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      return error
+      return error as AxiosError<{ error: string }>
+    }
+    return 'Неизвестная ошибка'
+  }
+}
+
+export const logout = async (): TUserResp<{ message: string }> => {
+  try {
+    const response = await protectedInstance.delete<{ message: string }>('logout')
+    localStorage.removeItem('user')
+    return response.data.message
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      return error as AxiosError<{ error: string }>
     }
     return 'Неизвестная ошибка'
   }

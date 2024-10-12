@@ -2,10 +2,11 @@
 import { useUserStore } from '@/store/useUserStore'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TFormValues } from '@/types/TFormValues'
+import axios, { AxiosError } from 'axios'
 import { ErrorMessage, Field, Form } from 'vee-validate'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { object, ref, string } from 'yup'
+import { object, string, ref as yupRef } from 'yup'
 import VButton from '../VButton.vue'
 
 interface IProps {
@@ -13,6 +14,7 @@ interface IProps {
 }
 
 const props = defineProps<IProps>()
+const serverError = ref<string>('')
 const emit = defineEmits<(e: 'toogleSignUp') => void>()
 const router = useRouter()
 
@@ -39,7 +41,7 @@ const formScheme = computed(() => {
         .min(6, 'Минимум 6 символов у пароля'),
       passwordConfirm: string()
         .required('Поле подтверждение пароля должно быть заполнено')
-        .oneOf([ref('password')], 'Пароли должны совпадать'),
+        .oneOf([yupRef('password')], 'Пароли должны совпадать'),
     })
   }
 })
@@ -55,7 +57,13 @@ const submitHandler = async (values: TFormValues) => {
       },
     }
 
-    await user.register(newUser)
+    const response = await user.register(newUser)
+    if (axios.isAxiosError(response)) {
+      console.log(response)
+      serverError.value = (response as AxiosError<{ error: string }>).response!.data!.error
+      return
+    }
+    return
   } else {
     const loginUser: TUserLogin = {
       user: {
@@ -63,7 +71,12 @@ const submitHandler = async (values: TFormValues) => {
         password: values.password,
       },
     }
-    await user.login(loginUser)
+    const response = await user.login(loginUser)
+    if (axios.isAxiosError(response)) {
+      console.log(response)
+      serverError.value = (response as AxiosError).response!.data! as string
+      return
+    }
   }
   router.push({ name: 'home' })
 }
@@ -146,11 +159,22 @@ const submitHandler = async (values: TFormValues) => {
         <ErrorMessage as="p" class="form__error" name="password" />
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="userName" />
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="passwordConfirm" />
+        <p v-if="serverError" class="form__error">{{ serverError }}</p>
       </div>
       <footer class="form__footer footer">
         <p class="footer__text">{{ signUp ? 'Уже есть аккаунт' : 'Еще нет аккаунта?' }}</p>
         <p class="footer__text">
-          <VButton variant="text" type="button" @click="emit('toogleSignUp')" class="footer__link">
+          <VButton
+            variant="text"
+            type="button"
+            @click="
+              () => {
+                emit('toogleSignUp')
+                serverError = ''
+              }
+            "
+            class="footer__link"
+          >
             {{ signUp ? 'Войдите здесь' : 'Регистрируйтесь здесь' }}
           </VButton>
         </p>

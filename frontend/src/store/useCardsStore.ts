@@ -48,25 +48,24 @@ export const useCardStore = defineStore('cards', {
     },
 
     replaceCard(selectedStatus: EStatusKeys, itemStatus: EStatus, itemID: string) {
-      let cardIndex
+      let cardIndex = 0
       const card = this.filtredCards[itemStatus].find((card, idx) => {
         cardIndex = idx
         return `${card.id}` === itemID
       })
 
-      if (cardIndex! >= 0) this.filtredCards[itemStatus].splice(cardIndex!, 1)
+      if (cardIndex >= 0) this.filtredCards[itemStatus].splice(cardIndex, 1)
       if (card) {
         const newStatus = EStatus[selectedStatus]
         card.status = newStatus
 
         this.filtredCards[newStatus].push(card)
+        updateCardApi(+itemID, card)
       }
     },
     async fetchCards() {
       const cards = await getCardsApi()
-      if (cards) {
-        this.setCards(cards)
-      }
+      if (cards) this.setCards(cards)
     },
     async updateCard(card: TCardResponse) {
       updateCardApi(card)

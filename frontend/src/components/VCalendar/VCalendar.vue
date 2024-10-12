@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-parsing-error -->
 <template>
   <fieldset class="datepicker">
     <legend class="datepicker__title">Дата</legend>
