@@ -1,7 +1,6 @@
 import { LOCAL_STORAGE_USER } from '@/constants/LocalStorageKeys'
 import { getUserFromLS } from '@/helpers/getUserFromLS'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -22,9 +21,7 @@ protectedInstance.interceptors.request.use((config) => {
 protectedInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    const router = useRouter()
     localStorage.removeItem(LOCAL_STORAGE_USER)
     console.error(err)
-    router.push({ name: 'signIn' })
   }
 )

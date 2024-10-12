@@ -29,6 +29,12 @@ defineProps<IProps>()
     font-size: 1.75rem;
     font-weight: 500;
   }
+  &--outlined {
+    color: $blue-color;
+    border-radius: 4px;
+    padding: 10px 14px 10px 14px;
+    border: 0.7px solid $blue-color;
+  }
   &:disabled {
     background-color: $bg-gray-color;
   }

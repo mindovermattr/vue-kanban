@@ -100,7 +100,7 @@ const { handleChange } = useField('selectedDate', undefined, {
   display: flex;
   justify-content: space-between;
 
-  margin-top: 19px;
+  margin-top: 16px;
   &__title {
     color: $gray-color-100;
     @include font-h5();

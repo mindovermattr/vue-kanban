@@ -6,17 +6,10 @@ import type { TUserRespRegistration } from '@/types/responses/TUserResponse'
 import type { TUser } from '@/types/User'
 import { defineStore } from 'pinia'
 
-const setInitialUser = (isUser: boolean) => {
-  const data = getUserFromLS()
-
-  if (isUser) return data?.user
-  else return data?.token
-}
-
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: setInitialUser(true) as TUser | null,
-    token: setInitialUser(false) as string | null,
+    user: getUserFromLS()?.user as TUser | null,
+    token: getUserFromLS()?.token as string | null,
   }),
 
   getters: {

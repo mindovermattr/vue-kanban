@@ -94,7 +94,7 @@ onMounted(async () => {
             </Transition>
           </fieldset>
         </div>
-        <div>
+        <div class="fields__wrapper">
           <VCalendar />
           <Transition name="slide-fade" class="field__error field__error--categories"
             ><p class="error-date" v-if="errors.selectedDate">

@@ -8,7 +8,7 @@ import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps extends TCardResponse {}
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 const isDragging = inject<{
   value: boolean
@@ -45,7 +45,7 @@ const onDragEnd = () => {
       <CalendarIcon />
       <p class="card__date">{{ period }}</p>
     </footer>
-    <VModalUpdate :card-id="id" :is-visible="isModalVisible" @closeModal="closeModal" />
+    <VModalUpdate :cardId="id" :is-visible="isModalVisible" @closeModal="closeModal" />
   </article>
 </template>
 

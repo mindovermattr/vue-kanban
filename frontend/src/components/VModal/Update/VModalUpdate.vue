@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import VButton from '@/components/VButton.vue'
+import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { EStatus } from '@/types/EStatus'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { Form } from 'vee-validate'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import VModal from '../VModal.vue'
 
 interface IProps {
@@ -20,9 +20,7 @@ const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
 const isRedacting = ref(false)
-const currentCard = ref<TCardResponse | undefined>(
-  cards.cards.find((el) => el.category_id === props.cardId)
-)
+const currentCard = computed(() => cards.cards.find((el) => el.id === props.cardId))
 </script>
 
 <template>
@@ -35,21 +33,40 @@ const currentCard = ref<TCardResponse | undefined>(
       <div class="update-modal__status status">
         <h4 class="status__name">Статус</h4>
         <TransitionGroup name="list" tag="fieldset" class="">
-          <VButton v-if="!isRedacting" class="status__button" variant="contained"
-            >Без статуса</VButton
-          >
+          <VButton type="button" v-if="!isRedacting" class="status__button" variant="contained">
+            Без статуса
+          </VButton>
           <template v-if="isRedacting">
             <VButton
               v-for="status in EStatus"
               v-bind:key="status"
               class="status__button"
               variant="contained"
-              >{{ status }}</VButton
-            >
+              >{{ status }}
+            </VButton>
           </template>
         </TransitionGroup>
       </div>
-      <VButton type="button" variant="contained">asd</VButton>
+      <div class="update-modal__input input">
+        <fieldset class="input__body">
+          <legend class="input__title">Описание задачи</legend>
+          <textarea class="input__text" placeholder="Введите" name="body"></textarea>
+        </fieldset>
+        <fieldset class="input__body">
+          <VCalendar />
+        </fieldset>
+      </div>
+      <div class="update-modal__controls controls">
+        <div class="controls__wrapper">
+          <VButton class="controls__button" type="button" variant="outlined">
+            Редактировать задачу</VButton
+          >
+          <VButton class="controls__button" type="button" variant="outlined">
+            Удалить задачу</VButton
+          >
+        </div>
+        <VButton @click="emit('closeModal')" type="button" variant="contained">Закрыть</VButton>
+      </div>
     </Form>
   </VModal>
 </template>
@@ -59,6 +76,8 @@ const currentCard = ref<TCardResponse | undefined>(
   &__header {
     display: flex;
     justify-content: space-between;
+
+    align-items: center;
   }
   &__title {
     font-size: 2.5rem;
@@ -67,11 +86,13 @@ const currentCard = ref<TCardResponse | undefined>(
   }
 }
 .status {
-  margin-top: 18px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   &__name {
     font-size: 1.75rem;
     font-weight: 600;
     line-height: 16px;
+    margin-bottom: 12px;
   }
   &__button {
     background-color: $gray-color-100;
@@ -79,6 +100,40 @@ const currentCard = ref<TCardResponse | undefined>(
     font-size: 1.75rem;
   }
 }
+
+.input {
+  display: flex;
+  gap: 21px;
+  margin-bottom: 20px;
+  &__text {
+    @include font-h6();
+    width: 370px;
+    height: 200px;
+    background-color: $gray-color-40;
+    resize: none;
+    color: $gray-color-100;
+    padding: 14px;
+    border-radius: 8px;
+  }
+  &__title {
+    @include font-h5();
+    margin-bottom: 20px;
+  }
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  &__wrapper {
+    display: flex;
+    gap: 8px;
+  }
+  &__button {
+    @include font-h4();
+    line-height: 14px;
+  }
+}
+
 .list-move,
 .list-enter-active,
 .list-leave-active {
