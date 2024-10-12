@@ -4,7 +4,7 @@ import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TFormValues } from '@/types/TFormValues'
 import { ErrorMessage, Field, Form } from 'vee-validate'
 import { computed } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { object, ref, string } from 'yup'
 import VButton from '../VButton.vue'
 
@@ -12,8 +12,9 @@ interface IProps {
   signUp: boolean
 }
 
-const router = useRouter()
 const props = defineProps<IProps>()
+const emit = defineEmits<(e: 'toogleSignUp') => void>()
+const router = useRouter()
 
 const user = useUserStore()
 
@@ -79,20 +80,55 @@ const submitHandler = async (values: TFormValues) => {
       <div class="form__fields">
         <template v-if="signUp">
           <fieldset class="form__field">
-            <Field name="userName" type="text" class="form__input" placeholder="Имя" />
+            <Field
+              name="userName"
+              type="text"
+              :class="[
+                'form__input',
+                {
+                  'form__input--error': errors.userName,
+                },
+              ]"
+              placeholder="Имя"
+            />
           </fieldset>
         </template>
         <fieldset class="form__field">
-          <Field name="email" type="email" class="form__input" placeholder="Эл. почта" />
+          <Field
+            name="email"
+            type="email"
+            :class="[
+              'form__input',
+              {
+                'form__input--error': errors.email,
+              },
+            ]"
+            placeholder="Эл. почта"
+          />
         </fieldset>
         <fieldset class="form__field">
-          <Field name="password" type="password" class="form__input" placeholder="Пароль" />
+          <Field
+            name="password"
+            type="password"
+            :class="[
+              'form__input',
+              {
+                'form__input--error': errors.password,
+              },
+            ]"
+            placeholder="Пароль"
+          />
         </fieldset>
         <fieldset v-if="signUp" class="form__field">
           <Field
             name="passwordConfirm"
             type="password"
-            class="form__input"
+            :class="[
+              'form__input',
+              {
+                'form__input--error': errors.passwordConfirm,
+              },
+            ]"
             placeholder="Подтверждение пароля"
           />
         </fieldset>
@@ -114,9 +150,9 @@ const submitHandler = async (values: TFormValues) => {
       <footer class="form__footer footer">
         <p class="footer__text">{{ signUp ? 'Уже есть аккаунт' : 'Еще нет аккаунта?' }}</p>
         <p class="footer__text">
-          <RouterLink class="footer__link" :to="signUp ? '/sign-in' : '/sign-up'">{{
-            signUp ? 'Войдите здесь' : 'Регистрируйтесь здесь'
-          }}</RouterLink>
+          <VButton variant="text" type="button" @click="emit('toogleSignUp')" class="footer__link">
+            {{ signUp ? 'Войдите здесь' : 'Регистрируйтесь здесь' }}
+          </VButton>
         </p>
       </footer>
     </Form>
@@ -161,6 +197,10 @@ const submitHandler = async (values: TFormValues) => {
     line-height: 150%;
     border: 0.7px solid $gray-color-40;
     border-radius: 8px;
+
+    &--error {
+      border-color: $error-color;
+    }
   }
   &__button {
     border-radius: 4px;
