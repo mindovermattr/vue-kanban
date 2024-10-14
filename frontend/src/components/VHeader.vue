@@ -13,7 +13,6 @@ const userStore = useUserStore()
 
 const openAddModalHandler = () => {
   isAddModalVisible.value = true
-  console.log(userStore.user)
 }
 const openCategoryModalHandler = () => {
   isCategoryModal.value = true
@@ -26,7 +25,7 @@ const closeCategoryModalHandler = () => {
 }
 const router = useRouter()
 const clickHander = () => {
-  router.push('/sign-up/')
+  router.push('/sign-in/')
 }
 </script>
 

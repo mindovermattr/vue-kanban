@@ -20,7 +20,12 @@ const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
 const isRedacting = ref(false)
+const isSelected = ref('Done')
 const currentCard = computed(() => cards.cards.find((el) => el.id === props.cardId))
+
+const redactingHandler = () => {
+  isRedacting.value = !isRedacting.value
+}
 </script>
 
 <template>
@@ -32,15 +37,24 @@ const currentCard = computed(() => cards.cards.find((el) => el.id === props.card
       </div>
       <div class="update-modal__status status">
         <h4 class="status__name">Статус</h4>
-        <TransitionGroup name="list" tag="fieldset" class="">
-          <VButton type="button" v-if="!isRedacting" class="status__button" variant="contained">
+        <TransitionGroup name="list" tag="fieldset" class="status__wrapper">
+          <VButton
+            type="button"
+            v-if="!isRedacting"
+            class="status__button status__button--selected"
+            variant="contained"
+          >
             Без статуса
           </VButton>
-          <template v-if="isRedacting">
+          <template v-else>
             <VButton
-              v-for="status in EStatus"
-              v-bind:key="status"
+              v-for="(status, key) in EStatus"
+              type="button"
+              :key="status"
               class="status__button"
+              :class="{
+                'status__button--selected': isSelected === key,
+              }"
               variant="contained"
               >{{ status }}
             </VButton>
@@ -58,8 +72,14 @@ const currentCard = computed(() => cards.cards.find((el) => el.id === props.card
       </div>
       <div class="update-modal__controls controls">
         <div class="controls__wrapper">
-          <VButton class="controls__button" type="button" variant="outlined">
-            Редактировать задачу</VButton
+          <VButton v-if="isRedacting" variant="contained" type="button">Сохранить</VButton>
+          <VButton
+            @click="redactingHandler"
+            class="controls__button"
+            type="button"
+            variant="outlined"
+          >
+            {{ isRedacting ? 'Отменить' : 'Редактировать задачу' }}</VButton
           >
           <VButton class="controls__button" type="button" variant="outlined">
             Удалить задачу</VButton
@@ -98,6 +118,14 @@ const currentCard = computed(() => cards.cards.find((el) => el.id === props.card
     background-color: $gray-color-100;
     border-radius: 24px;
     font-size: 1.75rem;
+    opacity: 0.4;
+    &--selected {
+      opacity: 1;
+    }
+  }
+  &__wrapper {
+    display: flex;
+    gap: 8px;
   }
 }
 
@@ -108,7 +136,7 @@ const currentCard = computed(() => cards.cards.find((el) => el.id === props.card
   &__text {
     @include font-h6();
     width: 370px;
-    height: 200px;
+    height: 100%;
     background-color: $gray-color-40;
     resize: none;
     color: $gray-color-100;

@@ -10,7 +10,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="isVisible" class="modal-wrapper" @click="emit('closeModal')">
+      <div @mouseup.capture.stop v-if="isVisible" class="modal-wrapper" @click="emit('closeModal')">
         <div @click.stop class="modal">
           <slot> </slot>
         </div>
