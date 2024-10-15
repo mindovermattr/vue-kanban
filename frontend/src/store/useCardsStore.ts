@@ -47,7 +47,7 @@ export const useCardStore = defineStore('cards', {
       this.filtredCards = filtred
     },
 
-    replaceCard(selectedStatus: EStatusKeys, itemStatus: EStatus, itemID: string) {
+    async replaceCard(selectedStatus: EStatusKeys, itemStatus: EStatus, itemID: string) {
       let cardIndex = 0
       const card = this.filtredCards[itemStatus].find((card, idx) => {
         cardIndex = idx
@@ -60,16 +60,17 @@ export const useCardStore = defineStore('cards', {
         card.status = newStatus
 
         this.filtredCards[newStatus].push(card)
-        updateCardApi(+itemID, card)
+        const resp = await updateCardApi(+itemID, card)
+        console.log('asd' + resp)
       }
     },
     async fetchCards() {
       const cards = await getCardsApi()
       if (cards) this.setCards(cards)
     },
-    async updateCard(card: TCardResponse) {
-      updateCardApi(card)
-    },
+    // async updateCard(card: TCardResponse) {
+    //   updateCardApi(card)
+    // },
 
     async addCard(card: TCardResponse) {
       await addCardApi(card)

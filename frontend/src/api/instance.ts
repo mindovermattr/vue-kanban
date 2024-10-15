@@ -1,4 +1,3 @@
-import { LOCAL_STORAGE_USER } from '@/constants/LocalStorageKeys'
 import { getUserFromLS } from '@/helpers/getUserFromLS'
 import axios from 'axios'
 
@@ -21,7 +20,7 @@ protectedInstance.interceptors.request.use((config) => {
 protectedInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    localStorage.removeItem(LOCAL_STORAGE_USER)
-    console.error(err)
+    // localStorage.removeItem(LOCAL_STORAGE_USER)
+    // console.error(err)
   }
 )

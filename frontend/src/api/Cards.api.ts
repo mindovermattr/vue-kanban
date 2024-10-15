@@ -22,9 +22,9 @@ export const addCard = async (card: TKanbanCard) => {
 
 export const updateCard = async (id: number, card: TCardResponse) => {
   try {
-    await protectedInstance.put(`/tasks/${id}`, card)
+    const resp = await protectedInstance.put(`/tasks/${id}`, card)
+    return resp
   } catch (error) {
-    console.error(error)
     return error
   }
 }

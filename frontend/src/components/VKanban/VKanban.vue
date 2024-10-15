@@ -40,12 +40,12 @@ provide('isDragging', isDragging)
 }
 
 .anim {
-  animation: 0.5s 1 alternate b;
+  animation: 1s 1 alternate bounce;
 }
 
-@keyframes b {
+@keyframes bounce {
   0% {
-    scale: 0.5;
+    scale: 0;
   }
   100% {
     scale: 1;
