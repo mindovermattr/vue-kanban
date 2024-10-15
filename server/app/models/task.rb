@@ -1,6 +1,7 @@
 class Task < ApplicationRecord
   STATUS_VALUES = ['noStatus', 'needDone', 'inProgress', 'testing', 'done']
 
+  belongs_to :desk
   belongs_to :category
 
   validates :name, :body, :period, :status, presence: true
