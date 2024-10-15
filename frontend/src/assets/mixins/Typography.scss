@@ -1,0 +1,57 @@
+@mixin main-font-family {
+  font-family: $main-font;
+}
+
+@mixin font-h1 {
+  @include main-font-family();
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+@mixin font-h2 {
+  @include main-font-family();
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+@mixin font-h3 {
+  @include main-font-family();
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+@mixin font-h4 {
+  @include main-font-family();
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 21px;
+}
+
+@mixin font-h5 {
+  @include main-font-family();
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 21px;
+}
+
+@mixin font-h6 {
+  @include main-font-family();
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 18px;
+}
+@mixin font-h6-bold {
+  @include main-font-family();
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+@mixin font-h7 {
+  @include main-font-family();
+  font-size: 1.25rem;
+  font-weight: 400;
+}

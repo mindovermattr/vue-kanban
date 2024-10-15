@@ -16,3 +16,11 @@ protectedInstance.interceptors.request.use((config) => {
   if (user) config.headers.Authorization = `Bearer ${user.token}`
   return config
 })
+
+protectedInstance.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    // localStorage.removeItem(LOCAL_STORAGE_USER)
+    // console.error(err)
+  }
+)
