@@ -24,6 +24,7 @@ provide('isDragging', isDragging)
       :key="status"
       :items="card.filtredCards[status]"
       :isDragging="isDragging"
+      class="anim"
       @onDropDragEvent="onDropDragEvent"
       @onDragStart="onStartDragEvent"
       @dragend="onDragEnd"
@@ -36,6 +37,19 @@ provide('isDragging', isDragging)
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
+}
+
+.anim {
+  animation: 0.5s 1 alternate b;
+}
+
+@keyframes b {
+  0% {
+    scale: 0.5;
+  }
+  100% {
+    scale: 1;
+  }
 }
 @media (max-width: $tablet-width) {
   .container--kanban {

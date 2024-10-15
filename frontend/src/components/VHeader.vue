@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useModal } from '@/helpers/useModal'
 import { useUserStore } from '@/store/useUserStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -8,24 +9,24 @@ import VModalAddCategory from './VModal/Add/Category/VModalAddCategory.vue'
 
 const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)
+const isOpen = ref(false)
 
 const userStore = useUserStore()
 
-const openAddModalHandler = () => {
-  isAddModalVisible.value = true
+const { closeModal: closeAddModalHandler, openModal: openAddModalHandler } =
+  useModal(isAddModalVisible)
+
+const { closeModal: closeCategoryModalHandler, openModal: openCategoryModalHandler } =
+  useModal(isCategoryModal)
+
+const toggleOpen = () => {
+  isOpen.value = !isOpen.value
 }
-const openCategoryModalHandler = () => {
-  isCategoryModal.value = true
-}
-const closeAddModalHandler = () => {
-  isAddModalVisible.value = false
-}
-const closeCategoryModalHandler = () => {
-  isCategoryModal.value = false
-}
+
 const router = useRouter()
 const clickHander = () => {
-  router.push('/sign-in/')
+  userStore.logout()
+  router.push({ name: 'SignIn' })
 }
 </script>
 
@@ -36,9 +37,18 @@ const clickHander = () => {
     <div class="header__controls controls">
       <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
       <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
-      <VButton variant="text" @click="clickHander" class="controls__button controls__button--text">
+      <VButton variant="text" @click="toggleOpen" class="controls__button controls__button--text">
         {{ userStore.user?.username }}
       </VButton>
+      <Transition name="profile">
+        <div v-if="isOpen" class="controls__profile profile">
+          <div>
+            <p class="profile__name">{{ userStore.user?.username }}</p>
+            <p class="profile__email">{{ userStore.user?.email }}</p>
+          </div>
+          <VButton @click="clickHander" class="profile__button" variant="outlined">Выйти</VButton>
+        </div>
+      </Transition>
     </div>
   </header>
   <VModalAdd @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
@@ -56,6 +66,7 @@ const clickHander = () => {
   }
 }
 .controls {
+  position: relative;
   display: flex;
   gap: 20px;
   &__button {
@@ -73,6 +84,53 @@ const clickHander = () => {
         content: '↓';
       }
     }
+  }
+  &__profile {
+    position: absolute;
+    right: 0;
+    top: 50px;
+  }
+}
+
+.profile {
+  padding: 34px;
+  background-color: $white-color;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  border: 0.7px solid rgba(148, 166, 190, 0.4);
+  border-radius: 10px;
+  /* enter */
+  box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
+
+  &__name {
+    @include font-h4();
+    text-align: center;
+  }
+  &__email {
+    @include font-h3();
+    color: $gray-color-100;
+    text-align: center;
+  }
+  &__button {
+    @include font-h4();
+  }
+}
+
+.profile-enter-active {
+  animation: bounce-in 0.2s;
+}
+.profile-leave-active {
+  animation: bounce-in 0.2s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 </style>

@@ -30,7 +30,7 @@ const { handleChange, checked } = useField('category_id', undefined, {
 <style lang="scss" scoped>
 .category {
   @include font-h6-bold();
-  padding: 10px 20px;
+  padding: 5px 14px;
   max-width: 75px;
 
   overflow: hidden;

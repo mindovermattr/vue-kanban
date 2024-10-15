@@ -1,4 +1,4 @@
-import { login, signUp } from '@/api/User.api'
+import { login as loginApi, logout as logoutApi, signUp } from '@/api/User.api'
 import { LOCAL_STORAGE_USER } from '@/constants/LocalStorageKeys'
 import { getUserFromLS } from '@/helpers/getUserFromLS'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', {
       }
     },
     async login(user: TUserLogin) {
-      const response = (await login(user)) as TUserRespRegistration
+      const response = (await loginApi(user)) as TUserRespRegistration
       if (response?.data) {
         localStorage.setItem(
           LOCAL_STORAGE_USER,
@@ -49,6 +49,10 @@ export const useUserStore = defineStore('user', {
       } else {
         return response
       }
+    },
+    async logout() {
+      const response = await logoutApi()
+      return response
     },
   },
 })
