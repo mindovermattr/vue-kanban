@@ -10,7 +10,9 @@ Rails.application.routes.draw do
                registrations: 'users/registrations'
              }
 
-  root to: 'tasks#index'
-  resources :categories, except: [:new, :show]
-  resources :tasks, except: [:new, :show]
+  root to: 'desks#index'
+  resources :desks, except: [:new, :show] do
+    resources :categories, except: [:new, :show]
+    resources :tasks, except: [:new, :show]
+  end
 end
