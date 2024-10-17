@@ -2,7 +2,7 @@ class DesksController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @desks = current_user.desks.all
+    @desks = current_user.desks
     render json: @desks
   end
 
