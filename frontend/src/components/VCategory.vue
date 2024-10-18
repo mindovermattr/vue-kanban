@@ -29,10 +29,8 @@ const { handleChange, checked } = useField('category_id', undefined, {
 
 <style lang="scss" scoped>
 .category {
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 10px;
-  padding: 10px 20px;
+  @include font-h6-bold();
+  padding: 5px 14px;
   max-width: 75px;
 
   overflow: hidden;
@@ -43,18 +41,6 @@ const { handleChange, checked } = useField('category_id', undefined, {
   text-overflow: ellipsis;
   &--selection {
     opacity: 0.4;
-  }
-  &--web {
-    background: $bg-orange-color;
-    color: $orange-text-color;
-  }
-  &--research {
-    background: $bg-violet-color;
-    color: $violet-text-color;
-  }
-  &--copywriting {
-    background: $bg-mint-color;
-    color: $mint-text-color;
   }
 }
 </style>

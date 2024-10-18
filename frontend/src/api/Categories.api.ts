@@ -6,7 +6,7 @@ export const getCategories = async (): Promise<TCategory[] | undefined> => {
     const response = await protectedInstance.get<TCategory[]>(`/categories`)
     return response.data
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
@@ -17,6 +17,6 @@ export const addCategory = async (
     const response = await protectedInstance.post<Omit<TCategory, 'id'>>(`/categories`, category)
     return response.data
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
