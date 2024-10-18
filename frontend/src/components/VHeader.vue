@@ -4,12 +4,14 @@ import { useUserStore } from '@/store/useUserStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
+import VFlash from './VFlash/VFlash.vue'
 import VModalAdd from './VModal/Add/Card/VModalAddCard.vue'
 import VModalAddCategory from './VModal/Add/Category/VModalAddCategory.vue'
 
 const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)
 const isOpen = ref(false)
+const flashVisible = ref(false)
 
 const userStore = useUserStore()
 
@@ -23,6 +25,13 @@ const toggleOpen = () => {
   isOpen.value = !isOpen.value
 }
 
+const setClose = () => {
+  flashVisible.value = false
+}
+const setVisible = () => {
+  flashVisible.value = true
+}
+
 const router = useRouter()
 const clickHander = () => {
   userStore.logout()
@@ -33,7 +42,7 @@ const clickHander = () => {
 <template>
   <header class="header container">
     <h1 class="header__title">KamBam</h1>
-
+    <VButton @click="setVisible" variant="contained">asd</VButton>
     <div class="header__controls controls">
       <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
       <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
@@ -53,6 +62,9 @@ const clickHander = () => {
   </header>
   <VModalAdd @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
   <VModalAddCategory @closeModal="closeCategoryModalHandler" :is-visible="isCategoryModal" />
+  <VFlash :is-visible="flashVisible" @set-close="setClose" :value="10" :time-in-ms="1000"
+    >asdasd</VFlash
+  >
 </template>
 
 <style lang="scss" scoped>

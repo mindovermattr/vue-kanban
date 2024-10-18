@@ -3,7 +3,7 @@ import { useUserStore } from '@/store/useUserStore'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TFormValues } from '@/types/TFormValues'
 import axios, { AxiosError } from 'axios'
-import { ErrorMessage, Field, Form } from 'vee-validate'
+import { ErrorMessage, Field, useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { object, string, ref as yupRef } from 'yup'
@@ -46,7 +46,11 @@ const formScheme = computed(() => {
   }
 })
 
-const submitHandler = async (values: TFormValues) => {
+const { handleSubmit, errors, meta } = useForm<TFormValues>({
+  validationSchema: formScheme,
+})
+
+const onSubmit = handleSubmit(async (values) => {
   if (props.signUp && values?.passwordConfirm) {
     const newUser: TUserRegistration = {
       user: {
@@ -72,6 +76,7 @@ const submitHandler = async (values: TFormValues) => {
       },
     }
     const response = await user.login(loginUser)
+    console.log(response)
     if (axios.isAxiosError(response)) {
       console.log(response)
       serverError.value = (response as AxiosError).response!.data! as string
@@ -79,16 +84,11 @@ const submitHandler = async (values: TFormValues) => {
     }
   }
   router.push({ name: 'home' })
-}
+})
 </script>
 <template>
   <div class="form-wrapper">
-    <Form
-      :validation-schema="formScheme"
-      @submit="submitHandler"
-      class="form"
-      v-slot="{ meta, errors }"
-    >
+    <form @submit="onSubmit" class="form">
       <h2 class="form__title">{{ signUp ? 'Регистрация' : 'Вход' }}</h2>
       <div class="form__fields">
         <template v-if="signUp">
@@ -179,7 +179,7 @@ const submitHandler = async (values: TFormValues) => {
           </VButton>
         </p>
       </footer>
-    </Form>
+    </form>
   </div>
 </template>
 
