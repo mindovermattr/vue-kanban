@@ -4,14 +4,12 @@ import { useUserStore } from '@/store/useUserStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
-import VFlash from './VFlash/VFlash.vue'
 import VModalAdd from './VModal/Add/Card/VModalAddCard.vue'
 import VModalAddCategory from './VModal/Add/Category/VModalAddCategory.vue'
 
 const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)
 const isOpen = ref(false)
-const flashVisible = ref(false)
 
 const userStore = useUserStore()
 
@@ -21,50 +19,47 @@ const { closeModal: closeAddModalHandler, openModal: openAddModalHandler } =
 const { closeModal: closeCategoryModalHandler, openModal: openCategoryModalHandler } =
   useModal(isCategoryModal)
 
-const toggleOpen = () => {
+const toggleProfile = () => {
   isOpen.value = !isOpen.value
 }
 
-const setClose = () => {
-  flashVisible.value = false
-}
-const setVisible = () => {
-  flashVisible.value = true
+const closeProfile = () => {
+  isOpen.value = false
 }
 
 const router = useRouter()
-const clickHander = () => {
+const logoutHandler = () => {
   userStore.logout()
   router.push({ name: 'SignIn' })
 }
 </script>
 
 <template>
-  <header class="header container">
+  <header @click="closeProfile" class="header container">
     <h1 class="header__title">KamBam</h1>
-    <VButton @click="setVisible" variant="contained">asd</VButton>
     <div class="header__controls controls">
       <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
       <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
-      <VButton variant="text" @click="toggleOpen" class="controls__button controls__button--text">
+      <VButton
+        variant="text"
+        @click.stop="toggleProfile"
+        class="controls__button controls__button--text"
+      >
         {{ userStore.user?.username }}
       </VButton>
       <Transition name="profile">
-        <div v-if="isOpen" class="controls__profile profile">
+        <div @click.stop v-if="isOpen" class="controls__profile profile">
           <div>
             <p class="profile__name">{{ userStore.user?.username }}</p>
             <p class="profile__email">{{ userStore.user?.email }}</p>
           </div>
-          <VButton @click="clickHander" class="profile__button" variant="outlined">Выйти</VButton>
+          <VButton @click="logoutHandler" class="profile__button" variant="outlined">Выйти</VButton>
         </div>
       </Transition>
     </div>
   </header>
   <VModalAdd @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
   <VModalAddCategory @closeModal="closeCategoryModalHandler" :is-visible="isCategoryModal" />
-  <VFlash :is-visible="flashVisible" @set-close="setClose" :value="10" :time-in-ms="1000"
-    >asdasd</VFlash
-  >
 </template>
 
 <style lang="scss" scoped>
@@ -113,7 +108,6 @@ const clickHander = () => {
 
   border: 0.7px solid rgba(148, 166, 190, 0.4);
   border-radius: 10px;
-  /* enter */
   box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
 
   &__name {

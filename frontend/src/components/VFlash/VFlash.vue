@@ -1,56 +1,63 @@
 <script setup lang="ts">
-import { onBeforeUpdate, onUpdated, ref } from 'vue'
+import { onBeforeUpdate, onMounted, ref } from 'vue'
 
 interface IProps {
-  min?: number
-  max?: number
   isVisible: boolean
-  value: number
-  timeInMs: number
+  timeInMs?: number
+  top?: string
+  right?: string
+  left?: string
+  bottom?: string
+  color?: string
+  step?: number
 }
 
-const props = defineProps<IProps>()
+const { timeInMs = 1500, step = 100 } = defineProps<IProps>()
 const emit = defineEmits<(e: 'setClose') => void>()
 const progress = ref(100)
+
 let intervalId: number | undefined
 let timeOutID: number | undefined
-onBeforeUpdate(() => {
+
+const time = new Promise<number>((res) => {
   progress.value = 100
+
+  intervalId = setInterval(() => {
+    progress.value -= 0.1
+    if (Math.ceil(progress.value) === 0) {
+      res(intervalId!)
+    }
+  }, timeInMs / 1000)
+})
+
+onMounted(() => {
+  time.then((id) => {
+    clearInterval(id)
+    emit('setClose')
+  })
+})
+
+onBeforeUpdate(() => {
   if (timeOutID) {
     clearTimeout(timeOutID)
     timeOutID = undefined
-  } else {
-    timeOutID = setTimeout(() => {
-      emit('setClose')
-      clearInterval(intervalId)
-    }, props.timeInMs + 100)
   }
-})
-
-onUpdated(() => {
   if (intervalId) {
     intervalId = undefined
-  } else {
-    intervalId = setInterval(() => {
-      progress.value -= 1
-    }, props.timeInMs / 100)
   }
 })
 </script>
 
 <template>
   <Teleport to="body">
-    <Transition name="message">
+    <Transition appear name="message">
       <div v-if="isVisible" class="flash">
-        <div class="flash__content">
-          <div
-            class="flash__progress-wrapper"
-            role="progressbar"
-            :aria-valuemin="min"
-            :aria-valuemax="max"
-            :aria-valuenow="value"
-          >
-            <div :style="{ width: `${progress}%` }" class="flash__progress"></div>
+        <div :style="{ left: left, top: top, right: right, bottom: bottom }" class="flash__content">
+          <div class="flash__progress-wrapper" role="progressbar">
+            <div
+              :style="{ width: `${progress}%`, backgroundColor: color }"
+              class="flash__progress"
+            ></div>
           </div>
           <div class="flash__text">
             <slot></slot>
@@ -71,16 +78,14 @@ onUpdated(() => {
     position: absolute;
     left: 20px;
     bottom: 20px;
-    min-width: 150px;
+    min-width: 250px;
+    max-width: 350px;
     min-height: 80px;
     background-color: $white-color;
-
-    border-radius: 10px;
   }
   &__progress {
     background-color: $blue-color;
-    border-radius: 10px;
-    height: 10px;
+    height: 6px;
     &--wrapper {
       width: 100%;
       height: 20px;
