@@ -61,7 +61,7 @@ export const useCardStore = defineStore('cards', {
 
         this.filtredCards[newStatus].push(card)
         const resp = await updateCardApi(+itemID, card)
-        console.log('asd' + resp)
+        return resp
       }
     },
     async fetchCards() {
@@ -74,7 +74,7 @@ export const useCardStore = defineStore('cards', {
 
     async addCard(card: TCardResponse) {
       await addCardApi(card)
-      await this.fetchCards()
+      this.cards.push(card)
     },
   },
 })

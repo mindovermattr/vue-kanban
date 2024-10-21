@@ -43,7 +43,7 @@ const onDragEnd = () => {
     <h4 class="card__title">{{ name }}</h4>
     <footer class="card__footer">
       <CalendarIcon />
-      <p class="card__date">{{ period }}</p>
+      <p class="card__date">{{ `${period}. ${$attrs.draggable ? '' : 'Карточка просрочена '}` }}</p>
     </footer>
     <VModalUpdate :cardId="id" :is-visible="isModalVisible" @closeModal="closeModal" />
   </article>
@@ -88,6 +88,13 @@ const onDragEnd = () => {
   }
   &__category {
     padding: 5px 14px;
+  }
+
+  &[draggable='false'] {
+    border: 1px solid rgb(232, 92, 92);
+    & .card__date {
+      color: rgb(232, 92, 92);
+    }
   }
 }
 .column {

@@ -9,10 +9,9 @@ interface IProps {
   left?: string
   bottom?: string
   color?: string
-  step?: number
 }
 
-const { timeInMs = 1500, step = 100 } = defineProps<IProps>()
+const { timeInMs = 1500 } = defineProps<IProps>()
 const emit = defineEmits<(e: 'setClose') => void>()
 const progress = ref(100)
 
