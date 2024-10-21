@@ -2,18 +2,21 @@
 import { useUserStore } from '@/store/useUserStore'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TFormValues } from '@/types/TFormValues'
-import { ErrorMessage, Field, Form } from 'vee-validate'
-import { computed } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
-import { object, ref, string } from 'yup'
+import axios, { AxiosError } from 'axios'
+import { ErrorMessage, Field, useForm } from 'vee-validate'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { object, string, ref as yupRef } from 'yup'
 import VButton from '../VButton.vue'
 
 interface IProps {
   signUp: boolean
 }
 
-const router = useRouter()
 const props = defineProps<IProps>()
+const serverError = ref<string>('')
+const emit = defineEmits<(e: 'toogleSignUp') => void>()
+const router = useRouter()
 
 const user = useUserStore()
 
@@ -38,23 +41,33 @@ const formScheme = computed(() => {
         .min(6, 'Минимум 6 символов у пароля'),
       passwordConfirm: string()
         .required('Поле подтверждение пароля должно быть заполнено')
-        .oneOf([ref('password')], 'Пароли должны совпадать'),
+        .oneOf([yupRef('password')], 'Пароли должны совпадать'),
     })
   }
 })
 
-const submitHandler = async (values: TFormValues) => {
-  if (props.signUp) {
+const { handleSubmit, errors, meta } = useForm<TFormValues>({
+  validationSchema: formScheme,
+})
+
+const onSubmit = handleSubmit(async (values) => {
+  if (props.signUp && values?.passwordConfirm) {
     const newUser: TUserRegistration = {
       user: {
         username: values.userName,
         password: values.password,
         email: values.email,
-        password_confirmation: values?.passwordConfirm,
+        password_confirmation: values.passwordConfirm,
       },
     }
 
-    await user.register(newUser)
+    const response = await user.register(newUser)
+    if (axios.isAxiosError(response)) {
+      console.log(response)
+      serverError.value = (response as AxiosError<{ error: string }>).response!.data!.error
+      return
+    }
+    return
   } else {
     const loginUser: TUserLogin = {
       user: {
@@ -62,37 +75,73 @@ const submitHandler = async (values: TFormValues) => {
         password: values.password,
       },
     }
-    await user.login(loginUser)
+    const response = await user.login(loginUser)
+    console.log(response)
+    if (axios.isAxiosError(response)) {
+      console.log(response)
+      serverError.value = (response as AxiosError).response!.data! as string
+      return
+    }
   }
   router.push({ name: 'home' })
-}
+})
 </script>
 <template>
   <div class="form-wrapper">
-    <Form
-      :validation-schema="formScheme"
-      @submit="submitHandler"
-      class="form"
-      v-slot="{ meta, errors }"
-    >
+    <form @submit="onSubmit" class="form">
       <h2 class="form__title">{{ signUp ? 'Регистрация' : 'Вход' }}</h2>
       <div class="form__fields">
         <template v-if="signUp">
           <fieldset class="form__field">
-            <Field name="userName" type="text" class="form__input" placeholder="Имя" />
+            <Field
+              name="userName"
+              type="text"
+              :class="[
+                'form__input',
+                {
+                  'form__input--error': errors.userName,
+                },
+              ]"
+              placeholder="Имя"
+            />
           </fieldset>
         </template>
         <fieldset class="form__field">
-          <Field name="email" type="email" class="form__input" placeholder="Эл. почта" />
+          <Field
+            name="email"
+            type="email"
+            :class="[
+              'form__input',
+              {
+                'form__input--error': errors.email,
+              },
+            ]"
+            placeholder="Эл. почта"
+          />
         </fieldset>
         <fieldset class="form__field">
-          <Field name="password" type="password" class="form__input" placeholder="Пароль" />
+          <Field
+            name="password"
+            type="password"
+            :class="[
+              'form__input',
+              {
+                'form__input--error': errors.password,
+              },
+            ]"
+            placeholder="Пароль"
+          />
         </fieldset>
         <fieldset v-if="signUp" class="form__field">
           <Field
             name="passwordConfirm"
             type="password"
-            class="form__input"
+            :class="[
+              'form__input',
+              {
+                'form__input--error': errors.passwordConfirm,
+              },
+            ]"
             placeholder="Подтверждение пароля"
           />
         </fieldset>
@@ -110,16 +159,27 @@ const submitHandler = async (values: TFormValues) => {
         <ErrorMessage as="p" class="form__error" name="password" />
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="userName" />
         <ErrorMessage as="p" v-if="signUp" class="form__error" name="passwordConfirm" />
+        <p v-if="serverError" class="form__error">{{ serverError }}</p>
       </div>
       <footer class="form__footer footer">
         <p class="footer__text">{{ signUp ? 'Уже есть аккаунт' : 'Еще нет аккаунта?' }}</p>
         <p class="footer__text">
-          <RouterLink class="footer__link" :to="signUp ? '/sign-in' : '/sign-up'">{{
-            signUp ? 'Войдите здесь' : 'Регистрируйтесь здесь'
-          }}</RouterLink>
+          <VButton
+            variant="text"
+            type="button"
+            @click="
+              () => {
+                emit('toogleSignUp')
+                serverError = ''
+              }
+            "
+            class="footer__link"
+          >
+            {{ signUp ? 'Войдите здесь' : 'Регистрируйтесь здесь' }}
+          </VButton>
         </p>
       </footer>
-    </Form>
+    </form>
   </div>
 </template>
 
@@ -129,14 +189,14 @@ const submitHandler = async (values: TFormValues) => {
   flex-direction: column;
   gap: 20px;
   padding: 50px 60px;
-  background-color: $bg-white-color;
+  background-color: $white-color;
 
   &-wrapper {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $bg-gray-color;
+    background-color: $gray-color-40;
   }
 
   &__title {
@@ -156,20 +216,24 @@ const submitHandler = async (values: TFormValues) => {
   &__input {
     padding: 5px 0px 5px 10px;
     width: 100%;
-    color: $gray-text-color;
+    color: $gray-color-100;
     font-size: 1.75rem;
     line-height: 150%;
-    border: 0.7px solid rgba($gray-text-color, 0.4);
+    border: 0.7px solid $gray-color-40;
     border-radius: 8px;
+
+    &--error {
+      border-color: $error-color;
+    }
   }
   &__button {
     border-radius: 4px;
-    color: $bg-white-color;
+    color: $white-color;
     font-size: 1.75rem;
     font-weight: 500;
     text-align: center;
     &:disabled {
-      background: $gray-text-color;
+      background: $gray-color-100;
       cursor: auto;
     }
   }
@@ -180,7 +244,7 @@ const submitHandler = async (values: TFormValues) => {
   }
 
   &__error {
-    color: $red-text-color;
+    color: $error-color;
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 150%;
@@ -189,7 +253,7 @@ const submitHandler = async (values: TFormValues) => {
 
 .footer {
   &__text {
-    color: rgba($gray-text-color, 0.4);
+    color: $gray-color-40;
     font-size: 1.75rem;
     line-height: 150%;
     text-align: center;

@@ -8,7 +8,7 @@ import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps extends TCardResponse {}
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 const isDragging = inject<{
   value: boolean
@@ -43,9 +43,9 @@ const onDragEnd = () => {
     <h4 class="card__title">{{ name }}</h4>
     <footer class="card__footer">
       <CalendarIcon />
-      <p class="card__date">{{ period }}</p>
+      <p class="card__date">{{ `${period}. ${$attrs.draggable ? '' : 'Карточка просрочена '}` }}</p>
     </footer>
-    <VModalUpdate :card-id="id" :is-visible="isModalVisible" @closeModal="closeModal" />
+    <VModalUpdate :cardId="id" :is-visible="isModalVisible" @closeModal="closeModal" />
   </article>
 </template>
 
@@ -54,7 +54,7 @@ const onDragEnd = () => {
   cursor: grab;
   min-height: 133px;
   min-width: 220px;
-  background-color: $bg-white-color;
+  background-color: $white-color;
   padding: 13px 13px 19px 11px;
   border-radius: 10px;
 
@@ -88,6 +88,13 @@ const onDragEnd = () => {
   }
   &__category {
     padding: 5px 14px;
+  }
+
+  &[draggable='false'] {
+    border: 1px solid rgb(232, 92, 92);
+    & .card__date {
+      color: rgb(232, 92, 92);
+    }
   }
 }
 .column {

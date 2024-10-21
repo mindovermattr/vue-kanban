@@ -37,7 +37,6 @@ export const useDND = () => {
     const itemStatus = event.dataTransfer.getData('itemStatus') as EStatus
 
     cards.replaceCard(selectedStatus, itemStatus, itemID)
-    //cards.updateCard(card);
     onDragEnd()
   }
 

@@ -6,9 +6,8 @@ export const getCards = async (): Promise<TCardResponse[] | undefined> => {
   try {
     const response = await protectedInstance.get<TCardResponse[]>(`/tasks`)
     return response.data
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error)
-    return error
   }
 }
 
@@ -21,11 +20,11 @@ export const addCard = async (card: TKanbanCard) => {
   }
 }
 
-export const updateCard = async (card: TCardResponse) => {
+export const updateCard = async (id: number, card: TCardResponse) => {
   try {
-    await protectedInstance.put('/tasks', card)
+    const resp = await protectedInstance.put(`/tasks/${id}`, card)
+    return resp
   } catch (error) {
-    console.error(error)
     return error
   }
 }

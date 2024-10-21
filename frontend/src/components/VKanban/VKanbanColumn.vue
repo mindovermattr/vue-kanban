@@ -10,6 +10,7 @@ interface IProps {
   column: EStatusKeys
 }
 const props = defineProps<IProps>()
+const currentDate = new Date()
 
 const emit = defineEmits<{
   (e: 'onDropDragEvent', event: DragEvent, column: EStatusKeys): void
@@ -44,6 +45,16 @@ const isDragging = inject<{
   id: number | null
   isHided: boolean
 }>('isDragging')!
+
+const checkCard = (period: string) => {
+  const cardDate = new Date(period)
+  console.log(cardDate)
+  if (cardDate < currentDate) {
+    return false
+  } else {
+    return true
+  }
+}
 </script>
 
 <template>
@@ -62,7 +73,7 @@ const isDragging = inject<{
         v-bind="item"
         :key="item.id"
         @dragstart="emit('onDragStart', $event, item)"
-        draggable="true"
+        :draggable="checkCard(item.period)"
       />
     </TransitionGroup>
     <VKanbanDropzone
