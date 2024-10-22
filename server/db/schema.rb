@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_15_130322) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_22_182859) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -32,17 +32,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_15_130322) do
     t.index ["user_id"], name: "index_desks_on_user_id"
   end
 
+  create_table "statuses", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "desk_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["desk_id"], name: "index_statuses_on_desk_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", null: false
     t.bigint "category_id", null: false
-    t.string "status", default: "noStatus", null: false
     t.date "period", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "desk_id", null: false
+    t.bigint "status_id", null: false
     t.index ["category_id"], name: "index_tasks_on_category_id"
     t.index ["desk_id"], name: "index_tasks_on_desk_id"
+    t.index ["status_id"], name: "index_tasks_on_status_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -62,6 +71,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_15_130322) do
 
   add_foreign_key "categories", "desks"
   add_foreign_key "desks", "users"
+  add_foreign_key "statuses", "desks"
   add_foreign_key "tasks", "categories"
   add_foreign_key "tasks", "desks"
+  add_foreign_key "tasks", "statuses"
 end
