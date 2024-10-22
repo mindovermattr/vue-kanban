@@ -5,7 +5,7 @@ import VCategory from '@/components/VCategory.vue'
 import VModal from '@/components/VModal/VModal.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
-import { EStatus } from '@/types/EStatus'
+import { useStatusStore } from '@/store/useStatusStore'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanCard } from '@/types/TKanban'
 import { Field, Form } from 'vee-validate'
@@ -23,6 +23,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 
 const cards = useCardStore()
 const categories = useCategoryStore()
+const statusStore = useStatusStore()
 
 const date = new Date()
 
@@ -37,7 +38,7 @@ const validationScheme = object<IForm>({
 
 const submitHandler = async (values: IForm) => {
   const newCard: Omit<TCardResponse, 'id' | 'category'> = {
-    status: EStatus.NoStatus,
+    status: statusStore.status[0],
     category_id: values.category_id,
     name: values.name,
     period: values.selectedDate,
@@ -94,7 +95,7 @@ onMounted(async () => {
             </Transition>
           </fieldset>
         </div>
-        <div>
+        <div class="fields__wrapper">
           <VCalendar />
           <Transition name="slide-fade" class="field__error field__error--categories"
             ><p class="error-date" v-if="errors.selectedDate">

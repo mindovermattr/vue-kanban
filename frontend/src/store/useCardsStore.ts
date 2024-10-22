@@ -3,22 +3,22 @@ import {
   getCards as getCardsApi,
   updateCard as updateCardApi,
 } from '@/api/Cards.api'
-import { EStatus, type EStatusKeys } from '@/types/EStatus'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
-import type { TKanbanItems } from '@/types/TKanban'
 import { defineStore } from 'pinia'
+import { useStatusStore } from './useStatusStore'
 
 export const useCardStore = defineStore('cards', {
-  state: () => ({
-    cards: [] as TCardResponse[],
-    filtredCards: {
-      done: [],
-      inProgress: [],
-      needDone: [],
-      noStatus: [],
-      testing: [],
-    } as TKanbanItems,
-  }),
+  state: () => {
+    const categoryStore = useStatusStore()
+    const filtred: Record<string, []> = {}
+    categoryStore.status.forEach((status) => {
+      filtred[status] = []
+    })
+    return {
+      cards: [] as TCardResponse[],
+      filtredCards: filtred as Record<string, TCardResponse[]>,
+    }
+  },
 
   getters: {
     getCards: (state) => state.cards,
@@ -31,50 +31,52 @@ export const useCardStore = defineStore('cards', {
     },
 
     setFiltredCardsByStatus(cards: TCardResponse[]) {
-      const filtred = {
-        done: [],
-        inProgress: [],
-        needDone: [],
-        noStatus: [],
-        testing: [],
-      } as TKanbanItems
+      const categoryStore = useStatusStore()
+      const filtred: Record<string, TCardResponse[]> = {}
+      categoryStore.status.forEach((status) => {
+        filtred[status] = []
+      })
+
       cards.forEach((el) => {
-        filtred[el.status].push({
-          ...el,
-          category_id: el.category.id,
-        })
+        if (el.status === 'noStatus')
+          filtred['Без статуса'].push({
+            ...el,
+            status: 'Без статуса',
+            category_id: el.category.id,
+          })
       })
       this.filtredCards = filtred
+      console.log(filtred)
     },
 
-    replaceCard(selectedStatus: EStatusKeys, itemStatus: EStatus, itemID: string) {
-      let cardIndex
+    async replaceCard(selectedStatus: string, itemStatus: string, itemID: string) {
+      let cardIndex = 0
       const card = this.filtredCards[itemStatus].find((card, idx) => {
         cardIndex = idx
         return `${card.id}` === itemID
       })
 
-      if (cardIndex! >= 0) this.filtredCards[itemStatus].splice(cardIndex!, 1)
+      if (cardIndex >= 0) this.filtredCards[itemStatus].splice(cardIndex, 1)
       if (card) {
-        const newStatus = EStatus[selectedStatus]
-        card.status = newStatus
+        card.status = selectedStatus
 
-        this.filtredCards[newStatus].push(card)
+        this.filtredCards[selectedStatus].push(card)
+        const resp = await updateCardApi(+itemID, card)
+        return resp
       }
     },
     async fetchCards() {
       const cards = await getCardsApi()
-      if (cards) {
-        this.setCards(cards)
-      }
+      if (cards) this.setCards(cards)
     },
-    async updateCard(card: TCardResponse) {
-      updateCardApi(card)
-    },
+
+    // async updateCard(card: TCardResponse) {
+    //   updateCardApi(card)
+    // },
 
     async addCard(card: TCardResponse) {
       await addCardApi(card)
-      await this.fetchCards()
+      this.cards.push(card)
     },
   },
 })

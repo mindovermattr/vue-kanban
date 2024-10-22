@@ -16,12 +16,6 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
       props: { signUp: false },
     },
-    {
-      path: '/sign-up',
-      name: 'SignUp',
-      component: () => import('../views/LoginView.vue'),
-      props: { signUp: true },
-    },
   ],
 })
 
@@ -30,7 +24,7 @@ router.beforeEach((to) => {
   if (isAuth) {
     return true
   } else {
-    if (to.name === 'SignIn' || to.name === 'SignUp') {
+    if (to.name === 'SignIn') {
       return true
     } else {
       return { name: 'SignIn' }
