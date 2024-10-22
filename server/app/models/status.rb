@@ -1,8 +1,8 @@
 class Status < ApplicationRecord
   belongs_to :desk
 
-  has_many :tasks
+  has_many :tasks, dependent: :destroy
 
   validates :name, presence: true
-  validates :name, uniqueness: { scope: :desk_id, message: 'Name has already been taken' }
+  validates :name, uniqueness: { scope: :desk_id }
 end

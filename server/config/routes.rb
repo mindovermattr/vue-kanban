@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   root to: 'desks#index'
   resources :desks, except: [:new, :show] do
+    resources :statuses, except: [:new, :show]
     resources :categories, except: [:new, :show]
     resources :tasks, except: [:new, :show]
   end

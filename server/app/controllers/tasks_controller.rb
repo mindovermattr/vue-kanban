@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_desk, only: [:index, :create]
-  before_action :set_task, only: [:update, :destroy]
+  before_action :set_desk!, only: [:index, :create]
+  before_action :set_task!, only: [:update, :destroy]
 
   def index
     @tasks = @desk.tasks
@@ -36,15 +36,15 @@ class TasksController < ApplicationController
 
   private
 
-  def set_desk
+  def set_desk!
     @desk = Desk.find_by(id: params[:desk_id])
   end
 
-  def set_task
+  def set_task!
     @task = Task.find_by(id: params[:id])
   end
 
   def task_params
-    params.require(:task).permit(:name, :body, :category_id, :status, :period)
+    params.require(:task).permit(:name, :body, :category_id, :status_id, :period)
   end
 end

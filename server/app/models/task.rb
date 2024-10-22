@@ -7,7 +7,7 @@ class Task < ApplicationRecord
   validate :period_must_be_in_future
 
   private
-  e
+
   def period_must_be_in_future
     errors.add(:period, "must be in the future") if period <= Date.today
   end
