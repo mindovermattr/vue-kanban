@@ -1,29 +1,20 @@
 <script setup lang="ts">
 import VKanbanCard from '@/components/VKanban/VKanbanCard.vue'
-import { type EStatusKeys } from '@/types/EStatus'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { inject, ref } from 'vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps {
   items: TCardResponse[]
-  column: EStatusKeys
+  column: string
 }
 const props = defineProps<IProps>()
 const currentDate = new Date()
 
 const emit = defineEmits<{
-  (e: 'onDropDragEvent', event: DragEvent, column: EStatusKeys): void
+  (e: 'onDropDragEvent', event: DragEvent, column: string): void
   (e: 'onDragStart', event: DragEvent, item: TCardResponse): void
 }>()
-
-const titles: Record<EStatusKeys, string> = {
-  Done: 'Готово',
-  InProgress: 'В работе',
-  NeedDone: 'Нужно сделать',
-  NoStatus: 'Без статуса',
-  Testing: 'Тестирование',
-}
 
 const isDropzoneSelected = ref(false)
 
@@ -65,7 +56,7 @@ const checkCard = (period: string) => {
     }"
     :data-section="column"
   >
-    <h3 class="column__title">{{ titles[column] }}</h3>
+    <h3 class="column__title">{{ column }}</h3>
 
     <TransitionGroup name="list" tag="div" class="cards">
       <VKanbanCard

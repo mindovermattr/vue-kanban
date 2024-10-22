@@ -29,13 +29,8 @@ const toggleSignUp = () => {
   <main>
     <VFormSignIn v-if="signUp" @toogleSignUp="toggleSignUp" :sign-up="sign" />
     <VFormSignIn v-else @toogleSignUp="toggleSignUp" :sign-up="sign" />
-    <VFlash
-      color="red"
-      @set-close="closeFlash"
-      :is-visible="isVisible"
-      :step="500"
-      :time-in-ms="4000"
-      >{{ 'Время вашей сессии истекло. Пожалуйста, войдите в систему снова' }}</VFlash
-    >
+    <VFlash color="red" @set-close="closeFlash" :is-visible="isVisible" :time-in-ms="4000">{{
+      'Время вашей сессии истекло. Пожалуйста, войдите в систему снова'
+    }}</VFlash>
   </main>
 </template>

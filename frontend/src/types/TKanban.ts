@@ -1,4 +1,3 @@
-import type { EStatus } from './EStatus'
 import type { TCardResponse } from './responses/TCardResponse'
 
 type TKanbanCard = {
@@ -7,7 +6,7 @@ type TKanbanCard = {
   name: string
   period: string
   body: string
-  status: EStatus
+  status: string
 }
 
 type TCategory = {
@@ -15,6 +14,7 @@ type TCategory = {
   id: number
   main_color: string
   accent_color: string
+  desk_id: number
 }
 
 type TKanbanItems = {

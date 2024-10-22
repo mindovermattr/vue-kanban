@@ -36,7 +36,9 @@ const logoutHandler = () => {
 
 <template>
   <header @click="closeProfile" class="header container">
-    <h1 class="header__title">KamBam</h1>
+    <router-link to="/" class="header__title"
+      >Kam<span class="header__title header__title--blue">Bam</span></router-link
+    >
     <div class="header__controls controls">
       <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
       <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
@@ -70,6 +72,9 @@ const logoutHandler = () => {
   padding: 20px 0;
   &__title {
     font-size: 3rem;
+    &--blue {
+      color: $blue-color;
+    }
   }
 }
 .controls {

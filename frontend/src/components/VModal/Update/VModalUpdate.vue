@@ -4,7 +4,7 @@ import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
-import { EStatus } from '@/types/EStatus'
+import { useStatusStore } from '@/store/useStatusStore'
 import { Form } from 'vee-validate'
 import { computed, ref } from 'vue'
 import VModal from '../VModal.vue'
@@ -15,6 +15,7 @@ interface IProps {
 }
 
 const categories = useCategoryStore()
+const statusStore = useStatusStore()
 const cards = useCardStore()
 const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
@@ -48,12 +49,12 @@ const redactingHandler = () => {
           </VButton>
           <template v-else>
             <VButton
-              v-for="(status, key) in EStatus"
+              v-for="status in statusStore.status"
               type="button"
               :key="status"
               class="status__button"
               :class="{
-                'status__button--selected': isSelected === key,
+                'status__button--selected': isSelected === status,
               }"
               variant="contained"
               >{{ status }}

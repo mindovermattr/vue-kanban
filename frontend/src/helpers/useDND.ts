@@ -1,5 +1,4 @@
 import { useCardStore } from '@/store/useCardsStore'
-import { EStatus, type EStatusKeys } from '@/types/EStatus'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { reactive } from 'vue'
 
@@ -31,10 +30,10 @@ export const useDND = () => {
     event.dataTransfer.setData('itemStatus', item.status)
   }
 
-  const onDropDragEvent = (event: DragEvent, selectedStatus: EStatusKeys) => {
+  const onDropDragEvent = (event: DragEvent, selectedStatus: string) => {
     if (!event.dataTransfer) return
     const itemID = event.dataTransfer.getData('itemID')
-    const itemStatus = event.dataTransfer.getData('itemStatus') as EStatus
+    const itemStatus = event.dataTransfer.getData('itemStatus')
 
     cards.replaceCard(selectedStatus, itemStatus, itemID)
     onDragEnd()
