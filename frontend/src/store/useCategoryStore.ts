@@ -15,16 +15,16 @@ export const useCategoryStore = defineStore('categories', {
       this.categories = categories
     },
 
-    async fetchCategories() {
-      const categories = await categoriesApi.getCategories()
+    async fetchCategories(deskId: number) {
+      const categories = await categoriesApi.getCategories(deskId)
       if (categories) {
         this.setCategories(categories)
       }
     },
 
-    async addCategory(category: Omit<TCategory, 'id'>) {
-      await categoriesApi.addCategory(category)
-      await this.fetchCategories()
+    async addCategory(deskId: number, category: Omit<TCategory, 'id'>) {
+      const resp = await categoriesApi.addCategory(category, deskId)
+      if (resp) this.categories.push(resp)
     },
   },
 })

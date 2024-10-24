@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import VHeader from '@/components/VHeader.vue'
-import Vkanban from '@/components/VKanban/VKanban.vue'
-</script>
+import VLayout from '@/components/VLayout/VLayout.vue'
+import { onMounted } from 'vue'
 
+onMounted(async () => {})
+</script>
 <template>
-  <VHeader />
-  <main class="main">
-    <Vkanban />
-  </main>
+  <VLayout>
+    <template #header>
+      <VHeader></VHeader>
+    </template>
+    <div class="container"></div>
+  </VLayout>
 </template>
 
-<style lang="scss" scoped>
-.main {
-  background-color: $bg-gray-color;
-  min-height: calc(100vh - 77px);
-}
-</style>
+<style scoped></style>

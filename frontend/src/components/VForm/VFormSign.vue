@@ -3,11 +3,12 @@ import { useUserStore } from '@/store/useUserStore'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TFormValues } from '@/types/TFormValues'
 import axios, { AxiosError } from 'axios'
-import { ErrorMessage, Field, useForm } from 'vee-validate'
+import { ErrorMessage, useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { object, string, ref as yupRef } from 'yup'
 import VButton from '../VButton.vue'
+import VField from '../VField/VField.vue'
 
 interface IProps {
   signUp: boolean
@@ -63,7 +64,6 @@ const onSubmit = handleSubmit(async (values) => {
 
     const response = await user.register(newUser)
     if (axios.isAxiosError(response)) {
-      console.log(response)
       serverError.value = (response as AxiosError<{ error: string }>).response!.data!.error
       return
     }
@@ -76,14 +76,12 @@ const onSubmit = handleSubmit(async (values) => {
       },
     }
     const response = await user.login(loginUser)
-    console.log(response)
     if (axios.isAxiosError(response)) {
-      console.log(response)
-      serverError.value = (response as AxiosError).response!.data! as string
+      serverError.value = response.response!.data! as string
       return
     }
   }
-  router.push({ name: 'home' })
+  router.replace({ name: 'home' })
 })
 </script>
 <template>
@@ -93,55 +91,25 @@ const onSubmit = handleSubmit(async (values) => {
       <div class="form__fields">
         <template v-if="signUp">
           <fieldset class="form__field">
-            <Field
-              name="userName"
-              type="text"
-              :class="[
-                'form__input',
-                {
-                  'form__input--error': errors.userName,
-                },
-              ]"
-              placeholder="Имя"
-            />
+            <VField name="userName" type="text" :isError="!!errors.userName" placeholder="Имя" />
           </fieldset>
         </template>
         <fieldset class="form__field">
-          <Field
-            name="email"
-            type="email"
-            :class="[
-              'form__input',
-              {
-                'form__input--error': errors.email,
-              },
-            ]"
-            placeholder="Эл. почта"
-          />
+          <VField name="email" type="email" :isError="!!errors.email" placeholder="Эл. почта" />
         </fieldset>
         <fieldset class="form__field">
-          <Field
+          <VField
             name="password"
             type="password"
-            :class="[
-              'form__input',
-              {
-                'form__input--error': errors.password,
-              },
-            ]"
+            :isError="!!errors.password"
             placeholder="Пароль"
           />
         </fieldset>
         <fieldset v-if="signUp" class="form__field">
-          <Field
+          <VField
             name="passwordConfirm"
             type="password"
-            :class="[
-              'form__input',
-              {
-                'form__input--error': errors.passwordConfirm,
-              },
-            ]"
+            :isError="!!errors.passwordConfirm"
             placeholder="Подтверждение пароля"
           />
         </fieldset>

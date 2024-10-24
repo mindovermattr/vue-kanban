@@ -2,7 +2,7 @@
 import type { TCategory } from '@/types/TKanban'
 import { useField } from 'vee-validate'
 
-interface IProps extends TCategory {
+interface IProps extends Omit<TCategory, 'desk_id'> {
   isField?: boolean
 }
 

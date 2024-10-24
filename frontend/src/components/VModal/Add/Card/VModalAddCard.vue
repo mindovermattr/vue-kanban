@@ -10,6 +10,7 @@ import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanCard } from '@/types/TKanban'
 import { Field, Form } from 'vee-validate'
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { number, object, string, date as yupDate } from 'yup'
 
 interface IProps {
@@ -20,6 +21,7 @@ type IForm = TKanbanCard & { selectedDate: Date }
 
 defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
+const route = useRoute()
 
 const cards = useCardStore()
 const categories = useCategoryStore()
@@ -38,19 +40,20 @@ const validationScheme = object<IForm>({
 
 const submitHandler = async (values: IForm) => {
   const newCard: Omit<TCardResponse, 'id' | 'category'> = {
-    status: statusStore.status[0],
+    status_id: statusStore.status[0].id,
     category_id: values.category_id,
     name: values.name,
-    period: values.selectedDate,
+    period: values.selectedDate.toDateString(),
     body: values.body,
   }
 
-  await cards.addCard(newCard)
+  await cards.addCard(+route.params.id, newCard)
   emit('closeModal')
 }
 
 onMounted(async () => {
-  await categories.fetchCategories()
+  await categories.fetchCategories(+route.params.id)
+  console.log(categories.categories)
   date.setDate(date.getDate() + 1)
 })
 </script>

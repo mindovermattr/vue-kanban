@@ -1,14 +1,21 @@
 import { getUserFromLS } from '@/helpers/getUserFromLS'
+import HomeView from '@/views/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import DeskView from '../views/DeskView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/desk/:id',
+      name: 'desk',
+      component: DeskView,
+      props: true,
     },
     {
       path: '/sign-in',

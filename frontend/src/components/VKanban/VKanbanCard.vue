@@ -43,7 +43,7 @@ const onDragEnd = () => {
     <h4 class="card__title">{{ name }}</h4>
     <footer class="card__footer">
       <CalendarIcon />
-      <p class="card__date">{{ `${period}. ${$attrs.draggable ? '' : 'Карточка просрочена '}` }}</p>
+      <p class="card__date">{{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}</p>
     </footer>
     <VModalUpdate :cardId="id" :is-visible="isModalVisible" @closeModal="closeModal" />
   </article>

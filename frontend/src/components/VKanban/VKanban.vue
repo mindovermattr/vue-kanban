@@ -3,30 +3,37 @@ import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
 import { useDND } from '@/helpers/useDND'
 import { useCardStore } from '@/store/useCardsStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import { onMounted, provide } from 'vue'
+import { onMounted, provide, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 const cardStore = useCardStore()
 const statusStore = useStatusStore()
 
-const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND()
+const route = useRoute()
+const kanbanContainer = ref<HTMLDivElement | null>(null)
+
+const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+route.params.id)
 
 onMounted(async () => {
-  await statusStore.fetchCategories()
-  await cardStore.fetchCards()
-  console.log(cardStore.filtredCards)
+  await statusStore.fetchStatus(+route.params.id)
+  await cardStore.fetchCards(+route.params.id)
 })
 
 provide('isDragging', isDragging)
 </script>
 
 <template>
-  <div class="container container--kanban">
+  <div
+    :style="{ 'grid-template-columns': `repeat(${statusStore.status.length}, 220px)` }"
+    class="container container--kanban"
+    ref="kanbanContainer"
+  >
     <VKanbanColumn
       v-for="status in statusStore.status"
-      :column="status"
-      :key="status"
-      :items="cardStore.filtredCards[status]"
-      :isDragging="isDragging"
+      :columnName="status.name"
+      :columnId="status.id"
+      :key="status.id"
+      :items="cardStore.filtredCards[status.name]"
       class="anim"
       @onDropDragEvent="onDropDragEvent"
       @onDragStart="onStartDragEvent"
@@ -38,8 +45,8 @@ provide('isDragging', isDragging)
 <style lang="scss" scoped>
 .container--kanban {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
+  overflow-x: scroll;
 }
 
 .anim {

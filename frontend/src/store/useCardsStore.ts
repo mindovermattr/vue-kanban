@@ -12,7 +12,7 @@ export const useCardStore = defineStore('cards', {
     const categoryStore = useStatusStore()
     const filtred: Record<string, []> = {}
     categoryStore.status.forEach((status) => {
-      filtred[status] = []
+      filtred[status.name] = []
     })
     return {
       cards: [] as TCardResponse[],
@@ -34,39 +34,47 @@ export const useCardStore = defineStore('cards', {
       const categoryStore = useStatusStore()
       const filtred: Record<string, TCardResponse[]> = {}
       categoryStore.status.forEach((status) => {
-        filtred[status] = []
+        filtred[status.name] = []
+        cards.forEach((el) => {
+          if (el.status_id === status.id)
+            filtred[status.name].push({
+              ...el,
+              category_id: el.category.id,
+            })
+        })
       })
 
-      cards.forEach((el) => {
-        if (el.status === 'noStatus')
-          filtred['Без статуса'].push({
-            ...el,
-            status: 'Без статуса',
-            category_id: el.category.id,
-          })
-      })
       this.filtredCards = filtred
       console.log(filtred)
     },
 
-    async replaceCard(selectedStatus: string, itemStatus: string, itemID: string) {
+    async replaceCard(
+      deskId: number,
+      selectedStatus: number,
+      itemStatusId: number,
+      itemID: string
+    ) {
       let cardIndex = 0
-      const card = this.filtredCards[itemStatus].find((card, idx) => {
+      const statusStore = useStatusStore()
+      const selected = statusStore.status.find((el) => el.id === itemStatusId)
+      const card = this.filtredCards[selected!.name].find((card, idx) => {
         cardIndex = idx
         return `${card.id}` === itemID
       })
+      console.log(card)
 
-      if (cardIndex >= 0) this.filtredCards[itemStatus].splice(cardIndex, 1)
+      if (cardIndex >= 0) this.filtredCards[selected!.name].splice(cardIndex, 1)
       if (card) {
-        card.status = selectedStatus
+        const s = statusStore.status.find((el) => el.id === selectedStatus)
+        card.status_id = selectedStatus
 
-        this.filtredCards[selectedStatus].push(card)
-        const resp = await updateCardApi(+itemID, card)
+        this.filtredCards[s!.name].push(card)
+        const resp = await updateCardApi(deskId, +itemID, card)
         return resp
       }
     },
-    async fetchCards() {
-      const cards = await getCardsApi()
+    async fetchCards(deskId: number) {
+      const cards = await getCardsApi(deskId)
       if (cards) this.setCards(cards)
     },
 
@@ -74,8 +82,8 @@ export const useCardStore = defineStore('cards', {
     //   updateCardApi(card)
     // },
 
-    async addCard(card: TCardResponse) {
-      await addCardApi(card)
+    async addCard(deskId: number, card: TCardResponse) {
+      await addCardApi(deskId, card)
       this.cards.push(card)
     },
   },

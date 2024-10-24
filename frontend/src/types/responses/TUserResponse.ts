@@ -11,4 +11,8 @@ export type TUserRespLogin = {
   token: string
 }
 
-export type TUserResp<T> = Promise<T | AxiosError | string>
+export type TUserError = {
+  error: string
+}
+
+export type TUserResp<T> = Promise<T | AxiosError<TUserError> | string>
