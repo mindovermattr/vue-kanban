@@ -5,7 +5,7 @@ import type { InputTypeHTMLAttribute } from 'vue'
 interface IProps {
   name: string
   type: InputTypeHTMLAttribute
-  isError: boolean
+  isError?: boolean
   placeholder?: string
 }
 

@@ -67,16 +67,14 @@ const checkCard = (period: string) => {
         :draggable="checkCard(item.period)"
       />
     </TransitionGroup>
-    <Transition appear name="zone">
-      <VKanbanDropzone
-        v-if="isDragging.value"
-        :is-selected="isDropzoneSelected"
-        @drop="onDrop($event)"
-        @dragover.prevent
-        @dragenter.prevent="onDragEnter"
-        @dragleave="onDragLeave"
-      />
-    </Transition>
+    <VKanbanDropzone
+      v-if="isDragging.value"
+      :is-selected="isDropzoneSelected"
+      @drop="onDrop($event)"
+      @dragover.prevent
+      @dragenter.prevent="onDragEnter"
+      @dragleave="onDragLeave"
+    />
   </section>
 </template>
 
@@ -117,20 +115,6 @@ const checkCard = (period: string) => {
 
 .list-leave-active {
   position: absolute;
-}
-
-.zone-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.zone-leave-active {
-  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.zone-enter-from,
-.zone-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
 }
 
 @media (max-width: $tablet-width) {

@@ -30,12 +30,11 @@ export const useDND = (deskId: number) => {
     event.dataTransfer.setData('itemStatus', `${item.status_id}`)
   }
 
-  const onDropDragEvent = (event: DragEvent, selectedStatus: number) => {
+  const onDropDragEvent = (event: DragEvent, statusSelected: number) => {
     if (!event.dataTransfer) return
     const itemID = event.dataTransfer.getData('itemID')
     const itemStatus = event.dataTransfer.getData('itemStatus')
-
-    cards.replaceCard(deskId, selectedStatus, +itemStatus, itemID)
+    cards.replaceCard(deskId, statusSelected, +itemStatus, +itemID)
     onDragEnd()
   }
 

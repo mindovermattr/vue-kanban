@@ -50,25 +50,24 @@ export const useCardStore = defineStore('cards', {
 
     async replaceCard(
       deskId: number,
-      selectedStatus: number,
+      selectedStatusId: number,
       itemStatusId: number,
-      itemID: string
+      itemID: number
     ) {
       let cardIndex = 0
       const statusStore = useStatusStore()
-      const selected = statusStore.status.find((el) => el.id === itemStatusId)
-      const card = this.filtredCards[selected!.name].find((card, idx) => {
+      const initialStatuts = statusStore.status.find((el) => el.id === itemStatusId)
+      const card = this.filtredCards[initialStatuts!.name].find((card, idx) => {
         cardIndex = idx
-        return `${card.id}` === itemID
+        return card.id === itemID
       })
-      console.log(card)
 
-      if (cardIndex >= 0) this.filtredCards[selected!.name].splice(cardIndex, 1)
+      if (cardIndex >= 0) this.filtredCards[initialStatuts!.name].splice(cardIndex, 1)
       if (card) {
-        const s = statusStore.status.find((el) => el.id === selectedStatus)
-        card.status_id = selectedStatus
+        const selectedStatus = statusStore.status.find((el) => el.id === selectedStatusId)
+        card.status_id = selectedStatusId
 
-        this.filtredCards[s!.name].push(card)
+        this.filtredCards[selectedStatus!.name].push(card)
         const resp = await updateCardApi(deskId, +itemID, card)
         return resp
       }
@@ -85,6 +84,7 @@ export const useCardStore = defineStore('cards', {
     async addCard(deskId: number, card: TCardResponse) {
       await addCardApi(deskId, card)
       this.cards.push(card)
+      this.filtredCards[0].push(card)
     },
   },
 })
