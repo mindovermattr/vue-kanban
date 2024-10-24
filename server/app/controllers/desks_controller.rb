@@ -3,7 +3,7 @@ class DesksController < ApplicationController
 
   def index
     @desks = current_user.desks
-    render json: @desks
+    render json: @desks, each_serializer: DeskStatsSerializer
   end
 
   def create
