@@ -1,9 +1,9 @@
 import type { TCategory } from '@/types/TKanban'
 import { protectedInstance } from './instance'
 
-export const getCategories = async (): Promise<TCategory[] | undefined> => {
+export const getCategories = async (deskId: number): Promise<TCategory[] | undefined> => {
   try {
-    const response = await protectedInstance.get<TCategory[]>(`/categories`)
+    const response = await protectedInstance.get<TCategory[]>(`desks/${deskId}/categories`)
     return response.data
   } catch (error) {
     console.error(error)
@@ -11,10 +11,11 @@ export const getCategories = async (): Promise<TCategory[] | undefined> => {
 }
 
 export const addCategory = async (
-  category: TCategory
-): Promise<Omit<TCategory, 'id'> | undefined> => {
+  category: Omit<TCategory, 'id'>,
+  deskId: number
+): Promise<TCategory | undefined> => {
   try {
-    const response = await protectedInstance.post<Omit<TCategory, 'id'>>(`/categories`, category)
+    const response = await protectedInstance.post<TCategory>(`desks/${deskId}/categories`, category)
     return response.data
   } catch (error) {
     console.error(error)

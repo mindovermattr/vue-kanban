@@ -7,25 +7,33 @@ import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { Form } from 'vee-validate'
 import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import VModal from '../VModal.vue'
 
 interface IProps {
   isVisible: boolean
   cardId: number
+  statusId: number
 }
 
 const categories = useCategoryStore()
 const statusStore = useStatusStore()
 const cards = useCardStore()
+const route = useRoute()
+
 const props = defineProps<IProps>()
+const selectedStatus = computed(() => statusStore.status.find((el) => el.id === props.statusId))
 const emit = defineEmits<(e: 'closeModal') => void>()
 
 const isRedacting = ref(false)
-const isSelected = ref('Done')
 const currentCard = computed(() => cards.cards.find((el) => el.id === props.cardId))
 
 const redactingHandler = () => {
   isRedacting.value = !isRedacting.value
+}
+
+const deleteHandler = async () => {
+  await cards.deleteCard(+route.params.id, props.cardId, props.statusId)
 }
 </script>
 
@@ -43,21 +51,21 @@ const redactingHandler = () => {
             type="button"
             v-if="!isRedacting"
             class="status__button status__button--selected"
-            variant="contained"
+            variant="default"
           >
-            Без статуса
+            {{ selectedStatus!.name }}
           </VButton>
           <template v-else>
             <VButton
               v-for="status in statusStore.status"
               type="button"
-              :key="status"
+              :key="status.name"
               class="status__button"
               :class="{
-                'status__button--selected': isSelected === status,
+                'status__button--selected': statusId === status.id,
               }"
-              variant="contained"
-              >{{ status }}
+              variant="default"
+              >{{ status.name }}
             </VButton>
           </template>
         </TransitionGroup>
@@ -82,7 +90,7 @@ const redactingHandler = () => {
           >
             {{ isRedacting ? 'Отменить' : 'Редактировать задачу' }}</VButton
           >
-          <VButton class="controls__button" type="button" variant="outlined">
+          <VButton @click="deleteHandler" class="controls__button" type="button" variant="outlined">
             Удалить задачу</VButton
           >
         </div>
@@ -120,6 +128,8 @@ const redactingHandler = () => {
     border-radius: 24px;
     font-size: 1.75rem;
     opacity: 0.4;
+    padding: 10px 14px;
+    color: $white-color;
     &--selected {
       opacity: 1;
     }

@@ -4,8 +4,6 @@ import { useUserStore } from '@/store/useUserStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
-import VModalAdd from './VModal/Add/Card/VModalAddCard.vue'
-import VModalAddCategory from './VModal/Add/Category/VModalAddCategory.vue'
 
 const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)
@@ -30,7 +28,7 @@ const closeProfile = () => {
 const router = useRouter()
 const logoutHandler = () => {
   userStore.logout()
-  router.push({ name: 'SignIn' })
+  router.replace({ name: 'SignIn' })
 }
 </script>
 
@@ -40,8 +38,7 @@ const logoutHandler = () => {
       >Kam<span class="header__title header__title--blue">Bam</span></router-link
     >
     <div class="header__controls controls">
-      <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
-      <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
+      <slot></slot>
       <VButton
         variant="text"
         @click.stop="toggleProfile"
@@ -60,8 +57,6 @@ const logoutHandler = () => {
       </Transition>
     </div>
   </header>
-  <VModalAdd @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
-  <VModalAddCategory @closeModal="closeCategoryModalHandler" :is-visible="isCategoryModal" />
 </template>
 
 <style lang="scss" scoped>

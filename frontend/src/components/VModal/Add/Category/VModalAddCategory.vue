@@ -3,6 +3,7 @@ import VButton from '@/components/VButton.vue'
 import VCategory from '@/components/VCategory.vue'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { ColorPicker } from 'vue3-colorpicker'
 import 'vue3-colorpicker/style.css'
 import VModal from '../../VModal.vue'
@@ -12,13 +13,16 @@ const mainColor = ref('#ffffff')
 const accentColor = ref('#000000')
 const name = ref('Demo')
 
+const route = useRoute()
+
 const categories = useCategoryStore()
 
 const addCategory = async () => {
-  await categories.addCategory({
+  await categories.addCategory(+route.params.id, {
     name: name.value,
     main_color: mainColor.value.toUpperCase(),
     accent_color: accentColor.value.toUpperCase(),
+    desk_id: +route.params.id,
   })
   emit('closeModal')
 }
@@ -52,7 +56,13 @@ const emit = defineEmits<(e: 'closeModal') => void>()
         </fieldset>
       </div>
       <div class="demo">
-        <VCategory :name="name" :id="0" :main_color="mainColor" :accent_color="accentColor" />
+        <VCategory
+          :desk_id="+route.params.id"
+          :name="name"
+          :id="0"
+          :main_color="mainColor"
+          :accent_color="accentColor"
+        />
       </div>
       <VButton @click.prevent="addCategory" variant="contained">Создать категорию</VButton>
     </form>

@@ -2,14 +2,15 @@
 import VButton from '@/components/VButton.vue'
 import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
+import VField from '@/components/VField/VField.vue'
 import VModal from '@/components/VModal/VModal.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanCard } from '@/types/TKanban'
-import { Field, Form } from 'vee-validate'
+import { Field, useForm } from 'vee-validate'
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { number, object, string, date as yupDate } from 'yup'
 
 interface IProps {
@@ -20,6 +21,7 @@ type IForm = TKanbanCard & { selectedDate: Date }
 
 defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
+const route = useRoute()
 
 const cards = useCardStore()
 const categories = useCategoryStore()
@@ -36,38 +38,47 @@ const validationScheme = object<IForm>({
     .required('Нужно выбрать дату'),
 })
 
-const submitHandler = async (values: IForm) => {
-  const newCard: Omit<TCardResponse, 'id' | 'category'> = {
-    status: statusStore.status[0],
+const { handleSubmit, errors } = useForm<IForm>({
+  validationSchema: validationScheme,
+  validateOnMount: false,
+})
+
+const submitHandler = handleSubmit(async (values: IForm) => {
+  const newCard: Omit<TKanbanCard, 'id'> = {
+    status_id: statusStore.status[0].id,
     category_id: values.category_id,
     name: values.name,
-    period: values.selectedDate,
+    period: values.selectedDate.toDateString(),
     body: values.body,
   }
 
-  await cards.addCard(newCard)
+  const resp = await cards.addCard(+route.params.id, newCard)
+
+  console.log(resp)
   emit('closeModal')
-}
+})
 
 onMounted(async () => {
-  await categories.fetchCategories()
+  await categories.fetchCategories(+route.params.id)
+  console.log(categories.categories)
   date.setDate(date.getDate() + 1)
 })
 </script>
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <Form :validation-schema="validationScheme" @submit="submitHandler" v-slot="{ errors }">
+    <form @submit="submitHandler">
       <h2 class="modal__title">Создание задачи</h2>
       <div class="modal__fields fields">
         <div class="fields__wrapper">
           <fieldset class="fields__item field">
             <legend class="field__title title">Название задачи</legend>
-            <Field
+            <VField
               name="name"
               placeholder="Введите название задачи..."
               class="field__input"
               type="text"
+              :is-error="!!errors.name"
             />
             <Transition name="slide-fade" class="field__error"
               ><p v-if="errors.name">{{ errors.name }}</p></Transition
@@ -107,7 +118,7 @@ onMounted(async () => {
       <div class="modal__button-wrapper">
         <VButton type="submit" class="modal__button" variant="contained">Создать задачу</VButton>
       </div>
-    </Form>
+    </form>
   </VModal>
 </template>
 
@@ -159,15 +170,10 @@ onMounted(async () => {
 .field {
   max-height: fit-content;
   &__input {
-    font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 16px;
     margin-top: 20px;
 
     width: 100%;
     padding: 14px;
-    border: 0.7px solid rgba(148, 166, 190, 0.4);
-    border-radius: 8px;
   }
   &__textarea {
     font-size: 1.75rem;
@@ -193,6 +199,7 @@ onMounted(async () => {
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 16px;
+    margin-top: 8px;
     &--categories {
       margin-top: 20px;
     }

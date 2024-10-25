@@ -2,7 +2,7 @@ import { useCardStore } from '@/store/useCardsStore'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { reactive } from 'vue'
 
-export const useDND = () => {
+export const useDND = (deskId: number) => {
   const isDragging = reactive<{
     value: boolean
     id: number | null
@@ -27,15 +27,14 @@ export const useDND = () => {
     event.dataTransfer.dropEffect = 'move'
     event.dataTransfer.effectAllowed = 'move'
     event.dataTransfer.setData('itemID', item.id.toString())
-    event.dataTransfer.setData('itemStatus', item.status)
+    event.dataTransfer.setData('itemStatus', `${item.status_id}`)
   }
 
-  const onDropDragEvent = (event: DragEvent, selectedStatus: string) => {
+  const onDropDragEvent = (event: DragEvent, statusSelected: number) => {
     if (!event.dataTransfer) return
     const itemID = event.dataTransfer.getData('itemID')
     const itemStatus = event.dataTransfer.getData('itemStatus')
-
-    cards.replaceCard(selectedStatus, itemStatus, itemID)
+    cards.replaceCard(deskId, statusSelected, +itemStatus, +itemID)
     onDragEnd()
   }
 

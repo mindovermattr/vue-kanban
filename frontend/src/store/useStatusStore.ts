@@ -1,9 +1,12 @@
+import { getStatuses } from '@/api/Status.api'
+import type { TStatus } from '@/types/responses/TStatusResponse'
+import axios from 'axios'
 import { defineStore } from 'pinia'
 
 export const useStatusStore = defineStore('status', {
   state: () => {
     return {
-      status: [] as string[],
+      status: [] as TStatus[],
     }
   },
   getters: {
@@ -11,9 +14,13 @@ export const useStatusStore = defineStore('status', {
   },
 
   actions: {
-    async fetchCategories() {
-      this.status = ['Без статуса', 'Нужно сделать', 'В работе', 'Тестиование', 'Готово']
-      return ['Без статуса', 'Нужно сделать', 'В работе', 'Тестиование', 'Готово']
+    async fetchStatus(deskId: number) {
+      const resp = await getStatuses(deskId)
+      if (axios.isAxiosError(resp)) return resp.message
+      if (resp) {
+        this.status = resp.data
+      }
+      return 'Неизвестная ошибка'
     },
   },
 })

@@ -1,12 +1,10 @@
-import type { TCardResponse } from './responses/TCardResponse'
-
 type TKanbanCard = {
   id: number
   category_id: number
   name: string
   period: string
   body: string
-  status: string
+  status_id: number
 }
 
 type TCategory = {
@@ -17,12 +15,4 @@ type TCategory = {
   desk_id: number
 }
 
-type TKanbanItems = {
-  noStatus: TCardResponse[]
-  needDone: TCardResponse[]
-  inProgress: TCardResponse[]
-  testing: TCardResponse[]
-  done: TCardResponse[]
-}
-
-export type { TCategory, TKanbanCard, TKanbanItems }
+export type { TCategory, TKanbanCard }

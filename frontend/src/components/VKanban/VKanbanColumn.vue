@@ -5,14 +5,15 @@ import { inject, ref } from 'vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps {
-  items: TCardResponse[]
-  column: string
+  items: TCardResponse[] | undefined
+  columnName: string
+  columnId: number
 }
 const props = defineProps<IProps>()
 const currentDate = new Date()
 
 const emit = defineEmits<{
-  (e: 'onDropDragEvent', event: DragEvent, column: string): void
+  (e: 'onDropDragEvent', event: DragEvent, column: number): void
   (e: 'onDragStart', event: DragEvent, item: TCardResponse): void
 }>()
 
@@ -28,7 +29,7 @@ const onDragLeave = () => {
 
 const onDrop = (event: DragEvent) => {
   isDropzoneSelected.value = false
-  emit('onDropDragEvent', event, props.column)
+  emit('onDropDragEvent', event, props.columnId)
 }
 
 const isDragging = inject<{
@@ -39,7 +40,6 @@ const isDragging = inject<{
 
 const checkCard = (period: string) => {
   const cardDate = new Date(period)
-  console.log(cardDate)
   if (cardDate < currentDate) {
     return false
   } else {
@@ -54,9 +54,9 @@ const checkCard = (period: string) => {
     :class="{
       'column--dragging': isDragging.value,
     }"
-    :data-section="column"
+    :data-section="columnName"
   >
-    <h3 class="column__title">{{ column }}</h3>
+    <h3 class="column__title">{{ columnName }}</h3>
 
     <TransitionGroup name="list" tag="div" class="cards">
       <VKanbanCard
@@ -99,7 +99,6 @@ const checkCard = (period: string) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 10px;
 }
 
 .list-move,
