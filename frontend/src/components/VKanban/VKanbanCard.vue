@@ -8,7 +8,7 @@ import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps extends TCardResponse {}
 
-const props = defineProps<IProps>()
+defineProps<IProps>()
 
 const isDragging = inject<{
   value: boolean

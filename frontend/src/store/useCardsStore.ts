@@ -1,5 +1,6 @@
 import {
   addCard as addCardApi,
+  deleteCard as deleteCardApi,
   getCards as getCardsApi,
   updateCard as updateCardApi,
 } from '@/api/Cards.api'
@@ -87,6 +88,16 @@ export const useCardStore = defineStore('cards', {
         this.cards.push(resp.data)
         this.filtredCards[0].push(resp.data)
       }
+    },
+    async deleteCard(deskId: number, cardId: number, statusId: number) {
+      const statusStore = useStatusStore()
+      await deleteCardApi(deskId, cardId)
+
+      const status = statusStore.status.find((el) => el.id === statusId)
+      const idx = this.cards.findIndex((el) => el.id === cardId)
+      this.cards.splice(idx, 1)
+      const statusIdx = this.filtredCards[status!.name].findIndex((el) => el.id === statusId)
+      this.filtredCards[status!.name].splice(statusIdx, 1)
     },
   },
 })

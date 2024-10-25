@@ -31,3 +31,12 @@ export const updateCard = async (deskId: number, id: number, card: TCardResponse
     return error
   }
 }
+
+export const deleteCard = async (deskId: number, cardId: number) => {
+  try {
+    const resp = await protectedInstance.delete(`desks/${deskId}/tasks/${cardId}`)
+    return resp
+  } catch (error) {
+    return error
+  }
+}
