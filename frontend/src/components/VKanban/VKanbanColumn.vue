@@ -5,7 +5,7 @@ import { inject, ref } from 'vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps {
-  items: TCardResponse[]
+  items: TCardResponse[] | undefined
   columnName: string
   columnId: number
 }

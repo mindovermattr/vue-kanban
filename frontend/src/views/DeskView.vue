@@ -8,7 +8,7 @@ import VModalAddCategory from '@/components/VModal/Add/Category/VModalAddCategor
 import { useModal } from '@/helpers/useModal'
 import { ref } from 'vue'
 
-defineProps<{ id: number }>()
+defineProps<{ id: string }>()
 
 const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)

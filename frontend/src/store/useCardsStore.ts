@@ -4,6 +4,7 @@ import {
   updateCard as updateCardApi,
 } from '@/api/Cards.api'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
+import type { TKanbanCard } from '@/types/TKanban'
 import { defineStore } from 'pinia'
 import { useStatusStore } from './useStatusStore'
 
@@ -45,7 +46,6 @@ export const useCardStore = defineStore('cards', {
       })
 
       this.filtredCards = filtred
-      console.log(filtred)
     },
 
     async replaceCard(
@@ -81,10 +81,12 @@ export const useCardStore = defineStore('cards', {
     //   updateCardApi(card)
     // },
 
-    async addCard(deskId: number, card: TCardResponse) {
-      await addCardApi(deskId, card)
-      this.cards.push(card)
-      this.filtredCards[0].push(card)
+    async addCard(deskId: number, card: Omit<TKanbanCard, 'id'>) {
+      const resp = await addCardApi(deskId, card)
+      if (resp) {
+        this.cards.push(resp.data)
+        this.filtredCards[0].push(resp.data)
+      }
     },
   },
 })

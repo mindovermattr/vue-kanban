@@ -1,5 +1,6 @@
 import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { type TKanbanCard } from '@/types/TKanban'
+import type { AxiosResponse } from 'axios'
 import { protectedInstance } from './instance'
 
 export const getCards = async (deskId: number): Promise<TCardResponse[] | undefined> => {
@@ -11,12 +12,14 @@ export const getCards = async (deskId: number): Promise<TCardResponse[] | undefi
   }
 }
 
-export const addCard = async (deskId: number, card: TKanbanCard) => {
+export const addCard = async (
+  deskId: number,
+  card: Omit<TKanbanCard, 'id'>
+): Promise<AxiosResponse<TCardResponse> | undefined> => {
   try {
-    await protectedInstance.post<TKanbanCard>(`desks/${deskId}/tasks`, card)
+    return await protectedInstance.post<TCardResponse>(`desks/${deskId}/tasks`, card)
   } catch (error) {
-    console.error(error)
-    return error
+    console.log(error)
   }
 }
 

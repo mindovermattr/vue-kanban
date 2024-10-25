@@ -12,16 +12,17 @@ import VModal from '../VModal.vue'
 interface IProps {
   isVisible: boolean
   cardId: number
+  statusId: number
 }
 
 const categories = useCategoryStore()
 const statusStore = useStatusStore()
 const cards = useCardStore()
+
 const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
 const isRedacting = ref(false)
-const isSelected = ref('Done')
 const currentCard = computed(() => cards.cards.find((el) => el.id === props.cardId))
 
 const redactingHandler = () => {
@@ -51,13 +52,13 @@ const redactingHandler = () => {
             <VButton
               v-for="status in statusStore.status"
               type="button"
-              :key="status"
+              :key="status.name"
               class="status__button"
               :class="{
-                'status__button--selected': isSelected === status,
+                'status__button--selected': statusId === status.id,
               }"
               variant="contained"
-              >{{ status }}
+              >{{ status.name }}
             </VButton>
           </template>
         </TransitionGroup>

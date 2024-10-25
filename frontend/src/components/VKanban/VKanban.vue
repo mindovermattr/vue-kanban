@@ -17,6 +17,7 @@ const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+rou
 onMounted(async () => {
   await statusStore.fetchStatus(+route.params.id)
   await cardStore.fetchCards(+route.params.id)
+  console.log(cardStore.filtredCards)
 })
 
 provide('isDragging', isDragging)

@@ -7,7 +7,6 @@ import VModal from '@/components/VModal/VModal.vue'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
 import type { TKanbanCard } from '@/types/TKanban'
 import { Field, useForm } from 'vee-validate'
 import { onMounted } from 'vue'
@@ -41,10 +40,11 @@ const validationScheme = object<IForm>({
 
 const { handleSubmit, errors } = useForm<IForm>({
   validationSchema: validationScheme,
+  validateOnMount: false,
 })
 
 const submitHandler = handleSubmit(async (values: IForm) => {
-  const newCard: Omit<TCardResponse, 'id' | 'category'> = {
+  const newCard: Omit<TKanbanCard, 'id'> = {
     status_id: statusStore.status[0].id,
     category_id: values.category_id,
     name: values.name,
@@ -78,6 +78,7 @@ onMounted(async () => {
               placeholder="Введите название задачи..."
               class="field__input"
               type="text"
+              :is-error="!!errors.name"
             />
             <Transition name="slide-fade" class="field__error"
               ><p v-if="errors.name">{{ errors.name }}</p></Transition
