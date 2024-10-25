@@ -8,7 +8,7 @@ onMounted(async () => {})
 <template>
   <VLayout>
     <template #header>
-      <VHeader></VHeader>
+      <VHeader> </VHeader>
     </template>
     <div class="container"></div>
   </VLayout>

@@ -23,9 +23,9 @@ export const addCard = async (
   }
 }
 
-export const updateCard = async (deskId: number, id: number, card: TCardResponse) => {
+export const updateCard = async (deskId: number, card: TCardResponse) => {
   try {
-    const resp = await protectedInstance.put(`desks/${deskId}/tasks/${id}`, card)
+    const resp = await protectedInstance.put(`desks/${deskId}/tasks/${card.id}`, card)
     return resp
   } catch (error) {
     return error

@@ -69,7 +69,7 @@ export const useCardStore = defineStore('cards', {
         card.status_id = selectedStatusId
 
         this.filtredCards[selectedStatus!.name].push(card)
-        const resp = await updateCardApi(deskId, +itemID, card)
+        const resp = await updateCardApi(deskId, card)
         return resp
       }
     },
