@@ -1,15 +1,7 @@
 class DeskStatsSerializer < ActiveModel::Serializer
-  attributes :id, :name, :user_id, :tasks_count, :statuses_count, :categories_count
+  attributes :id, :name, :username, :tasks, :statuses, :categories
 
-  attribute :tasks_count do
-    @object.tasks.count
-  end
-
-  attribute :statuses_count do
-    @object.statuses.count
-  end
-
-  attribute :categories_count do
-    @object.categories.count
+  attribute :username do
+    User.find_by(id: @object.user_id).username
   end
 end
