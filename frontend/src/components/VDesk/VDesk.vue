@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { TDesk } from '@/types/TDesk'
-import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
 import VButton from '../VButton.vue'
@@ -10,14 +9,10 @@ interface IProps extends TDesk {
 }
 
 defineProps<IProps>()
-
-const isOpen = ref(false)
-
-const openHandler = () => {
-  isOpen.value = !isOpen.value
-}
+const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
 </script>
 <template>
+  <!--  -->
   <article :style="{ animationDelay: `${index * 200}ms` }" class="desk">
     <header class="desk__header header">
       <div class="link">
@@ -26,24 +21,18 @@ const openHandler = () => {
       </div>
       <ul class="desk__stats stats">
         <li class="stats__item">
-          <VButton data-tooltip="Добавить пользователя" class="stats__button" variant="default"
+          <VButton class="stats__button" variant="default"
             ><VDeskIcons :size="20" icon-id="plus"
           /></VButton>
         </li>
         <li class="stats__item">
-          <VButton data-tooltip="Удалить доску" class="stats__button" variant="default">
+          <VButton @click="emit('deleteDesk', id)" class="stats__button" variant="default">
             <VDeskIcons :size="20" icon-id="delete" />
           </VButton>
         </li>
       </ul>
     </header>
-    <div
-      class="desk__content"
-      :class="{
-        'desk__content--opened': isOpen,
-        'desk__content--closed': !isOpen,
-      }"
-    >
+    <div class="desk__content">
       <ul class="desk__list list">
         <li class="list__item"><VDeskIcons icon-id="profile" /> Автор: {{ username }}</li>
         <li class="list__item">
@@ -64,15 +53,6 @@ const openHandler = () => {
       </ul>
       <div class="desk__controls controls"></div>
     </div>
-    <VButton
-      @click="openHandler"
-      class="desk__arrow"
-      :class="{
-        'desk__arrow--opened': isOpen,
-      }"
-      variant="default"
-      ><VDeskIcons :size="24" icon-id="down-arrow"
-    /></VButton>
   </article>
 </template>
 
@@ -87,7 +67,6 @@ const openHandler = () => {
   flex-direction: column;
   justify-content: space-between;
   scale: 0;
-  z-index: 1;
 
   animation: bounce-anim 0.5s ease-in-out forwards;
   &__header {
@@ -101,25 +80,9 @@ const openHandler = () => {
     color: $blue-color;
     text-transform: capitalize;
   }
-  &__arrow {
-    align-self: center;
-    transition: rotate 0.5s;
-    &--opened {
-      rotate: 180deg;
-      margin-top: 12px;
-    }
-  }
-  &__content {
-    max-height: 0px;
-    overflow: hidden;
-    transition: max-height 0.5s ease-in-out;
 
-    &--opened {
-      transition: max-height 0.3s ease-in;
-      max-height: 110px;
-      display: flex;
-      flex-direction: column;
-    }
+  &__content {
+    overflow: hidden;
   }
 }
 
@@ -131,7 +94,7 @@ const openHandler = () => {
     width: 14px;
     height: 14px;
     border-radius: 100%;
-    background-color: rgb(62, 214, 115);
+    background-color: $blue-color;
     animation: pulse-anim 2.5s ease-in-out alternate infinite;
   }
 }
@@ -150,7 +113,6 @@ const openHandler = () => {
     align-items: center;
     padding: 5px 5px;
     margin-bottom: 5px;
-    position: relative;
 
     &:hover {
       background-color: $gray-color-40;

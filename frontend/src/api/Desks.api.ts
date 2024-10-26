@@ -19,3 +19,13 @@ export const addDesk = async (name: string): Promise<AxiosResponse<TDesk> | unde
     console.error(error)
   }
 }
+
+export const deleteDesk = async (deskId: number) => {
+  try {
+    const response = await protectedInstance.delete(`desks/${deskId}`)
+    console.log(response)
+    return response
+  } catch (error) {
+    console.error(error)
+  }
+}
