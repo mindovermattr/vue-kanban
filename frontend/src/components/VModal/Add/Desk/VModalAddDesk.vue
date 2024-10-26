@@ -36,6 +36,8 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: flex-start;
+  height: 100%;
   &__title {
     @include font-h3();
     margin-bottom: 12px;

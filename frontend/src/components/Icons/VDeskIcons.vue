@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface IProps {
-  iconId: 'status' | 'category' | 'profile' | 'task' | 'down-arrow'
+  iconId: 'status' | 'category' | 'profile' | 'task' | 'down-arrow' | 'plus' | 'delete'
   size?: number
   width?: number
   height?: number

@@ -20,7 +20,6 @@ export const useStatusStore = defineStore('status', {
       if (resp) {
         this.status = resp.data
       }
-      return 'Неизвестная ошибка'
     },
   },
 })

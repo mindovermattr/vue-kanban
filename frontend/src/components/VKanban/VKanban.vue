@@ -4,12 +4,13 @@ import { useDND } from '@/helpers/useDND'
 import { useCardStore } from '@/store/useCardsStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { onMounted, provide } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const cardStore = useCardStore()
 const statusStore = useStatusStore()
 
 const route = useRoute()
+const router = useRouter()
 
 const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+route.params.id)
 

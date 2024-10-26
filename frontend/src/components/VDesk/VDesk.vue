@@ -19,15 +19,21 @@ const openHandler = () => {
 </script>
 <template>
   <article :style="{ animationDelay: `${index * 200}ms` }" class="desk">
-    <header class="desk__header">
-      <RouterLink :to="`/desk/${id}`" class="desk__title">{{ name }}</RouterLink>
+    <header class="desk__header header">
+      <div class="link">
+        <div class="link__circle"></div>
+        <RouterLink :to="`/desk/${id}`" class="desk__title">{{ name }}</RouterLink>
+      </div>
       <ul class="desk__stats stats">
-        <li class="stats__item"><VDeskIcons :size="18" icon-id="task" /> {{ tasks.length }}</li>
         <li class="stats__item">
-          <VDeskIcons :size="18" icon-id="status" /> {{ statuses.length }}
+          <VButton data-tooltip="Добавить пользователя" class="stats__button" variant="default"
+            ><VDeskIcons :size="20" icon-id="plus"
+          /></VButton>
         </li>
         <li class="stats__item">
-          <VDeskIcons :size="18" icon-id="category" /> {{ categories.length }}
+          <VButton data-tooltip="Удалить доску" class="stats__button" variant="default">
+            <VDeskIcons :size="20" icon-id="delete" />
+          </VButton>
         </li>
       </ul>
     </header>
@@ -56,10 +62,7 @@ const openHandler = () => {
           <span v-for="status in statuses" :key="status.id">{{ status.name }}</span>
         </li>
       </ul>
-      <div class="desk__controls controls">
-        <VButton class="controls__button" variant="contained">Добавить пользователя</VButton>
-        <VButton class="controls__button" variant="outlined">Удалить доску</VButton>
-      </div>
+      <div class="desk__controls controls"></div>
     </div>
     <VButton
       @click="openHandler"
@@ -84,8 +87,9 @@ const openHandler = () => {
   flex-direction: column;
   justify-content: space-between;
   scale: 0;
+  z-index: 1;
 
-  animation: bounce-anim 0.5s linear forwards;
+  animation: bounce-anim 0.5s ease-in-out forwards;
   &__header {
     display: flex;
     justify-content: space-between;
@@ -108,14 +112,27 @@ const openHandler = () => {
   &__content {
     max-height: 0px;
     overflow: hidden;
-    transition: max-height 0.5s ease-out;
+    transition: max-height 0.5s ease-in-out;
 
     &--opened {
-      transition: max-height 0.5s ease-in;
-      max-height: 180px;
+      transition: max-height 0.3s ease-in;
+      max-height: 110px;
       display: flex;
       flex-direction: column;
     }
+  }
+}
+
+.link {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  &__circle {
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+    background-color: rgb(62, 214, 115);
+    animation: pulse-anim 2.5s ease-in-out alternate infinite;
   }
 }
 
@@ -126,8 +143,20 @@ const openHandler = () => {
     @include font-h4();
     font-size: 2.5rem;
   }
-}
+  &__button {
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 5px;
+    margin-bottom: 5px;
+    position: relative;
 
+    &:hover {
+      background-color: $gray-color-40;
+    }
+  }
+}
 .list {
   display: flex;
   flex-direction: column;
@@ -156,6 +185,18 @@ const openHandler = () => {
   }
   100% {
     scale: 1;
+  }
+}
+
+@keyframes pulse-anim {
+  0% {
+    scale: 0.7;
+  }
+  50% {
+    scale: 1;
+  }
+  100% {
+    scale: 0.7;
   }
 }
 </style>
