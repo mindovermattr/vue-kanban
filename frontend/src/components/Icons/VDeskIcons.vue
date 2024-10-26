@@ -1,19 +1,31 @@
 <script setup lang="ts">
 interface IProps {
-  iconId: 'status' | 'category' | 'profile' | 'task'
+  iconId: 'status' | 'category' | 'profile' | 'task' | 'down-arrow'
+  size?: number
+  width?: number
+  height?: number
 }
 
-defineProps<IProps>()
+const { size = 20 } = defineProps<IProps>()
 </script>
 <template>
-  <svg class="icon">
-    <use :xlink-href="`#${iconId}`" />
+  <svg
+    :style="{
+      width: width ? `${width}px` : `${size}px`,
+      height: height ? `${height}px` : `${size}px`,
+    }"
+    class="icon"
+  >
+    <use :xlink:href="`#a${iconId}`" />
   </svg>
 </template>
 
 <style lang="scss" scoped>
 .icon {
-  width: 100%;
-  height: 100%;
+  width: 18px;
+  height: 18px;
+  & > use {
+    fill: none;
+  }
 }
 </style>
