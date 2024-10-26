@@ -78,10 +78,6 @@ export const useCardStore = defineStore('cards', {
       if (cards) this.setCards(cards)
     },
 
-    // async updateCard(card: TCardResponse) {
-    //   updateCardApi(card)
-    // },
-
     async addCard(deskId: number, card: Omit<TKanbanCard, 'id'>) {
       const resp = await addCardApi(deskId, card)
       if (resp) {
@@ -92,7 +88,6 @@ export const useCardStore = defineStore('cards', {
     async deleteCard(deskId: number, cardId: number, statusId: number) {
       const statusStore = useStatusStore()
       await deleteCardApi(deskId, cardId)
-
       const status = statusStore.status.find((el) => el.id === statusId)
       const idx = this.cards.findIndex((el) => el.id === cardId)
       this.cards.splice(idx, 1)
