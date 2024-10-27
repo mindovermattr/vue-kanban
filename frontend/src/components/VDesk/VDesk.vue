@@ -38,7 +38,7 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
         <li class="list__item">
           <VDeskIcons icon-id="category" />
           Категории:
-          <span v-for="category in categories" :key="category.id">{{ category.name }}</span>
+          <span v-for="category in categories" :key="category.id">{{ category.name }} </span>
         </li>
         <li class="list__item">
           <VDeskIcons icon-id="task" />
@@ -128,6 +128,8 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
     font-size: 2rem;
     display: flex;
     gap: 8px;
+    max-width: 100%;
+    flex-wrap: wrap;
   }
 }
 

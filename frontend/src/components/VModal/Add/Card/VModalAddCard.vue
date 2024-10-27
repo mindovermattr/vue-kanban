@@ -9,7 +9,7 @@ import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import type { TKanbanCard } from '@/types/TKanban'
 import { Field, useForm } from 'vee-validate'
-import { onMounted } from 'vue'
+import { onMounted, onUpdated } from 'vue'
 import { useRoute } from 'vue-router'
 import { number, object, string, date as yupDate } from 'yup'
 
@@ -38,9 +38,8 @@ const validationScheme = object<IForm>({
     .required('Нужно выбрать дату'),
 })
 
-const { handleSubmit, errors } = useForm<IForm>({
+const { handleSubmit, errors, setErrors, errorBag } = useForm<IForm>({
   validationSchema: validationScheme,
-  validateOnMount: false,
 })
 
 const submitHandler = handleSubmit(async (values: IForm) => {
@@ -54,14 +53,16 @@ const submitHandler = handleSubmit(async (values: IForm) => {
 
   const resp = await cards.addCard(+route.params.id, newCard)
 
-  console.log(resp)
   emit('closeModal')
 })
 
 onMounted(async () => {
-  await categories.fetchCategories(+route.params.id)
-  console.log(categories.categories)
+  setErrors({})
   date.setDate(date.getDate() + 1)
+  await categories.fetchCategories(+route.params.id)
+})
+onUpdated(() => {
+  console.log(errorBag.value)
 })
 </script>
 
