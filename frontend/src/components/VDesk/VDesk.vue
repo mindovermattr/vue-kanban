@@ -38,17 +38,23 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
         <li class="list__item">
           <VDeskIcons icon-id="category" />
           Категории:
-          <span v-for="category in categories" :key="category.id">{{ category.name }} </span>
+          <span v-for="(category, idx) in categories" :key="category.id"
+            >{{ `${category.name}${categories[idx + 1] ? ', ' : '.'} ` }}
+          </span>
         </li>
         <li class="list__item">
           <VDeskIcons icon-id="task" />
           Задачи:
-          <span v-for="task in tasks" :key="task.id">{{ task.name }}</span>
+          <span v-for="(task, idx) in tasks" :key="task.id">{{
+            `${task.name}${tasks[idx + 1] ? ', ' : '.'} `
+          }}</span>
         </li>
         <li class="list__item">
           <VDeskIcons icon-id="status" />
           Колонки:
-          <span v-for="status in statuses" :key="status.id">{{ status.name }}</span>
+          <span v-for="(status, idx) in statuses" :key="status.id">{{
+            `${status.name}${statuses[idx + 1] ? ', ' : '.'} `
+          }}</span>
         </li>
       </ul>
       <div class="desk__controls controls"></div>
