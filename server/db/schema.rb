@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_22_184018) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_28_194418) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_184018) do
     t.datetime "updated_at", null: false
     t.bigint "desk_id", null: false
     t.index ["desk_id"], name: "index_categories_on_desk_id"
+  end
+
+  create_table "desk_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "desk_id", null: false
+    t.string "role", default: "member"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["desk_id"], name: "index_desk_users_on_desk_id"
+    t.index ["user_id"], name: "index_desk_users_on_user_id"
   end
 
   create_table "desks", force: :cascade do |t|
@@ -71,6 +81,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_184018) do
   end
 
   add_foreign_key "categories", "desks"
+  add_foreign_key "desk_users", "desks"
+  add_foreign_key "desk_users", "users"
   add_foreign_key "desks", "users"
   add_foreign_key "statuses", "desks"
   add_foreign_key "tasks", "categories"
