@@ -6,4 +6,6 @@ class User < ApplicationRecord
          :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :desks, dependent: :destroy
+  has_many :desk_users, dependent: :destroy
+  has_many :desks, through: :desk_users
 end
