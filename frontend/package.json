@@ -17,6 +17,7 @@
     "axios": "^1.7.7",
     "pinia": "^2.2.2",
     "vee-validate": "^4.13.2",
+    "vite-plugin-svg-spriter": "^1.0.0",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
     "vue3-colorpicker": "^2.3.0",

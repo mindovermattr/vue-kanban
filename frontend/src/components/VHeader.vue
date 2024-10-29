@@ -94,6 +94,7 @@ const logoutHandler = () => {
   }
   &__profile {
     position: absolute;
+    z-index: 1;
     right: 0;
     top: 50px;
   }

@@ -15,15 +15,16 @@ export const getStatuses = async (
 }
 
 export const addStatus = async (
-  name: string,
-  deskId: number
+  deskId: number,
+  name: string
 ): Promise<AxiosResponse<TStatus> | TStatusErrorResponse | undefined> => {
   try {
-    const response = await protectedInstance.post<TStatus>(`desks/${deskId}/statuses`, name)
+    const response = await protectedInstance.post<TStatus>(`desks/${deskId}/statuses`, { name })
     return response
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       return error
     }
+    return
   }
 }

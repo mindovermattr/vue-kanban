@@ -67,7 +67,6 @@ const onSubmit = handleSubmit(async (values) => {
       serverError.value = (response as AxiosError<{ error: string }>).response!.data!.error
       return
     }
-    return
   } else {
     const loginUser: TUserLogin = {
       user: {

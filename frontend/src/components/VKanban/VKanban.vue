@@ -3,21 +3,20 @@ import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
 import { useDND } from '@/helpers/useDND'
 import { useCardStore } from '@/store/useCardsStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import { onMounted, provide, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, provide } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const cardStore = useCardStore()
 const statusStore = useStatusStore()
 
 const route = useRoute()
-const kanbanContainer = ref<HTMLDivElement | null>(null)
+const router = useRouter()
 
 const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+route.params.id)
 
 onMounted(async () => {
   await statusStore.fetchStatus(+route.params.id)
   await cardStore.fetchCards(+route.params.id)
-  console.log(cardStore.filtredCards)
 })
 
 provide('isDragging', isDragging)
@@ -27,7 +26,7 @@ provide('isDragging', isDragging)
   <div
     :style="{ 'grid-template-columns': `repeat(${statusStore.status.length}, 220px)` }"
     class="container container--kanban"
-    ref="kanbanContainer"
+    v-if="statusStore.status.length"
   >
     <VKanbanColumn
       v-for="status in statusStore.status"
@@ -41,13 +40,21 @@ provide('isDragging', isDragging)
       @dragend="onDragEnd"
     />
   </div>
+  <div class="container container--message" v-else>Самое время создать первую колонку!</div>
 </template>
 
 <style lang="scss" scoped>
-.container--kanban {
-  display: grid;
-  gap: 20px;
-  overflow-x: scroll;
+.container {
+  &--kanban {
+    display: grid;
+    gap: 20px;
+    overflow-x: scroll;
+  }
+  &--message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .anim {

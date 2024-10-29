@@ -12,7 +12,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
     <Transition name="fade">
       <div @mouseup.capture.stop v-if="isVisible" class="modal-wrapper" @click="emit('closeModal')">
         <div @click.stop class="modal">
-          <slot> </slot>
+          <slot></slot>
         </div>
       </div>
     </Transition>
@@ -55,6 +55,6 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 .fade-enter-from .modal,
 .fade-leave-to .modal {
   opacity: 0;
-  transform: translate(-50%, -60%) scale(1);
+  transform: translate(-50%, -60%);
 }
 </style>

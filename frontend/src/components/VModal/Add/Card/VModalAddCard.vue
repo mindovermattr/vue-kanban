@@ -8,7 +8,7 @@ import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import type { TKanbanCard } from '@/types/TKanban'
-import { Field, useForm } from 'vee-validate'
+import { ErrorMessage, Field, useForm } from 'vee-validate'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { number, object, string, date as yupDate } from 'yup'
@@ -38,9 +38,8 @@ const validationScheme = object<IForm>({
     .required('Нужно выбрать дату'),
 })
 
-const { handleSubmit, errors } = useForm<IForm>({
+const { handleSubmit, errors, meta } = useForm<IForm>({
   validationSchema: validationScheme,
-  validateOnMount: false,
 })
 
 const submitHandler = handleSubmit(async (values: IForm) => {
@@ -54,14 +53,12 @@ const submitHandler = handleSubmit(async (values: IForm) => {
 
   const resp = await cards.addCard(+route.params.id, newCard)
 
-  console.log(resp)
   emit('closeModal')
 })
 
 onMounted(async () => {
-  await categories.fetchCategories(+route.params.id)
-  console.log(categories.categories)
   date.setDate(date.getDate() + 1)
+  await categories.fetchCategories(+route.params.id)
 })
 </script>
 
@@ -80,9 +77,9 @@ onMounted(async () => {
               type="text"
               :is-error="!!errors.name"
             />
-            <Transition name="slide-fade" class="field__error"
-              ><p v-if="errors.name">{{ errors.name }}</p></Transition
-            >
+            <Transition name="slide-fade" class="field__error">
+              <ErrorMessage v-if="meta.touched" as="p" name="name">{{ errors.name }}</ErrorMessage>
+            </Transition>
           </fieldset>
           <fieldset class="fields__item field">
             <legend class="field__title title">Описание задачи</legend>
@@ -102,16 +99,18 @@ onMounted(async () => {
               </button>
             </div>
             <Transition name="slide-fade" class="field__error field__error--categories">
-              <p v-if="errors.category_id">{{ errors.category_id }}</p>
+              <ErrorMessage v-if="meta.touched" as="p" name="category_id">{{
+                errors.category_id
+              }}</ErrorMessage>
             </Transition>
           </fieldset>
         </div>
         <div class="fields__wrapper">
           <VCalendar />
           <Transition name="slide-fade" class="field__error field__error--categories"
-            ><p class="error-date" v-if="errors.selectedDate">
+            ><ErrorMessage v-if="meta.touched" as="p" name="selectedDate" class="error-date">
               {{ errors.selectedDate }}
-            </p></Transition
+            </ErrorMessage></Transition
           >
         </div>
       </div>
@@ -206,6 +205,7 @@ onMounted(async () => {
   }
 }
 .error-date {
+  margin-top: 0;
   max-width: 192px;
 }
 

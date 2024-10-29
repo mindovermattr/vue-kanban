@@ -1,17 +1,92 @@
 <script setup lang="ts">
+import { deleteDesk, getDesks } from '@/api/Desks.api'
+import VButton from '@/components/VButton.vue'
+import VDesk from '@/components/VDesk/VDesk.vue'
+import VDeskSkeleton from '@/components/VDesk/VDeskSkeleton.vue'
 import VHeader from '@/components/VHeader.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
-import { onMounted } from 'vue'
+import VModalAddDesk from '@/components/VModal/Add/Desk/VModalAddDesk.vue'
+import { useModal } from '@/helpers/useModal'
+import { useUserStore } from '@/store/useUserStore'
+import type { TDesk } from '@/types/TDesk'
+import { onMounted, ref } from 'vue'
 
-onMounted(async () => {})
+const desks = ref<TDesk[]>()
+const isDeskModalOpen = ref(false)
+const isLoading = ref(true)
+const userStore = useUserStore()
+
+const { openModal, closeModal } = useModal(isDeskModalOpen)
+
+const addDesk = (desk: { id: number; name: string }) => {
+  desks.value?.push({
+    ...desk,
+    categories: [],
+    username: userStore.user!.username,
+    statuses: [],
+    tasks: [],
+  })
+}
+
+const deleteDeskHandler = async (deskId: number) => {
+  await deleteDesk(deskId)
+  const idx = desks.value!.findIndex((el) => el.id === deskId)
+  desks.value?.splice(idx, 1)
+}
+
+onMounted(async () => {
+  const response = await getDesks()
+  isLoading.value = false
+  if (response) desks.value = response.data
+})
 </script>
 <template>
   <VLayout>
     <template #header>
-      <VHeader> </VHeader>
+      <VHeader>
+        <VButton @click="openModal" variant="contained">Добавить доску</VButton>
+      </VHeader>
     </template>
-    <div class="container"></div>
+    <section class="container desks-wrapper">
+      <h2 class="desks__title">Доступные доски:</h2>
+      <div class="desks">
+        <template v-if="!isLoading">
+          <VDesk
+            @deleteDesk="deleteDeskHandler"
+            v-for="(desk, idx) in desks"
+            :index="idx"
+            :key="desk.id"
+            v-bind="desk"
+          />
+        </template>
+        <template v-else-if="!desks?.length">
+          <VDeskSkeleton />
+        </template>
+        <div v-else>
+          <h2>Сейчас доступных досок нет. Самое время создать!</h2>
+        </div>
+      </div>
+    </section>
+    <template #modal
+      ><VModalAddDesk @addDesk="addDesk" @closeModal="closeModal" :is-visible="isDeskModalOpen" />
+    </template>
   </VLayout>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.desks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  &-wrapper {
+    padding-top: 32px;
+  }
+  &__title {
+    @include font-h1();
+    font-size: 3.5rem;
+  }
+}
+</style>

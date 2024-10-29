@@ -1,4 +1,4 @@
-import { getStatuses } from '@/api/Status.api'
+import { addStatus as addStatusApi, getStatuses } from '@/api/Status.api'
 import type { TStatus } from '@/types/responses/TStatusResponse'
 import axios from 'axios'
 import { defineStore } from 'pinia'
@@ -15,12 +15,16 @@ export const useStatusStore = defineStore('status', {
 
   actions: {
     async fetchStatus(deskId: number) {
-      const resp = await getStatuses(deskId)
-      if (axios.isAxiosError(resp)) return resp.message
-      if (resp) {
-        this.status = resp.data
+      const response = await getStatuses(deskId)
+      if (axios.isAxiosError(response)) return response.message
+      if (response) {
+        this.status = response.data
       }
-      return 'Неизвестная ошибка'
+    },
+    async addStatus(deskId: number, status: Omit<TStatus, 'id'>) {
+      const response = await addStatusApi(deskId, status.name)
+      if (axios.isAxiosError(response)) return response.message
+      else if (response) this.status.push(response.data)
     },
   },
 })
