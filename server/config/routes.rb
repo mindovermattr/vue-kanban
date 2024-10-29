@@ -15,5 +15,7 @@ Rails.application.routes.draw do
     resources :statuses, except: [:new, :show]
     resources :categories, except: [:new, :show]
     resources :tasks, except: [:new, :show]
+    resources :invitations, only: [:create]
+    get '/invitations/:token/accept', to: 'invitations#accept', as: 'invitation_accept'
   end
 end
