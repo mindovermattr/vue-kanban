@@ -4,10 +4,10 @@ class InvitationsController < ApplicationController
 
   def create
     @invitation = @desk.invitations.new(invitation_params)
-    @invitation.user = current_user
 
     if @invitation.save
-      render json: { message: 'Invitation created', link: desk_invitation_accept_url(desk_id: @invitation.desk_id, token: @invitation.token) }, status: :created
+      render json: { link: desk_invitation_accept_url(desk_id: @invitation.desk_id, token: @invitation.token) },
+             status: :created
     else
       unprocessable_entity(@invitation)
     end
@@ -17,12 +17,12 @@ class InvitationsController < ApplicationController
     @invitation = Invitation.find_by(token: params[:token])
 
     if @invitation && @invitation.is_relevant?
-      @desk = @invitation.desk
-      @desk.users << current_user
+      @invitation.desk.users << current_user
+      @invitation.use!
 
       render json: { message: 'You have accepted your invitation!' }, status: :accepted
     else
-      unprocessable_entity(@invitation)
+      render json: { error: 'Token expired!' }, status: :unprocessable_entity
     end
   end
 
@@ -33,6 +33,6 @@ class InvitationsController < ApplicationController
   end
 
   def invitation_params
-    params.require(:invitation).permit(:email)
+    params.require(:invitation).permit(:max_uses)
   end
 end

@@ -44,14 +44,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_29_065937) do
 
   create_table "invitations", force: :cascade do |t|
     t.string "token", null: false
+    t.integer "max_uses", default: 1, null: false
+    t.integer "uses", default: 0, null: false
     t.bigint "desk_id", null: false
-    t.bigint "user_id"
     t.datetime "expires_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["desk_id"], name: "index_invitations_on_desk_id"
     t.index ["token"], name: "index_invitations_on_token", unique: true
-    t.index ["user_id"], name: "index_invitations_on_user_id"
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -97,7 +97,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_29_065937) do
   add_foreign_key "desk_users", "users"
   add_foreign_key "desks", "users"
   add_foreign_key "invitations", "desks"
-  add_foreign_key "invitations", "users"
   add_foreign_key "statuses", "desks"
   add_foreign_key "tasks", "categories"
   add_foreign_key "tasks", "desks"

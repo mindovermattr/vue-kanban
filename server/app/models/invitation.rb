@@ -1,14 +1,19 @@
 class Invitation < ApplicationRecord
   belongs_to :desk
-  belongs_to :user, optional: true
 
   before_create :generate_token
   before_create :set_expiration
 
-  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :token, uniqueness: true
+  validates :max_uses, numericality: { greater_than: 0 }
+  validates :uses, numericality: { greater_than_or_equal_to: 0 }
 
   def is_relevant?
-    expires_at >= Time.now
+    expires_at.future? && uses < max_uses
+  end
+
+  def use!
+    increment!(:uses)
   end
 
   private
@@ -18,6 +23,6 @@ class Invitation < ApplicationRecord
   end
 
   def set_expiration
-    self.expires_at = 7.days.from_now
+    self.expires_at = 3.days.from_now
   end
 end

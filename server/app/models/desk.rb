@@ -4,7 +4,7 @@ class Desk < ApplicationRecord
   has_many :statuses, dependent: :destroy
   has_many :desk_users, dependent: :destroy
   has_many :users, through: :desk_users
-  has_many :invitations
+  has_many :invitations, dependent: :destroy
 
   validates :name, presence: true
 end
