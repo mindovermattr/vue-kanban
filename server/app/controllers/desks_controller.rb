@@ -1,6 +1,7 @@
 class DesksController < ApplicationController
   before_action :authenticate_user!
 
+
   def index
     @desks = current_user.member_desks
     render json: @desks, each_serializer: DeskStatsSerializer

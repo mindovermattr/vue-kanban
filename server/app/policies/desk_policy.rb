@@ -7,10 +7,6 @@ class DeskPolicy < ApplicationPolicy
     user_is_owner?
   end
 
-  def invite?
-    user_is_owner?
-  end
-
   private
 
   def user_is_owner?
