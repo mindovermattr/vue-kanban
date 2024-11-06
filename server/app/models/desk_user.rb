@@ -1,9 +1,9 @@
 class DeskUser < ApplicationRecord
-  ROLES_VALUES = ['owner', 'member', 'guest'].freeze
+  enum role: { guest: 0, member: 1, owner: 2 }, _suffix: :role
 
   belongs_to :desk
   belongs_to :user
 
   validates :user_id, uniqueness: { scope: :desk_id }
-  validates :role, inclusion: { in: ROLES_VALUES }
+  validates :role, presence: true
 end

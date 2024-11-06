@@ -1,7 +1,12 @@
 class DeskPolicy < ApplicationPolicy
 
+  def initialize(user, record)
+    super
+    @desk_user = record.desk_users.find_by(user: user) if record.is_a?(Desk)
+  end
+
   def index?
-    record.desk_users.find_by(user: user, role: %w[owner member guest]).present?
+    user.present?
   end
 
   def create?
@@ -9,10 +14,10 @@ class DeskPolicy < ApplicationPolicy
   end
 
   def update?
-    record.desk_users.find_by(user: user, role: %w[owner member]).present?
+    @desk_user.owner_role? || @desk_user.member_role?
   end
 
   def destroy?
-    record.desk_users.find_by(user: user, role: 'owner').present?
+    @desk_user.owner_role?
   end
 end
