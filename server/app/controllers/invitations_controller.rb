@@ -18,7 +18,7 @@ class InvitationsController < ApplicationController
   def accept
     @invitation = Invitation.find_by(token: params[:token])
 
-    if @invitation && @invitation.is_relevant?
+    if @invitation&.is_relevant? && @invitation.desk.users.exclude?(current_user)
       @invitation.desk.users << current_user
       @invitation.use!
 
