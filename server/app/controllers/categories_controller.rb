@@ -2,7 +2,7 @@ class CategoriesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_desk!
   before_action :set_category!, only: [:update, :destroy]
-  before_action :auhtorize_category!
+  before_action :authorize_category!
   after_action :verify_authorized
 
   def index
@@ -50,7 +50,7 @@ class CategoriesController < ApplicationController
     params.require(:category).permit(:name, :main_color, :accent_color)
   end
 
-  def auhtorize_category!
+  def authorize_category!
     authorize(@desk, policy_class: CategoryPolicy)
   end
 end

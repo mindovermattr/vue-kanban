@@ -2,7 +2,7 @@ class StatusesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_desk!
   before_action :set_status!, only: [:update, :destroy]
-  before_action :auhtorize_status!
+  before_action :authorize_status!
   after_action :verify_authorized
 
 
@@ -51,7 +51,7 @@ class StatusesController < ApplicationController
     params.require(:status).permit(:name)
   end
 
-  def auhtorize_status!
+  def authorize_status!
     authorize(@desk, policy_class: StatusPolicy)
   end
 end

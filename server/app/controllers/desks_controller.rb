@@ -1,7 +1,7 @@
 class DesksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_desk!, only: [:update, :destroy]
-  before_action :auhtorize_desk!
+  before_action :authorize_desk!
   after_action :verify_authorized
 
   def index
@@ -43,7 +43,7 @@ class DesksController < ApplicationController
     @desk = Desk.find_by(id: params[:id])
   end
 
-  def auhtorize_desk!
+  def authorize_desk!
     authorize(@desk || Desk)
   end
 
