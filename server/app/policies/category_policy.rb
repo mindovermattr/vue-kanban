@@ -1,4 +1,4 @@
-class DeskPolicy < ApplicationPolicy
+class CategoryPolicy < ApplicationPolicy
 
   def initialize(user, record)
     super
@@ -6,11 +6,11 @@ class DeskPolicy < ApplicationPolicy
   end
 
   def index?
-    user.present?
+    has_role?(:owner_role?, :member_role?, :guest_role?)
   end
 
   def create?
-    user.present?
+    has_role?(:owner_role?, :member_role?)
   end
 
   def update?

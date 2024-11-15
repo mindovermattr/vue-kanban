@@ -36,6 +36,12 @@ class ApplicationPolicy
     false
   end
 
+  protected
+
+  def has_role?(*roles)
+    roles.any? { |role| @desk_user&.public_send(role) }
+  end
+
   class Scope
     def initialize(user, scope)
       @user = user

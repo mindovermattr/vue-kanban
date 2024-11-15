@@ -1,7 +1,9 @@
 class CategoriesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_desk, only: [:index, :create]
-  before_action :set_category, only: [:update, :destroy]
+  before_action :set_desk!
+  before_action :set_category!, only: [:update, :destroy]
+  before_action :auhtorize_category!
+  after_action :verify_authorized
 
   def index
     @categories = @desk.categories
@@ -36,15 +38,19 @@ class CategoriesController < ApplicationController
 
   private
 
-  def set_desk
+  def set_desk!
     @desk = Desk.find_by(id: params[:desk_id])
   end
 
-  def set_category
+  def set_category!
     @category = Category.find_by(id: params[:id])
   end
 
   def category_params
     params.require(:category).permit(:name, :main_color, :accent_color)
+  end
+
+  def auhtorize_category!
+    authorize(@desk, policy_class: CategoryPolicy)
   end
 end
