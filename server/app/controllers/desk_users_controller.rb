@@ -2,6 +2,8 @@ class DeskUsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_desk!
   before_action :set_desk_user!, except: :index
+  before_action :authorize_desk_user!
+  after_action :verify_authorized
 
   def index
     @desk_users = @desk.desk_users
@@ -37,5 +39,9 @@ class DeskUsersController < ApplicationController
 
   def role_params
     params.require(:desk_user).permit(:role)
+  end
+
+  def authorize_desk_user!
+    authorize(@desk, policy_class: DeskUserPolicy)
   end
 end
