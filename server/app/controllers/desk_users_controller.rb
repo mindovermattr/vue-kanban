@@ -1,0 +1,41 @@
+class DeskUsersController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_desk!
+  before_action :set_desk_user!, except: :index
+
+  def index
+    @desk_users = @desk.desk_users
+    render json: @desk_users
+  end
+
+  def update
+    if @desk_user
+      @desk_user.update(role_params)
+      render json: @desk_user, status: :created
+    else
+      render json: { errors: 'Некорректный запрос'}, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    if @desk_user
+      @desk_user.destroy
+    else
+      render json: { error: 'Некорректный id' }, status: :bad_request
+    end
+  end
+
+  private
+
+  def set_desk!
+    @desk = Desk.find_by(id: params[:desk_id])
+  end
+
+  def set_desk_user!
+    @desk_user = DeskUser.find_by(id: params[:id])
+  end
+
+  def role_params
+    params.require(:desk_user).permit(:role)
+  end
+end

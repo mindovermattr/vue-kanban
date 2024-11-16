@@ -12,9 +12,10 @@ Rails.application.routes.draw do
 
   root to: 'desks#index'
   resources :desks, except: [:new, :show] do
-    resources :statuses, except: [:new, :show]
-    resources :categories, except: [:new, :show]
-    resources :tasks, except: [:new, :show]
+    resources :desk_users, only: [:index, :update, :destroy]
+    resources :statuses, except: [:new, :show, :edit]
+    resources :categories, except: [:new, :show, :edit]
+    resources :tasks, except: [:new, :show, :edit]
     resources :invitations, only: [:create]
     get '/invitations/:token/accept', to: 'invitations#accept', as: 'invitation_accept'
   end
