@@ -30,7 +30,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 
   &-wrapper {
     position: fixed;
-    width: calc((#{100vw}) - 18px);
+    width: calc((#{100vw}));
     height: 100vh;
     top: 0;
     background-color: rgba($color: #000000, $alpha: 0.5);

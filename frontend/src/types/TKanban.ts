@@ -1,6 +1,6 @@
 type TKanbanCard = {
   id: number
-  category_id: number
+  category_id?: number
   name: string
   period: string
   body: string

@@ -97,6 +97,7 @@ const onDragEnd = () => {
 
   &[draggable='false'] {
     border: 1px solid rgb(232, 92, 92);
+    cursor: no-drop;
     & .card__date {
       color: rgb(232, 92, 92);
     }

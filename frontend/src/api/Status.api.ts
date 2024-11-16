@@ -22,9 +22,8 @@ export const addStatus = async (
     const response = await protectedInstance.post<TStatus>(`desks/${deskId}/statuses`, { name })
     return response
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      return error
-    }
+    if (axios.isAxiosError(error)) return error
+
     return
   }
 }

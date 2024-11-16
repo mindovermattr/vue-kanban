@@ -4,6 +4,8 @@ interface IProps {
   size?: number
   width?: number
   height?: number
+  fill?: string
+  stroke?: string
 }
 
 const { size = 20 } = defineProps<IProps>()
@@ -16,7 +18,7 @@ const { size = 20 } = defineProps<IProps>()
     }"
     class="icon"
   >
-    <use :xlink:href="`#a${iconId}`" />
+    <use :class="$attrs.class" :style="{ fill: fill, stroke }" :xlink:href="`#a${iconId}`" />
   </svg>
 </template>
 

@@ -57,9 +57,9 @@ import { computed, reactive, ref } from 'vue'
 const emit = defineEmits<(e: 'setDate', date: Date) => void>()
 
 const date = ref(new Date())
-const selectedDate = computed(() => getDate(date.value.getFullYear(), date.value.getMonth()))
 const formatedDate = ref<string>(formatDate(date))
 
+const selectedDate = computed(() => getDate(date.value.getFullYear(), date.value.getMonth()))
 const monthNameCapitalize = computed(() => {
   return (
     selectedDate.value.monthName.slice(0, 1).toUpperCase() +
