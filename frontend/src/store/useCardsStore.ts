@@ -5,6 +5,7 @@ import {
   updateCard as updateCardApi,
 } from '@/api/Cards.api'
 import type { TCardResponse } from '@/types/responses/TCardResponse'
+import type { TStatus } from '@/types/responses/TStatusResponse'
 import type { TKanbanCard } from '@/types/TKanban'
 import { defineStore } from 'pinia'
 import { useStatusStore } from './useStatusStore'
@@ -89,11 +90,19 @@ export const useCardStore = defineStore('cards', {
     async deleteCard(deskId: number, cardId: number, statusId: number) {
       const statusStore = useStatusStore()
       await deleteCardApi(deskId, cardId)
+
       const status = statusStore.status.find((el) => el.id === statusId)
       const idx = this.cards.findIndex((el) => el.id === cardId)
+
       this.cards.splice(idx, 1)
-      const statusIdx = this.filtredCards[status!.name].findIndex((el) => el.id === statusId)
+      const statusIdx = this.filtredCards[status!.name].findIndex((el) => el.id === cardId)
       this.filtredCards[status!.name].splice(statusIdx, 1)
+    },
+    addStatus(status: TStatus) {
+      this.filtredCards = {
+        ...this.filtredCards,
+        [status.name]: [],
+      }
     },
   },
 })

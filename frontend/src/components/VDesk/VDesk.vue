@@ -22,7 +22,7 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
       <ul class="desk__stats stats">
         <li class="stats__item">
           <VButton class="stats__button" variant="default"
-            ><VDeskIcons :size="20" icon-id="plus"
+            ><VDeskIcons fill="black" :size="20" icon-id="plus"
           /></VButton>
         </li>
         <li class="stats__item">

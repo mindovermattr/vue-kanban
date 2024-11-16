@@ -2,6 +2,7 @@ import { addStatus as addStatusApi, getStatuses } from '@/api/Status.api'
 import type { TStatus } from '@/types/responses/TStatusResponse'
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { useCardStore } from './useCardsStore'
 
 export const useStatusStore = defineStore('status', {
   state: () => {
@@ -22,9 +23,13 @@ export const useStatusStore = defineStore('status', {
       }
     },
     async addStatus(deskId: number, status: Omit<TStatus, 'id'>) {
+      const cardStore = useCardStore()
       const response = await addStatusApi(deskId, status.name)
       if (axios.isAxiosError(response)) return response.message
-      else if (response) this.status.push(response.data)
+      else if (response) {
+        this.status.push(response.data)
+        cardStore.addStatus(response.data)
+      }
     },
   },
 })

@@ -83,6 +83,7 @@ const onSubmit = handleSubmit(async (values) => {
   router.replace({ name: 'home' })
 })
 </script>
+
 <template>
   <div class="form-wrapper">
     <form @submit="onSubmit" class="form">

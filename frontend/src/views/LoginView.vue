@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import VFlash from '@/components/VFlash/VFlash.vue'
 import VFormSignIn from '@/components/VForm/VFormSign.vue'
-import { ref, toRef } from 'vue'
+import VLayout from '@/components/VLayout/VLayout.vue'
+import { useFlashStore } from '@/store/useFlashStore'
+import { onMounted, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 
 interface IProps {
@@ -10,27 +12,28 @@ interface IProps {
 
 const props = defineProps<IProps>()
 
-console.log(props)
+const flasStore = useFlashStore()
 
 const sign = toRef(props.signUp)
-const route = useRoute()
-const isVisible = ref(route.query.message === 'expireJWT' ? true : false)
 
-const closeFlash = () => {
-  isVisible.value = false
-}
+const route = useRoute()
 
 const toggleSignUp = () => {
   sign.value = !sign.value
 }
+onMounted(() => {
+  if (route.query.message === 'expireJWT')
+    flasStore.openFlash('Ваша сессия истекла! Войдите в систему снова.', 4000, 'error')
+})
 </script>
 
 <template>
-  <main>
+  <VLayout>
     <VFormSignIn v-if="signUp" @toogleSignUp="toggleSignUp" :sign-up="sign" />
     <VFormSignIn v-else @toogleSignUp="toggleSignUp" :sign-up="sign" />
-    <VFlash color="red" @set-close="closeFlash" :is-visible="isVisible" :time-in-ms="4000">{{
-      'Время вашей сессии истекло. Пожалуйста, войдите в систему снова'
-    }}</VFlash>
-  </main>
+    <template #modal>
+      <VFlash @closeFlash="flasStore.closeFlash" />
+    </template>
+  </VLayout>
+  <main></main>
 </template>

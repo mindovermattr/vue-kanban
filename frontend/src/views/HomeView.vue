@@ -3,10 +3,12 @@ import { deleteDesk, getDesks } from '@/api/Desks.api'
 import VButton from '@/components/VButton.vue'
 import VDesk from '@/components/VDesk/VDesk.vue'
 import VDeskSkeleton from '@/components/VDesk/VDeskSkeleton.vue'
+import VFlash from '@/components/VFlash/VFlash.vue'
 import VHeader from '@/components/VHeader.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
 import VModalAddDesk from '@/components/VModal/Add/Desk/VModalAddDesk.vue'
 import { useModal } from '@/helpers/useModal'
+import { useFlashStore } from '@/store/useFlashStore'
 import { useUserStore } from '@/store/useUserStore'
 import type { TDesk } from '@/types/TDesk'
 import { onMounted, ref } from 'vue'
@@ -33,6 +35,8 @@ const deleteDeskHandler = async (deskId: number) => {
   const idx = desks.value!.findIndex((el) => el.id === deskId)
   desks.value?.splice(idx, 1)
 }
+
+const flashStore = useFlashStore()
 
 onMounted(async () => {
   const response = await getDesks()
@@ -63,12 +67,13 @@ onMounted(async () => {
           <VDeskSkeleton />
         </template>
         <div v-else>
-          <h2>Сейчас доступных досок нет. Самое время создать!</h2>
+          <h2>Сейчас доступных досок нет. Самое время создать или присоединиться!</h2>
         </div>
       </div>
     </section>
     <template #modal
       ><VModalAddDesk @addDesk="addDesk" @closeModal="closeModal" :is-visible="isDeskModalOpen" />
+      <VFlash />
     </template>
   </VLayout>
 </template>

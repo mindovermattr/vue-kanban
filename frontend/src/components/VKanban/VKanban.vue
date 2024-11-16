@@ -4,13 +4,15 @@ import { useDND } from '@/helpers/useDND'
 import { useCardStore } from '@/store/useCardsStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { onMounted, provide } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+import VDeskIcons from '../Icons/VDeskIcons.vue'
+import VButton from '../VButton.vue'
 
 const cardStore = useCardStore()
 const statusStore = useStatusStore()
+const emit = defineEmits<(e: 'openModal') => void>()
 
 const route = useRoute()
-const router = useRouter()
 
 const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+route.params.id)
 
@@ -23,50 +25,103 @@ provide('isDragging', isDragging)
 </script>
 
 <template>
-  <div
-    :style="{ 'grid-template-columns': `repeat(${statusStore.status.length}, 220px)` }"
-    class="container container--kanban"
-    v-if="statusStore.status.length"
-  >
-    <VKanbanColumn
-      v-for="status in statusStore.status"
-      :columnName="status.name"
-      :columnId="status.id"
-      :key="status.id"
-      :items="cardStore.filtredCards[status.name]"
-      class="anim"
-      @onDropDragEvent="onDropDragEvent"
-      @onDragStart="onStartDragEvent"
-      @dragend="onDragEnd"
-    />
+  <div class="container desk">
+    <div class="desk__wrapper">
+      <h2 class="desk__title">Desk name</h2>
+      <div class="desk__controls">
+        <VButton @click="emit('openModal')" variant="default"
+          ><VDeskIcons class="desk__icon" :size="30" stroke="none" fill="#000" iconId="plus"
+        /></VButton>
+        <VButton variant="default"
+          ><VDeskIcons class="desk__icon" :size="30" stroke="#fff" fill="#fff" iconId="delete"
+        /></VButton>
+      </div>
+    </div>
+    <div
+      :style="{ 'grid-template-columns': `repeat(${statusStore.status.length}, 220px)` }"
+      class="container__kanban"
+      v-if="statusStore.status.length"
+    >
+      <VKanbanColumn
+        v-for="(status, idx) in statusStore.status"
+        :columnName="status.name"
+        :columnId="status.id"
+        :key="status.id"
+        :items="cardStore.filtredCards[status.name]"
+        class="anim"
+        :style="{ animationDelay: `${idx * 150}ms` }"
+        @onDropDragEvent="onDropDragEvent"
+        @onDragStart="onStartDragEvent"
+        @dragend="onDragEnd"
+      />
+    </div>
+    <div class="container container--message" v-else>Самое время создать первую колонку!</div>
   </div>
-  <div class="container container--message" v-else>Самое время создать первую колонку!</div>
 </template>
 
 <style lang="scss" scoped>
 .container {
-  &--kanban {
+  &__kanban {
     display: grid;
     gap: 20px;
     overflow-x: scroll;
+    grid-row: 1;
   }
   &--message {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
+    @include font-h1();
+  }
+}
+.desk {
+  &__title {
+    @include font-h1();
+    color: $gray-color-100;
+    font-size: 4rem;
+  }
+  &__wrapper {
+    padding: 24px 0 8px 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    &:hover .desk__controls {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  &__controls {
+    display: flex;
+    align-self: flex-end;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.5s;
+  }
+  &__icon {
+    border-radius: 25px;
+    padding: 2px 5px;
+    transition: all 0.5s;
+    &:hover {
+      background-color: #d8d7d7bc;
+    }
   }
 }
 
 .anim {
-  animation: 1s 1 alternate bounce;
+  animation: 1s 1 forwards fadeX;
+  opacity: 0;
 }
 
-@keyframes bounce {
+@keyframes fadeX {
   0% {
-    scale: 0;
+    transform: translateX(-35px);
+    opacity: 0;
   }
   100% {
-    scale: 1;
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 @media (max-width: $tablet-width) {

@@ -2,10 +2,11 @@
 import VButton from '@/components/VButton.vue'
 import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
+import { validationSchemeCardUpdate, type IFormCard } from '@/schemes/CardScheme'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import { Form } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import VModal from '../VModal.vue'
@@ -15,22 +16,43 @@ interface IProps {
   cardId: number
   statusId: number
 }
+const props = defineProps<IProps>()
+const emit = defineEmits<(e: 'closeModal') => void>()
 
 const categories = useCategoryStore()
 const statusStore = useStatusStore()
 const cards = useCardStore()
 const route = useRoute()
 
-const props = defineProps<IProps>()
-const selectedStatus = computed(() => statusStore.status.find((el) => el.id === props.statusId))
-const emit = defineEmits<(e: 'closeModal') => void>()
-
-const isRedacting = ref(false)
+const initialStatus = computed(() => statusStore.status.find((el) => el.id === props.statusId))
 const currentCard = computed(() => cards.cards.find((el) => el.id === props.cardId))
+
+const selectedStatus = ref(initialStatus.value?.id)
+const isRedacting = ref(false)
+
+const { handleSubmit, errors, values } = useForm<IFormCard>({
+  validationSchema: validationSchemeCardUpdate,
+  initialValues: {
+    ...currentCard.value,
+  },
+})
 
 const redactingHandler = () => {
   isRedacting.value = !isRedacting.value
 }
+
+const changeStatus = (statusId: number) => {
+  selectedStatus.value = statusId
+}
+
+const onSubmit = handleSubmit(async (values) => {
+  console.log(values)
+  const newCard = {
+    ...values,
+    status_id: selectedStatus.value,
+  }
+  console.log(newCard)
+})
 
 const deleteHandler = async () => {
   await cards.deleteCard(+route.params.id, props.cardId, props.statusId)
@@ -39,9 +61,9 @@ const deleteHandler = async () => {
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <Form class="modal__update update-modal">
+    <form @submit="onSubmit" class="modal__update update-modal">
       <div class="update-modal__header">
-        <h3 class="update-modal__title">Название задачи</h3>
+        <h3 class="update-modal__title">Название задачи {{ errors }}</h3>
         <VCategory v-bind="currentCard!.category" />
       </div>
       <div class="update-modal__status status">
@@ -53,7 +75,7 @@ const deleteHandler = async () => {
             class="status__button status__button--selected"
             variant="default"
           >
-            {{ selectedStatus!.name }}
+            {{ initialStatus!.name }}
           </VButton>
           <template v-else>
             <VButton
@@ -62,10 +84,12 @@ const deleteHandler = async () => {
               :key="status.name"
               class="status__button"
               :class="{
-                'status__button--selected': statusId === status.id,
+                'status__button--selected': selectedStatus === status.id,
               }"
+              @click="changeStatus(status.id)"
               variant="default"
-              >{{ status.name }}
+            >
+              {{ status.name }}
             </VButton>
           </template>
         </TransitionGroup>
@@ -73,7 +97,16 @@ const deleteHandler = async () => {
       <div class="update-modal__input input">
         <fieldset class="input__body">
           <legend class="input__title">Описание задачи</legend>
-          <textarea class="input__text" placeholder="Введите" name="body"></textarea>
+          <textarea
+            :disabled="!isRedacting"
+            class="input__text"
+            :class="{
+              'input__text--redacting': isRedacting,
+            }"
+            name="body"
+            v-model="currentCard!.body"
+          >
+          </textarea>
         </fieldset>
         <fieldset class="input__body">
           <VCalendar />
@@ -81,22 +114,22 @@ const deleteHandler = async () => {
       </div>
       <div class="update-modal__controls controls">
         <div class="controls__wrapper">
-          <VButton v-if="isRedacting" variant="contained" type="button">Сохранить</VButton>
+          <VButton v-if="isRedacting" variant="contained" type="submit">Сохранить</VButton>
           <VButton
             @click="redactingHandler"
             class="controls__button"
             type="button"
             variant="outlined"
           >
-            {{ isRedacting ? 'Отменить' : 'Редактировать задачу' }}</VButton
-          >
+            {{ isRedacting ? 'Отменить' : 'Редактировать задачу' }}
+          </VButton>
           <VButton @click="deleteHandler" class="controls__button" type="button" variant="outlined">
-            Удалить задачу</VButton
-          >
+            Удалить задачу
+          </VButton>
         </div>
         <VButton @click="emit('closeModal')" type="button" variant="contained">Закрыть</VButton>
       </div>
-    </Form>
+    </form>
   </VModal>
 </template>
 
@@ -153,6 +186,11 @@ const deleteHandler = async () => {
     color: $gray-color-100;
     padding: 14px;
     border-radius: 8px;
+    &--redacting {
+      border: 1px solid $black-color;
+      color: $black-color;
+      background-color: $white-color;
+    }
   }
   &__title {
     @include font-h5();

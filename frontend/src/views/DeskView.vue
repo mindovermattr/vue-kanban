@@ -30,10 +30,9 @@ const { closeModal: closeStatusModal, openModal: openStatusModal } = useModal(is
       <VHeader>
         <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
         <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
-        <VButton variant="contained" @click="openStatusModal">Создать колонку</VButton>
       </VHeader>
     </template>
-    <Vkanban />
+    <Vkanban @openModal="openStatusModal" />
     <template #modal>
       <VModalAddCard @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
       <VModalAddCategory

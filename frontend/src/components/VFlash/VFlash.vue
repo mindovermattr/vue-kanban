@@ -1,65 +1,53 @@
 <script setup lang="ts">
-import { onBeforeUpdate, onMounted, ref } from 'vue'
+import { useFlashStore } from '@/store/useFlashStore'
+import { onUnmounted, ref } from 'vue'
 
-interface IProps {
-  isVisible: boolean
-  timeInMs?: number
-  top?: string
-  right?: string
-  left?: string
-  bottom?: string
-  color?: string
-}
+const flashStore = useFlashStore()
+const emit = defineEmits<(e: 'closeFlash') => void>()
 
-const { timeInMs = 1500 } = defineProps<IProps>()
-const emit = defineEmits<(e: 'setClose') => void>()
 const progress = ref(100)
 
-let intervalId: number | undefined
-let timeOutID: number | undefined
+let intervalId = ref<number | undefined>()
 
-const time = new Promise<number>((res) => {
-  progress.value = 100
-
-  intervalId = setInterval(() => {
-    progress.value -= 0.1
-    if (Math.ceil(progress.value) === 0) {
-      res(intervalId!)
-    }
-  }, timeInMs / 1000)
-})
-
-onMounted(() => {
-  time.then((id) => {
-    clearInterval(id)
-    emit('setClose')
+const unsubscribe = flashStore.$onAction(() => {
+  const time = new Promise<number>((res) => {
+    progress.value = 100
+    intervalId.value = setInterval(() => {
+      progress.value -= 0.1
+      if (Math.ceil(progress.value) === 0) {
+        res(intervalId.value!)
+      }
+    }, flashStore.timeInMs / 1000)
   })
-})
 
-onBeforeUpdate(() => {
-  if (timeOutID) {
-    clearTimeout(timeOutID)
-    timeOutID = undefined
-  }
-  if (intervalId) {
-    intervalId = undefined
-  }
+  time.then((id) => {
+    flashStore.closeFlash()
+    clearInterval(id)
+    clearInterval(intervalId.value)
+  })
+}, false)
+
+onUnmounted(() => {
+  unsubscribe()
 })
 </script>
 
 <template>
   <Teleport to="body">
     <Transition appear name="message">
-      <div v-if="isVisible" class="flash">
-        <div :style="{ left: left, top: top, right: right, bottom: bottom }" class="flash__content">
+      <div v-if="flashStore.isOpen" class="flash">
+        <div class="flash__content">
           <div class="flash__progress-wrapper" role="progressbar">
             <div
-              :style="{ width: `${progress}%`, backgroundColor: color }"
+              :style="{
+                width: `${progress}%`,
+                backgroundColor: flashStore.variant === 'error' ? 'red' : 'blue',
+              }"
               class="flash__progress"
             ></div>
           </div>
           <div class="flash__text">
-            <slot></slot>
+            {{ flashStore.message }}
           </div>
         </div>
       </div>
@@ -74,7 +62,7 @@ onBeforeUpdate(() => {
   height: 100%;
 
   &__content {
-    position: absolute;
+    position: fixed;
     left: 20px;
     bottom: 20px;
     min-width: 250px;
@@ -84,11 +72,7 @@ onBeforeUpdate(() => {
   }
   &__progress {
     background-color: $blue-color;
-    height: 6px;
-    &--wrapper {
-      width: 100%;
-      height: 20px;
-    }
+    height: 8px;
   }
   &__text {
     @include font-h3();

@@ -4,6 +4,7 @@ import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
 import VField from '@/components/VField/VField.vue'
 import VModal from '@/components/VModal/VModal.vue'
+import { validationSchemeCard, type IFormCard } from '@/schemes/CardScheme'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
@@ -11,13 +12,10 @@ import type { TKanbanCard } from '@/types/TKanban'
 import { ErrorMessage, Field, useForm } from 'vee-validate'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { number, object, string, date as yupDate } from 'yup'
 
 interface IProps {
   isVisible: boolean
 }
-
-type IForm = TKanbanCard & { selectedDate: Date }
 
 defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
@@ -29,20 +27,11 @@ const statusStore = useStatusStore()
 
 const date = new Date()
 
-const validationScheme = object<IForm>({
-  name: string().required('Нужно ввести название').min(4, 'Минимум 4 символа'),
-  body: string(),
-  category_id: number().required('Нужно выбрать одну из категорий'),
-  selectedDate: yupDate()
-    .min(date, 'Минимальный срок выполнения задачи - следующий день')
-    .required('Нужно выбрать дату'),
+const { handleSubmit, errors, meta } = useForm<IFormCard>({
+  validationSchema: validationSchemeCard,
 })
 
-const { handleSubmit, errors, meta } = useForm<IForm>({
-  validationSchema: validationScheme,
-})
-
-const submitHandler = handleSubmit(async (values: IForm) => {
+const submitHandler = handleSubmit(async (values: IFormCard) => {
   const newCard: Omit<TKanbanCard, 'id'> = {
     status_id: statusStore.status[0].id,
     category_id: values.category_id,
@@ -51,7 +40,7 @@ const submitHandler = handleSubmit(async (values: IForm) => {
     body: values.body,
   }
 
-  const resp = await cards.addCard(+route.params.id, newCard)
+  await cards.addCard(+route.params.id, newCard)
 
   emit('closeModal')
 })
