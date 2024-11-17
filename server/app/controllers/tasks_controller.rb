@@ -1,7 +1,9 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_desk!, only: [:index, :create]
+  before_action :set_desk!
   before_action :set_task!, only: [:update, :destroy]
+  before_action :authorize_task!
+  after_action :verify_authorized
 
   def index
     @tasks = @desk.tasks
@@ -46,5 +48,9 @@ class TasksController < ApplicationController
 
   def task_params
     params.require(:task).permit(:name, :body, :category_id, :status_id, :period)
+  end
+
+  def authorize_task!
+    authorize(@desk, policy_class: TaskPolicy)
   end
 end

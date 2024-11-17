@@ -1,16 +1,15 @@
-class DeskPolicy < ApplicationPolicy
-
+class TaskPolicy < ApplicationPolicy
   def initialize(user, record)
     super
     @desk_user = record.desk_users.find_by(user: user) if record.is_a?(Desk)
   end
 
   def index?
-    user.present?
+    has_role?(:owner_role?, :member_role?, :guest_role?)
   end
 
   def create?
-    user.present?
+    has_role?(:owner_role?, :member_role?)
   end
 
   def update?
@@ -18,6 +17,6 @@ class DeskPolicy < ApplicationPolicy
   end
 
   def destroy?
-    has_role?(:owner_role?)
+    has_role?(:owner_role?, :member_role?)
   end
 end
