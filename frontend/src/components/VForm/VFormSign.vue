@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useUserStore } from '@/store/useUserStore'
+import { useAuthStore } from '@/store/useAuthStore'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
 import type { TFormValues } from '@/types/TFormValues'
 import axios, { AxiosError } from 'axios'
@@ -19,7 +19,7 @@ const serverError = ref<string>('')
 const emit = defineEmits<(e: 'toogleSignUp') => void>()
 const router = useRouter()
 
-const user = useUserStore()
+const user = useAuthStore()
 
 const formScheme = computed(() => {
   if (!props.signUp) {

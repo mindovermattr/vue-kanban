@@ -1,4 +1,4 @@
-import { login as loginApi, logout as logoutApi, signUp } from '@/api/User.api'
+import { login as loginApi, logout as logoutApi, signUp } from '@/api/Auth.api'
 import { LOCAL_STORAGE_USER } from '@/constants/LocalStorageKeys'
 import { getUserFromLS } from '@/helpers/getUserFromLS'
 import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
@@ -6,7 +6,7 @@ import type { TUserRespRegistration } from '@/types/responses/TUserResponse'
 import type { TUser } from '@/types/User'
 import { defineStore } from 'pinia'
 
-export const useUserStore = defineStore('user', {
+export const useAuthStore = defineStore('user', {
   state: () => ({
     user: getUserFromLS()?.user as TUser | null,
     token: getUserFromLS()?.token as string | null,

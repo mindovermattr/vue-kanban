@@ -8,15 +8,14 @@ import VHeader from '@/components/VHeader.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
 import VModalAddDesk from '@/components/VModal/Add/Desk/VModalAddDesk.vue'
 import { useModal } from '@/helpers/useModal'
-import { useFlashStore } from '@/store/useFlashStore'
-import { useUserStore } from '@/store/useUserStore'
+import { useAuthStore } from '@/store/useAuthStore'
 import type { TDesk } from '@/types/TDesk'
 import { onMounted, ref } from 'vue'
 
-const desks = ref<TDesk[]>()
+const desks = ref<TDesk[]>([])
 const isDeskModalOpen = ref(false)
 const isLoading = ref(true)
-const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const { openModal, closeModal } = useModal(isDeskModalOpen)
 
@@ -24,7 +23,7 @@ const addDesk = (desk: { id: number; name: string }) => {
   desks.value?.push({
     ...desk,
     categories: [],
-    username: userStore.user!.username,
+    username: authStore.user!.username,
     statuses: [],
     tasks: [],
   })
@@ -36,10 +35,9 @@ const deleteDeskHandler = async (deskId: number) => {
   desks.value?.splice(idx, 1)
 }
 
-const flashStore = useFlashStore()
-
 onMounted(async () => {
   const response = await getDesks()
+  console.log(response?.data)
   isLoading.value = false
   if (response) desks.value = response.data
 })
@@ -54,7 +52,10 @@ onMounted(async () => {
     <section class="container desks-wrapper">
       <h2 class="desks__title">Доступные доски:</h2>
       <div class="desks">
-        <template v-if="!isLoading">
+        <template v-if="isLoading">
+          <VDeskSkeleton />
+        </template>
+        <template v-else-if="desks.length">
           <VDesk
             @deleteDesk="deleteDeskHandler"
             v-for="(desk, idx) in desks"
@@ -63,16 +64,15 @@ onMounted(async () => {
             v-bind="desk"
           />
         </template>
-        <template v-else-if="!desks?.length">
-          <VDeskSkeleton />
-        </template>
         <div v-else>
-          <h2>Сейчас доступных досок нет. Самое время создать или присоединиться!</h2>
+          <h2 class="desks__message">
+            Сейчас доступных досок нет. Самое время создать или присоединиться!
+          </h2>
         </div>
       </div>
     </section>
-    <template #modal
-      ><VModalAddDesk @addDesk="addDesk" @closeModal="closeModal" :is-visible="isDeskModalOpen" />
+    <template #modal>
+      <VModalAddDesk @addDesk="addDesk" @closeModal="closeModal" :is-visible="isDeskModalOpen" />
       <VFlash />
     </template>
   </VLayout>
@@ -92,6 +92,10 @@ onMounted(async () => {
   &__title {
     @include font-h1();
     font-size: 3.5rem;
+  }
+  &__message {
+    @include font-h1();
+    color: $gray-color-100;
   }
 }
 </style>
