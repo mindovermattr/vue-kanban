@@ -19,4 +19,6 @@ Rails.application.routes.draw do
     resources :invitations, only: [:create]
     get '/invitations/:token/accept', to: 'invitations#accept', as: 'invitation_accept'
   end
+
+  mount ActionCable.server => '/cable'
 end

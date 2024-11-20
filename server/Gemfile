@@ -25,6 +25,7 @@ gem "bootsnap", require: false
 
 gem 'active_model_serializers', '~> 0.10'
 
+gem 'redis'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
