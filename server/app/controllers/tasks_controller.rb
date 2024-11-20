@@ -4,6 +4,7 @@ class TasksController < ApplicationController
   before_action :set_task!, only: [:update, :destroy]
   before_action :authorize_task!
   after_action :verify_authorized
+  after_action :publish_task!, only: [:create, :update]
 
   def index
     @tasks = @desk.tasks
@@ -37,6 +38,12 @@ class TasksController < ApplicationController
   end
 
   private
+
+  def publish_task!
+    return if @task.errors.any?
+
+    ActionCable.server.broadcast("tasks_channel_#{@desk.id}", @task)
+  end
 
   def set_desk!
     @desk = Desk.find_by(id: params[:desk_id])
