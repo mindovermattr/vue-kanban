@@ -1,12 +1,12 @@
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
+import type { TStatus } from '@/@types/responses/TStatusResponse'
+import type { TKanbanCard } from '@/@types/TKanban'
 import {
   addCard as addCardApi,
   deleteCard as deleteCardApi,
   getCards as getCardsApi,
   updateCard as updateCardApi,
 } from '@/api/Cards.api'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
-import type { TStatus } from '@/types/responses/TStatusResponse'
-import type { TKanbanCard } from '@/types/TKanban'
 import { defineStore } from 'pinia'
 import { useStatusStore } from './useStatusStore'
 

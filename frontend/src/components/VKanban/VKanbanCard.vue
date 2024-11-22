@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { inject, ref } from 'vue'
 import VCategory from '../VCategory.vue'
 import VModalUpdate from '../VModal/Update/VModalUpdate.vue'

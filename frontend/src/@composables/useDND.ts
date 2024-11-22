@@ -1,5 +1,5 @@
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import { useCardStore } from '@/store/useCardsStore'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { reactive } from 'vue'
 
 export const useDND = (deskId: number) => {

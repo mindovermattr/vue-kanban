@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useModal } from '@/@composables/useModal'
+import type { TDesk } from '@/@types/TDesk'
 import { deleteDesk, getDesks } from '@/api/Desks.api'
 import VButton from '@/components/VButton.vue'
 import VDesk from '@/components/VDesk/VDesk.vue'
@@ -7,9 +9,7 @@ import VFlash from '@/components/VFlash/VFlash.vue'
 import VHeader from '@/components/VHeader.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
 import VModalAddDesk from '@/components/VModal/Add/Desk/VModalAddDesk.vue'
-import { useModal } from '@/helpers/useModal'
 import { useAuthStore } from '@/store/useAuthStore'
-import type { TDesk } from '@/types/TDesk'
 import { onMounted, ref } from 'vue'
 
 const desks = ref<TDesk[]>([])

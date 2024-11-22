@@ -7,7 +7,7 @@ import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { useForm } from 'vee-validate'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import VModal from '../VModal.vue'
 
@@ -57,13 +57,16 @@ const onSubmit = handleSubmit(async (values) => {
 const deleteHandler = async () => {
   await cards.deleteCard(+route.params.id, props.cardId, props.statusId)
 }
+watch(errors, () => {
+  console.log(errors)
+})
 </script>
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
     <form @submit="onSubmit" class="modal__update update-modal">
       <div class="update-modal__header">
-        <h3 class="update-modal__title">Название задачи {{ errors }}</h3>
+        <h3 class="update-modal__title">Название задачи</h3>
         <VCategory v-bind="currentCard!.category" />
       </div>
       <div class="update-modal__status status">

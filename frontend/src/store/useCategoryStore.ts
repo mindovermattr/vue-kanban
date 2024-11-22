@@ -1,4 +1,4 @@
-import type { TCategory } from '@/types/TKanban'
+import type { TCategory } from '@/@types/TKanban'
 import { defineStore } from 'pinia'
 import * as categoriesApi from '../api/Categories.api'
 

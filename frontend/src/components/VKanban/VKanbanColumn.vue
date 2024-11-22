@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import VKanbanCard from '@/components/VKanban/VKanbanCard.vue'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { inject, ref } from 'vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
 

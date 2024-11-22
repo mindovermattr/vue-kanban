@@ -1,4 +1,4 @@
-import type { TDesk } from '@/types/TDesk'
+import type { TDesk } from '@/@types/TDesk'
 import type { AxiosResponse } from 'axios'
 import { protectedInstance } from './instance'
 

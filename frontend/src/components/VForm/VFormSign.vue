@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { TUserLogin, TUserRegistration } from '@/@types/requests/TUserLogin'
+import type { TFormValues } from '@/@types/TFormValues'
 import { useAuthStore } from '@/store/useAuthStore'
-import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
-import type { TFormValues } from '@/types/TFormValues'
 import axios, { AxiosError } from 'axios'
 import { ErrorMessage, useForm } from 'vee-validate'
 import { computed, ref } from 'vue'

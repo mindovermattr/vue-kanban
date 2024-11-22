@@ -1,5 +1,5 @@
+import type { TStatus } from '@/@types/responses/TStatusResponse'
 import { addStatus as addStatusApi, getStatuses } from '@/api/Status.api'
-import type { TStatus } from '@/types/responses/TStatusResponse'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { useCardStore } from './useCardsStore'

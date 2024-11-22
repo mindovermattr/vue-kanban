@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useModal } from '@/helpers/useModal'
+import { useModal } from '@/@composables/useModal'
 import { useAuthStore } from '@/store/useAuthStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

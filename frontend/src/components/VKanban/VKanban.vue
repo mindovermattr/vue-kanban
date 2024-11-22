@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { useDND } from '@/@composables/useDND'
+import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import { createDeskLink } from '@/api/Desks.api'
 import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
-import { useDND } from '@/helpers/useDND'
 import { useCardStore } from '@/store/useCardsStore'
 import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import { EDeskIcons } from '@/types/icons/EDeskIcons'
 import { onMounted, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'

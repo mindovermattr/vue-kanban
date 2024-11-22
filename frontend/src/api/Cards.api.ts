@@ -1,5 +1,5 @@
-import type { TCardResponse } from '@/types/responses/TCardResponse'
-import { type TKanbanCard } from '@/types/TKanban'
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
+import { type TKanbanCard } from '@/@types/TKanban'
 import type { AxiosResponse } from 'axios'
 import { protectedInstance } from './instance'
 

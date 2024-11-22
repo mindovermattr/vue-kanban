@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TCategory } from '@/types/TKanban'
+import type { TCategory } from '@/@types/TKanban'
 import { useField } from 'vee-validate'
 
 interface IProps extends Omit<TCategory, 'desk_id'> {

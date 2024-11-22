@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { EDeskIcons } from '@/types/icons/EDeskIcons'
+import type { EDeskIcons } from '@/@types/icons/EDeskIcons'
 
 interface IProps {
   iconId: EDeskIcons

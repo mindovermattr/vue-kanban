@@ -1,9 +1,9 @@
-import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
+import type { TUserLogin, TUserRegistration } from '@/@types/requests/TUserLogin'
 import type {
   TUserResp,
   TUserRespLogin,
   TUserRespRegistration,
-} from '@/types/responses/TUserResponse'
+} from '@/@types/responses/TUserResponse'
 import axios, { AxiosError } from 'axios'
 import { instance, protectedInstance } from './instance'
 

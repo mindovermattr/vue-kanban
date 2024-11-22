@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { EDeskIcons } from '@/types/icons/EDeskIcons'
-import type { TDesk } from '@/types/TDesk'
+import { EDeskIcons } from '@/@types/icons/EDeskIcons'
+import type { TDesk } from '@/@types/TDesk'
 import { RouterLink } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
 import VButton from '../VButton.vue'
