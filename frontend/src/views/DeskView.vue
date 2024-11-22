@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import VButton from '@/components/VButton.vue'
+import VFlash from '@/components/VFlash/VFlash.vue'
 import VHeader from '@/components/VHeader.vue'
 import Vkanban from '@/components/VKanban/VKanban.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
@@ -40,6 +41,7 @@ const { closeModal: closeStatusModal, openModal: openStatusModal } = useModal(is
         :is-visible="isCategoryModalVisible"
       />
       <VModalAddStatus @closeModal="closeStatusModal" :is-visible="isStatusModalVisible" />
+      <VFlash />
     </template>
   </VLayout>
 </template>

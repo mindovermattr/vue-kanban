@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { createDeskLink } from '@/api/Desks.api'
 import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
 import { useDND } from '@/helpers/useDND'
 import { useCardStore } from '@/store/useCardsStore'
+import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
+import { EDeskIcons } from '@/types/icons/EDeskIcons'
 import { onMounted, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
@@ -10,6 +13,7 @@ import VButton from '../VButton.vue'
 
 const cardStore = useCardStore()
 const statusStore = useStatusStore()
+const flashStore = useFlashStore()
 const emit = defineEmits<(e: 'openModal') => void>()
 
 const route = useRoute()
@@ -21,6 +25,14 @@ onMounted(async () => {
   await cardStore.fetchCards(+route.params.id)
 })
 
+const createInviteLink = async () => {
+  const response = await createDeskLink(+route.params.id, 3)
+  if (response?.data) {
+    await navigator.clipboard.writeText(response.data.link)
+    flashStore.openFlash('Ссылка скопирована в буфер обмена!', 1500, 'success')
+  }
+}
+
 provide('isDragging', isDragging)
 </script>
 
@@ -30,11 +42,24 @@ provide('isDragging', isDragging)
       <h2 class="desk__title">Desk name</h2>
       <div class="desk__controls">
         <VButton @click="emit('openModal')" variant="default"
-          ><VDeskIcons class="desk__icon" :size="30" stroke="none" fill="#000" iconId="plus"
+          ><VDeskIcons
+            class="desk__icon"
+            :size="30"
+            stroke="none"
+            fill="#000"
+            :iconId="EDeskIcons.plus"
         /></VButton>
         <VButton variant="default"
-          ><VDeskIcons class="desk__icon" :size="30" stroke="#fff" fill="#fff" iconId="delete"
+          ><VDeskIcons
+            class="desk__icon"
+            :size="30"
+            stroke="#fff"
+            fill="#fff"
+            :iconId="EDeskIcons.delete"
         /></VButton>
+        <VButton @click="createInviteLink" variant="default">
+          <VDeskIcons class="desk__icon" :size="30" :icon-id="EDeskIcons.link" />
+        </VButton>
       </div>
     </div>
     <div
@@ -82,7 +107,7 @@ provide('isDragging', isDragging)
     font-size: 4rem;
   }
   &__wrapper {
-    padding: 24px 0 8px 12px;
+    padding: 24px 0 8px 0px;
     display: flex;
     align-items: baseline;
     gap: 24px;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useModal } from '@/helpers/useModal'
-import { useUserStore } from '@/store/useAuthStore'
+import { useAuthStore } from '@/store/useAuthStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
@@ -9,7 +9,7 @@ const isAddModalVisible = ref(false)
 const isCategoryModal = ref(false)
 const isOpen = ref(false)
 
-const userStore = useUserStore()
+const userStore = useAuthStore()
 
 const { closeModal: closeAddModalHandler, openModal: openAddModalHandler } =
   useModal(isAddModalVisible)
