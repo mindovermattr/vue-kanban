@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TUserLogin, TUserRegistration } from '@/@types/requests/TUserLogin'
+import type { TUserFormLogin, TUserRegistration } from '@/@types/requests/TUserLogin'
 import type { TFormValues } from '@/@types/TFormValues'
 import { useAuthStore } from '@/store/useAuthStore'
 import axios, { AxiosError } from 'axios'
@@ -54,12 +54,10 @@ const { handleSubmit, errors, meta } = useForm<TFormValues>({
 const onSubmit = handleSubmit(async (values) => {
   if (props.signUp && values?.passwordConfirm) {
     const newUser: TUserRegistration = {
-      user: {
-        username: values.userName,
-        password: values.password,
-        email: values.email,
-        password_confirmation: values.passwordConfirm,
-      },
+      username: values.userName,
+      password: values.password,
+      email: values.email,
+      passwordConfirm: values.passwordConfirm,
     }
 
     const response = await user.register(newUser)
@@ -68,11 +66,9 @@ const onSubmit = handleSubmit(async (values) => {
       return
     }
   } else {
-    const loginUser: TUserLogin = {
-      user: {
-        email: values.email,
-        password: values.password,
-      },
+    const loginUser: TUserFormLogin = {
+      email: values.email,
+      password: values.password,
     }
     const response = await user.login(loginUser)
     if (axios.isAxiosError(response)) {

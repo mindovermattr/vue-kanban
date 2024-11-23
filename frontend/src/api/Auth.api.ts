@@ -1,15 +1,19 @@
-import type { TUserLogin, TUserRegistration } from '@/@types/requests/TUserLogin'
-import type {
-  TUserResp,
-  TUserRespLogin,
-  TUserRespRegistration,
-} from '@/@types/responses/TUserResponse'
+import type { TUserFormLogin, TUserRegistration } from '@/@types/requests/TUserLogin'
+import type { TUserResp, TUserResponse } from '@/@types/responses/TUserResponse'
 import axios, { AxiosError } from 'axios'
 import { instance, protectedInstance } from './instance'
 
-export const signUp = async (user: TUserRegistration): TUserResp<TUserRespRegistration> => {
+export const signUp = async (user: TUserRegistration): TUserResp<TUserResponse> => {
   try {
-    const response = await instance.post('signup', user)
+    const registrationData = {
+      user: {
+        email: user.email,
+        username: user.username,
+        password: user.password,
+        password_confirmation: user.passwordConfirm,
+      },
+    }
+    const response = await instance.post('signup', registrationData)
 
     return {
       data: response.data,
@@ -23,9 +27,9 @@ export const signUp = async (user: TUserRegistration): TUserResp<TUserRespRegist
   }
 }
 
-export const login = async (user: TUserLogin): TUserResp<TUserRespLogin> => {
+export const login = async (user: TUserFormLogin): TUserResp<TUserResponse> => {
   try {
-    const response = await instance.post('login', user)
+    const response = await instance.post('login', { user })
     return {
       data: response.data,
       token: response.headers['authorization'].split(' ')[1],

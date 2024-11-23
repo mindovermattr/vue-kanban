@@ -1,12 +1,7 @@
 import type { AxiosError } from 'axios'
-import type { TUser } from '../User'
+import type { TUser } from '../TUser'
 
-export type TUserRespRegistration = {
-  data: TUser
-  token: string
-}
-
-export type TUserRespLogin = {
+export type TUserResponse = {
   data: TUser
   token: string
 }

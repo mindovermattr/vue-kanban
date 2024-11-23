@@ -1,4 +1,4 @@
-import type { TUser } from '@/@types/User'
+import type { TUser } from '@/@types/TUser'
 
 export const getUserFromLS = (): ({ user: TUser } & { token: string }) | null => {
   const user = localStorage.getItem('user')

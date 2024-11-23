@@ -1,7 +1,9 @@
-import type { TUser } from '../User'
-
-export type TUserLogin = { user: Omit<TUser, 'passwordConfirm' | 'username'> }
+export type TUserFormLogin = {
+  email: string
+  password: string
+}
 
 export type TUserRegistration = {
-  user: Omit<TUser, 'passwordConfirm'> & { password_confirmation: string }
-}
+  username: string
+  passwordConfirm: string
+} & TUserFormLogin
