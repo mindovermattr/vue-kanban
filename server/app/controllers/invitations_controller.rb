@@ -22,9 +22,9 @@ class InvitationsController < ApplicationController
       @invitation.desk.users << current_user
       @invitation.use!
 
-      render json: { message: 'You have accepted your invitation!' }, status: :accepted
+      render json: { message: 'Вы уже приняли это приглашение!' }, status: :accepted
     else
-      render json: { error: 'Token expired!' }, status: :unprocessable_entity
+      render json: { error: 'Приглашение истекло' }, status: :unprocessable_entity
     end
   end
 

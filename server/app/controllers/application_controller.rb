@@ -10,6 +10,6 @@ class ApplicationController < ActionController::API
   private
 
   def user_not_authorized
-    render json: { errors: ["У вас нет доступа для этого действия!"] }, status: :unauthorized
+    render json: { errors: ["У вас нет доступа для этого действия!"] }, status: :forbidden
   end
 end

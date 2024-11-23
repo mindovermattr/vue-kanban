@@ -7,7 +7,7 @@ class DeskUsersController < ApplicationController
 
   def index
     @desk_users = @desk.desk_users
-    render json: @desk_users
+    render json: @desk_users, each_serializer: DeskUserIndexSerializer
   end
 
   def update
