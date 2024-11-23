@@ -9,6 +9,8 @@ class Task < ApplicationRecord
   private
 
   def period_must_be_in_future
+    return if period.blank?
+
     errors.add(:period, "must be in the future") if period <= Date.today
   end
 end
