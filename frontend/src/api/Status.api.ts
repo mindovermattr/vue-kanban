@@ -1,4 +1,4 @@
-import type { TStatus, TStatusErrorResponse } from '@/types/responses/TStatusResponse'
+import type { TStatus, TStatusErrorResponse } from '@/@types/responses/TStatusResponse'
 import axios, { type AxiosResponse } from 'axios'
 import { protectedInstance } from './instance'
 

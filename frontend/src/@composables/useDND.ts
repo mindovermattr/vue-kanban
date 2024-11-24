@@ -1,5 +1,5 @@
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import { useCardStore } from '@/store/useCardsStore'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
 import { reactive } from 'vue'
 
 export const useDND = (deskId: number) => {
@@ -21,7 +21,7 @@ export const useDND = (deskId: number) => {
     isDragging.id = item.id
 
     setTimeout(() => {
-      ;(event.target! as HTMLElement).classList.add('hide')
+      ;(event.target as HTMLElement).classList.add('hide')
       isDragging.isHided = true
     }, 0)
     event.dataTransfer.dropEffect = 'move'

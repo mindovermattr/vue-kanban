@@ -1,20 +1,20 @@
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
+import type { TStatus } from '@/@types/responses/TStatusResponse'
+import type { TKanbanCard } from '@/@types/TKanban'
 import {
   addCard as addCardApi,
   deleteCard as deleteCardApi,
   getCards as getCardsApi,
   updateCard as updateCardApi,
 } from '@/api/Cards.api'
-import type { TCardResponse } from '@/types/responses/TCardResponse'
-import type { TStatus } from '@/types/responses/TStatusResponse'
-import type { TKanbanCard } from '@/types/TKanban'
 import { defineStore } from 'pinia'
 import { useStatusStore } from './useStatusStore'
 
 export const useCardStore = defineStore('cards', {
   state: () => {
-    const categoryStore = useStatusStore()
+    const statusStore = useStatusStore()
     const filtred: Record<string, []> = {}
-    categoryStore.status.forEach((status) => {
+    statusStore.status.forEach((status) => {
       filtred[status.name] = []
     })
     return {
@@ -77,6 +77,23 @@ export const useCardStore = defineStore('cards', {
     async fetchCards(deskId: number) {
       const cards = await getCardsApi(deskId)
       if (cards) this.setCards(cards)
+    },
+    async updateCard(deskId: number, card: TCardResponse, oldCard: TCardResponse) {
+      const resp = await updateCardApi(deskId, card)
+
+      const statusStore = useStatusStore()
+
+      const initialStatus = statusStore.status.find((el) => el.id === oldCard.status_id)
+      const cardIndex = this.filtredCards[initialStatus!.name].findIndex((filtredCard) => {
+        return card.id === filtredCard.id
+      })
+
+      if (cardIndex >= 0) this.filtredCards[initialStatus!.name].splice(cardIndex, 1)
+      const selectedStatus = statusStore.status.find((el) => el.id === card.status_id)
+      card.status_id = selectedStatus!.id
+
+      this.filtredCards[selectedStatus!.name].push(card)
+      return resp
     },
 
     async addCard(deskId: number, card: Omit<TKanbanCard, 'id'>) {

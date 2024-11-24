@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { useModal } from '@/helpers/useModal'
-import { useUserStore } from '@/store/useUserStore'
+import { useAuthStore } from '@/store/useAuthStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
 
-const isAddModalVisible = ref(false)
-const isCategoryModal = ref(false)
 const isOpen = ref(false)
 
-const userStore = useUserStore()
-
-const { closeModal: closeAddModalHandler, openModal: openAddModalHandler } =
-  useModal(isAddModalVisible)
-
-const { closeModal: closeCategoryModalHandler, openModal: openCategoryModalHandler } =
-  useModal(isCategoryModal)
+const userStore = useAuthStore()
 
 const toggleProfile = () => {
   isOpen.value = !isOpen.value

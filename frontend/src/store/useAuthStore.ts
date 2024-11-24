@@ -1,15 +1,14 @@
-import { login as loginApi, logout as logoutApi, signUp } from '@/api/User.api'
+import type { TUserFormLogin, TUserRegistration } from '@/@types/requests/TUserLogin'
+import type { TUserResponse } from '@/@types/responses/TUserResponse'
+import type { TUser } from '@/@types/TUser'
+import { login as loginApi, logout as logoutApi, signUp } from '@/api/Auth.api'
 import { LOCAL_STORAGE_USER } from '@/constants/LocalStorageKeys'
 import { getUserFromLS } from '@/helpers/getUserFromLS'
-import type { TUserLogin, TUserRegistration } from '@/types/requests/TUserLogin'
-import type { TUserRespRegistration } from '@/types/responses/TUserResponse'
-import type { TUser } from '@/types/User'
 import { defineStore } from 'pinia'
 
-export const useUserStore = defineStore('user', {
+export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: getUserFromLS()?.user as TUser | null,
-    token: getUserFromLS()?.token as string | null,
+    ...(getUserFromLS() as { user: TUser; token: string }),
   }),
 
   getters: {
@@ -18,7 +17,7 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
     async register(user: TUserRegistration) {
-      const response = (await signUp(user)) as TUserRespRegistration
+      const response = (await signUp(user)) as TUserResponse
 
       if (response?.data) {
         localStorage.setItem(
@@ -34,8 +33,8 @@ export const useUserStore = defineStore('user', {
         return response
       }
     },
-    async login(user: TUserLogin) {
-      const response = (await loginApi(user)) as TUserRespRegistration
+    async login(user: TUserFormLogin) {
+      const response = (await loginApi(user)) as TUserResponse
       if (response?.data) {
         localStorage.setItem(
           LOCAL_STORAGE_USER,

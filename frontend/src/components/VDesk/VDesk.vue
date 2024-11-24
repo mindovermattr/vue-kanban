@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TDesk } from '@/types/TDesk'
+import { EDeskIcons } from '@/@types/icons/EDeskIcons'
+import type { TDesk } from '@/@types/TDesk'
 import { RouterLink } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
 import VButton from '../VButton.vue'
@@ -12,7 +13,6 @@ defineProps<IProps>()
 const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
 </script>
 <template>
-  <!--  -->
   <article :style="{ animationDelay: `${index * 200}ms` }" class="desk">
     <header class="desk__header header">
       <div class="link">
@@ -22,35 +22,37 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
       <ul class="desk__stats stats">
         <li class="stats__item">
           <VButton class="stats__button" variant="default"
-            ><VDeskIcons fill="black" :size="20" icon-id="plus"
+            ><VDeskIcons fill="black" :size="20" :icon-id="EDeskIcons.plus"
           /></VButton>
         </li>
         <li class="stats__item">
           <VButton @click="emit('deleteDesk', id)" class="stats__button" variant="default">
-            <VDeskIcons :size="20" icon-id="delete" />
+            <VDeskIcons :size="20" :icon-id="EDeskIcons.delete" />
           </VButton>
         </li>
       </ul>
     </header>
     <div class="desk__content">
       <ul class="desk__list list">
-        <li class="list__item"><VDeskIcons icon-id="profile" /> Автор: {{ username }}</li>
         <li class="list__item">
-          <VDeskIcons icon-id="category" />
+          <VDeskIcons :icon-id="EDeskIcons.profile" /> Автор: {{ username }}
+        </li>
+        <li class="list__item">
+          <VDeskIcons :icon-id="EDeskIcons.category" />
           Категории:
           <span v-for="(category, idx) in categories" :key="category.id"
             >{{ `${category.name}${categories[idx + 1] ? ', ' : '.'} ` }}
           </span>
         </li>
         <li class="list__item">
-          <VDeskIcons icon-id="task" />
+          <VDeskIcons :icon-id="EDeskIcons.task" />
           Задачи:
           <span v-for="(task, idx) in tasks" :key="task.id">{{
             `${task.name}${tasks[idx + 1] ? ', ' : '.'} `
           }}</span>
         </li>
         <li class="list__item">
-          <VDeskIcons icon-id="status" />
+          <VDeskIcons :icon-id="EDeskIcons.status" />
           Колонки:
           <span v-for="(status, idx) in statuses" :key="status.id">{{
             `${status.name}${statuses[idx + 1] ? ', ' : '.'} `

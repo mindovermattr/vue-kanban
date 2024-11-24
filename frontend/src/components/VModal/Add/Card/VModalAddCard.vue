@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TKanbanCard } from '@/@types/TKanban'
 import VButton from '@/components/VButton.vue'
 import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
@@ -8,7 +9,6 @@ import { validationSchemeCard, type IFormCard } from '@/schemes/CardScheme'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import type { TKanbanCard } from '@/types/TKanban'
 import { ErrorMessage, Field, useForm } from 'vee-validate'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'

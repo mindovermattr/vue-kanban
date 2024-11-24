@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { EDeskIcons } from '@/@types/icons/EDeskIcons'
+
 interface IProps {
-  iconId: 'status' | 'category' | 'profile' | 'task' | 'down-arrow' | 'plus' | 'delete'
+  iconId: EDeskIcons
   size?: number
   width?: number
   height?: number

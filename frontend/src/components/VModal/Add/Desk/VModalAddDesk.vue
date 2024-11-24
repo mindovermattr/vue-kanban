@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { TDesk } from '@/@types/TDesk'
 import { addDesk } from '@/api/Desks.api'
 import VButton from '@/components/VButton.vue'
 import VField from '@/components/VField/VField.vue'
-import type { TDesk } from '@/types/TDesk'
 import { useForm } from 'vee-validate'
 import VModal from '../../VModal.vue'
 

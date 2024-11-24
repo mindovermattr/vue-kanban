@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import { useModal } from '@/@composables/useModal'
 import VButton from '@/components/VButton.vue'
+import VFlash from '@/components/VFlash/VFlash.vue'
 import VHeader from '@/components/VHeader.vue'
 import Vkanban from '@/components/VKanban/VKanban.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
 import VModalAddCard from '@/components/VModal/Add/Card/VModalAddCard.vue'
 import VModalAddCategory from '@/components/VModal/Add/Category/VModalAddCategory.vue'
 import VModalAddStatus from '@/components/VModal/Add/Status/VModalAddStatus.vue'
-import { useModal } from '@/helpers/useModal'
 import { ref } from 'vue'
 
 defineProps<{ id: string }>()
@@ -40,6 +41,7 @@ const { closeModal: closeStatusModal, openModal: openStatusModal } = useModal(is
         :is-visible="isCategoryModalVisible"
       />
       <VModalAddStatus @closeModal="closeStatusModal" :is-visible="isStatusModalVisible" />
+      <VFlash />
     </template>
   </VLayout>
 </template>

@@ -1,4 +1,4 @@
-import type { TCategory } from '@/types/TKanban'
+import type { TCategory } from '@/@types/TKanban'
 import { protectedInstance } from './instance'
 
 export const getCategories = async (deskId: number): Promise<TCategory[] | undefined> => {
