@@ -11,7 +11,7 @@ export const useStatusStore = defineStore('status', {
     }
   },
   getters: {
-    categories: (state) => state.status,
+    getStatus: (state) => state.status,
   },
 
   actions: {

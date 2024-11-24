@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import VButton from '@/components/VButton.vue'
 import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
-import { validationSchemeCardUpdate, type IFormCard } from '@/schemes/CardScheme'
+import { validationSchemeCardUpdate, type IFormCardUpdate } from '@/schemes/CardScheme'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
-import { useForm } from 'vee-validate'
-import { computed, ref, watch } from 'vue'
+import { useField, useForm } from 'vee-validate'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import VModal from '../VModal.vue'
 
@@ -21,20 +22,24 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 
 const categories = useCategoryStore()
 const statusStore = useStatusStore()
-const cards = useCardStore()
+const cardsStore = useCardStore()
 const route = useRoute()
 
 const initialStatus = computed(() => statusStore.status.find((el) => el.id === props.statusId))
-const currentCard = computed(() => cards.cards.find((el) => el.id === props.cardId))
+const currentCard = computed(() => cardsStore.cards.find((el) => el.id === props.cardId))
 
-const selectedStatus = ref(initialStatus.value?.id)
+const selectedStatus = ref(initialStatus.value!.id)
 const isRedacting = ref(false)
 
-const { handleSubmit, errors, values } = useForm<IFormCard>({
+const { handleSubmit, errors, setFieldValue } = useForm<IFormCardUpdate>({
   validationSchema: validationSchemeCardUpdate,
   initialValues: {
     ...currentCard.value,
   },
+})
+
+const { value: bodyValue } = useField('body', (value) => !!value, {
+  initialValue: currentCard.value!.body,
 })
 
 const redactingHandler = () => {
@@ -43,23 +48,26 @@ const redactingHandler = () => {
 
 const changeStatus = (statusId: number) => {
   selectedStatus.value = statusId
+  setFieldValue('status_id', statusId)
 }
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log(values)
-  const newCard = {
-    ...values,
-    status_id: selectedStatus.value,
+  const newCard: TCardResponse = {
+    body: values.body,
+    name: values.name,
+    period: values.selectedDate.toDateString(),
+    status_id: values.status_id,
+    id: values.id,
+    category: values.category,
   }
   console.log(newCard)
+  await cardsStore.updateCard(+route.params.id, newCard, currentCard.value!)
+  emit('closeModal')
 })
 
 const deleteHandler = async () => {
-  await cards.deleteCard(+route.params.id, props.cardId, props.statusId)
+  await cardsStore.deleteCard(+route.params.id, props.cardId, props.statusId)
 }
-watch(errors, () => {
-  console.log(errors)
-})
 </script>
 
 <template>
@@ -107,12 +115,12 @@ watch(errors, () => {
               'input__text--redacting': isRedacting,
             }"
             name="body"
-            v-model="currentCard!.body"
+            v-model="bodyValue"
           >
           </textarea>
         </fieldset>
         <fieldset class="input__body">
-          <VCalendar />
+          <VCalendar :initialDate="currentCard?.period" />
         </fieldset>
       </div>
       <div class="update-modal__controls controls">

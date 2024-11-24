@@ -54,9 +54,13 @@ import { getDate, type TDays } from '@/helpers/getDate'
 import { useField } from 'vee-validate'
 import { computed, reactive, ref } from 'vue'
 
+interface IProps {
+  initialDate?: string
+}
+const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'setDate', date: Date) => void>()
 
-const date = ref(new Date())
+const date = ref(props.initialDate ? new Date(props.initialDate) : new Date())
 const formatedDate = ref<string>(formatDate(date))
 
 const selectedDate = computed(() => getDate(date.value.getFullYear(), date.value.getMonth()))

@@ -21,7 +21,7 @@ export const useDND = (deskId: number) => {
     isDragging.id = item.id
 
     setTimeout(() => {
-      ;(event.target! as HTMLElement).classList.add('hide')
+      ;(event.target as HTMLElement).classList.add('hide')
       isDragging.isHided = true
     }, 0)
     event.dataTransfer.dropEffect = 'move'
