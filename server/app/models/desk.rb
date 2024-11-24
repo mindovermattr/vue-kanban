@@ -1,4 +1,6 @@
 class Desk < ApplicationRecord
+  belongs_to :user
+
   has_many :tasks, dependent: :destroy
   has_many :categories, dependent: :destroy
   has_many :statuses, dependent: :destroy

@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Desk, type: :model do
+  it { should belong_to :user }
+
   it { should have_many(:tasks).dependent(:destroy) }
   it { should have_many(:categories).dependent(:destroy) }
   it { should have_many(:statuses).dependent(:destroy) }
