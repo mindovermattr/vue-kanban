@@ -11,20 +11,15 @@ class DeskUsersController < ApplicationController
   end
 
   def update
-    if @desk_user
-      @desk_user.update(role_params)
-      render json: @desk_user, status: :created
+    if @desk_user.update(role_params)
+      render json: @desk_user, status: :ok
     else
       render json: { errors: 'Некорректный запрос'}, status: :unprocessable_entity
     end
   end
 
   def destroy
-    if @desk_user
-      @desk_user.destroy
-    else
-      render json: { error: 'Некорректный id' }, status: :bad_request
-    end
+    render json: { error: 'Некорректный id' }, status: :unprocessable_entity unless @desk_user&.destroy
   end
 
   private
