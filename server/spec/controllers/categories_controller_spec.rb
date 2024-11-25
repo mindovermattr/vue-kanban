@@ -117,17 +117,35 @@ describe 'Categories', type: :request do
   describe 'DELETE /desks/:desk_id/categories/:id' do
     let!(:category) { create(:category, desk: desk) }
     let(:api_path) { "/desks/#{desk.id}/categories/#{category.id}" }
+    let!(:invalid_path) { "/desks/#{desk.id}/categories/#{category.id + 999}" }
 
-    it 'deletes the task' do
-      expect do
+    context 'when the category presence' do
+      it 'deletes the task' do
+        expect do
+          delete api_path, headers: headers
+        end.to change(Category, :count).by(-1)
+      end
+
+      it 'returns 204 status' do
         delete api_path, headers: headers
-      end.to change(Category, :count).by(-1)
+        expect(response).to have_http_status(:no_content)
+      end
     end
 
-    it 'returns 204 status' do
-      delete api_path, headers: headers
+    context 'when the category does not exist' do
+      it 'does not delete any record' do
+        expect { delete invalid_path, headers: headers }.not_to change(Category, :count)
+      end
 
-      expect(response).to have_http_status(:no_content)
+      it 'returns 422 status' do
+        delete invalid_path, headers: headers
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns an error message' do
+        delete invalid_path, headers: headers
+        expect(json['error']).to eq('Некорректный id')
+      end
     end
   end
 end

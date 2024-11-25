@@ -117,17 +117,35 @@ describe 'Statuses', type: :request do
   describe 'DELETE /desks/:desk_id/tasks/:id' do
     let!(:status) { create(:status, desk: desk) }
     let(:api_path) { "/desks/#{desk.id}/statuses/#{status.id}" }
+    let(:invalid_path) { "/desks/#{desk.id}/statuses/#{status.id + 999}" }
 
-    it 'deletes the status' do
-      expect do
+    context 'when the status presence' do
+      it 'deletes the status' do
+        expect do
+          delete api_path, headers: headers
+        end.to change(Status, :count).by(-1)
+      end
+
+      it 'returns 204 status' do
         delete api_path, headers: headers
-      end.to change(Status, :count).by(-1)
+        expect(response).to have_http_status(:no_content)
+      end
     end
 
-    it 'returns 204 status' do
-      delete api_path, headers: headers
+    context 'when the status does not exist' do
+      it 'does not delete any record' do
+        expect { delete invalid_path, headers: headers }.not_to change(Status, :count)
+      end
 
-      expect(response).to have_http_status(:no_content)
+      it 'returns 422 status' do
+        delete invalid_path, headers: headers
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns an error message' do
+        delete invalid_path, headers: headers
+        expect(json['error']).to eq('Некорректный id')
+      end
     end
   end
 end

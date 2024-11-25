@@ -14,7 +14,7 @@ class DesksController < ApplicationController
 
     if @desk.save
       @desk.desk_users.create(user: current_user, role: :owner)
-      render json: @desk, status: 201, location: @desk
+      render json: @desk, status: :created, location: @desk
     else
       unprocessable_entity(@desk)
     end
@@ -29,11 +29,7 @@ class DesksController < ApplicationController
   end
 
   def destroy
-    if @desk
-      @desk.destroy
-    else
-      render json: { error: 'Некорректный id' }, status: :bad_request
-    end
+   @desk&.destroy
   end
 
   private
