@@ -23,9 +23,9 @@ class StatusesController < ApplicationController
 
   def update
     if @status.update(status_params)
-      render json: @status, status: :created
+      render json: @status, status: :ok
     else
-      unprocessable_entity(@task)
+      unprocessable_entity(@status)
     end
   end
 
