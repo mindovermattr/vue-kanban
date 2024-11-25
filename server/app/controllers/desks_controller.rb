@@ -22,9 +22,9 @@ class DesksController < ApplicationController
 
   def update
     if @desk.update(desk_params)
-      render json: @desk, status: :created, location: @desk
+      render json: @desk, status: :ok, location: @desk
     else
-      render json: { errors: 'Некорректный запрос!' }, status: :bad_request
+      unprocessable_entity(@desk)
     end
   end
 
