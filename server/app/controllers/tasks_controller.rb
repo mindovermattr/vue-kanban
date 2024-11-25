@@ -23,7 +23,7 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      render json: @task, status: :created
+      render json: @task, status: :ok
     else
       unprocessable_entity(@task)
     end
