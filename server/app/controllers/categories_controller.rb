@@ -22,7 +22,7 @@ class CategoriesController < ApplicationController
 
   def update
     if @category.update(category_params)
-      render json: @category, status: :created
+      render json: @category, status: :ok
     else
       unprocessable_entity(@category)
     end

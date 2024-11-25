@@ -4,5 +4,9 @@ FactoryBot.define do
     main_color { "#FFFFFF" }
     accent_color { "#AAAAAA" }
     association :desk, factory: :desk
+
+    trait :invalid do
+      name { nil }
+    end
   end
 end
