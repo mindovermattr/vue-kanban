@@ -120,17 +120,30 @@ describe 'Desks', type: :request do
     let(:user) { create(:user) }
     let!(:desk) { create(:desk, user: user) }
     let(:api_path) { "/desks/#{desk.id}" }
+    let(:invalid_path) { "/desks/#{desk.id + 999}" }
 
-    it 'deletes the desk' do
-      expect do
+    context 'when the desk presence' do
+      it 'deletes the desk' do
+        expect do
+          delete api_path, headers: headers
+        end.to change(Desk, :count).by(-1)
+      end
+
+      it 'returns 204 status' do
         delete api_path, headers: headers
-      end.to change(Desk, :count).by(-1)
+        expect(response).to have_http_status(:no_content)
+      end
     end
 
-    it 'returns 204 status' do
-      delete api_path, headers: headers
+    context 'when the desk does not exist' do
+      it 'does not delete any record' do
+        expect { delete invalid_path, headers: headers }.not_to change(Desk, :count)
+      end
 
-      expect(response).to have_http_status(:no_content)
+      it 'returns 403 status' do
+        delete invalid_path, headers: headers
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 end

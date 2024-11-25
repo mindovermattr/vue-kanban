@@ -75,7 +75,7 @@ describe 'DeskUsers', type: :request do
 
   describe 'DELETE /desks/:desk_id/desk_users/:id' do
     let(:api_path) { "/desks/#{desk.id}/desk_users/#{desk_user.id}" }
-    let(:invalid_path) { "/desks/#{desk.id}/desk_users/#{desk_user.id + 1}" }
+    let(:invalid_path) { "/desks/#{desk.id}/desk_users/#{desk_user.id + 999}" }
 
     context 'when the desk_user presence' do
       it 'deletes the task' do
@@ -92,7 +92,6 @@ describe 'DeskUsers', type: :request do
     end
 
     context 'when the desk_user does not exist' do
-
       it 'does not delete any record' do
         expect { delete invalid_path, headers: headers }.not_to change(DeskUser, :count)
       end

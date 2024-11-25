@@ -30,11 +30,7 @@ class StatusesController < ApplicationController
   end
 
   def destroy
-    if @status
-      @status.destroy
-    else
-      render json: { error: 'Некорректный id' }, status: :bad_request
-    end
+    render json: { error: 'Некорректный id' }, status: :unprocessable_entity unless @status&.destroy
   end
 
   private
