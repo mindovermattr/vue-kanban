@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue'),
+      component: () => import('@/views/HomeView.vue'),
       meta: {
         requireAuth: true,
       },
@@ -15,7 +15,7 @@ const router = createRouter({
     {
       path: '/desk/:id',
       name: 'desk',
-      component: () => import('../views/DeskView.vue'),
+      component: () => import('@/views/DeskView.vue'),
       props: true,
       meta: {
         requireAuth: true,
@@ -24,7 +24,7 @@ const router = createRouter({
     {
       path: '/sign-in',
       name: 'SignIn',
-      component: () => import('../views/LoginView.vue'),
+      component: () => import('@/views/LoginView.vue'),
       props: { signUp: false },
       meta: {
         requireAuth: false,

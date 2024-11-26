@@ -3,6 +3,7 @@ import { useDND } from '@/@composables/useDND'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import { createDeskLink } from '@/api/Desks.api'
 import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
+import { cable } from '@/socket/consumer'
 import { useCardStore } from '@/store/useCardsStore'
 import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
@@ -23,6 +24,31 @@ const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+rou
 onMounted(async () => {
   await statusStore.fetchStatus(+route.params.id)
   await cardStore.fetchCards(+route.params.id)
+  // const socket = new WebSocket('ws://localhost:3000/cable')
+  // socket.onopen = () => {
+  //   console.log('open')
+  // }
+  // socket.onmessage = (event) => {
+  //   console.log(event.data)
+  // }
+  // socketStore.setOnMessageFunction((event) => {
+  //   console.log(event.data)
+  // })
+  // socketStore.connect()
+  cable.subscriptions.create(
+    { channel: 'TasksChannel', desk_id: +route.params.id },
+    {
+      connected: () => {
+        console.log('im connected')
+      },
+      disconnected: () => {
+        console.log('disconnected')
+      },
+      received(obj) {
+        console.log(obj)
+      },
+    }
+  )
 })
 
 const createInviteLink = async () => {
@@ -90,7 +116,7 @@ provide('isDragging', isDragging)
     display: grid;
     gap: 20px;
     overflow-x: scroll;
-    grid-row: 1;
+    padding-bottom: 20px;
   }
   &--message {
     display: flex;
