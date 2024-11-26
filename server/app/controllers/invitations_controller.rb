@@ -8,7 +8,7 @@ class InvitationsController < ApplicationController
     @invitation = @desk.invitations.new(invitation_params)
 
     if @invitation.save
-      render json: { link: desk_invitation_accept_url(desk_id: @invitation.desk_id, token: @invitation.token) },
+      render json: { link: "/desks/#{@invitation.desk_id}/invitations/#{@invitation.token}/accept" },
              status: :created
     else
       unprocessable_entity(@invitation)
