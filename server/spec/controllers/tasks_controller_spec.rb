@@ -23,7 +23,7 @@ describe 'Tasks', type: :request do
     end
 
     it 'returns all public fields of tasks' do
-      %w[id name body category status_id period].each do |attr|
+      %w[id name body category status_id period user_id].each do |attr|
         expect(json.first[attr]).to eq tasks.first.send(attr).as_json
       end
     end

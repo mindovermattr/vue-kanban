@@ -7,6 +7,7 @@ RSpec.describe Task, type: :model do
   it { should belong_to(:desk) }
   it { should belong_to(:status) }
   it { should belong_to(:category) }
+  it { should belong_to(:user).optional }
 
   it { should validate_presence_of :name }
   it { should validate_presence_of :body }

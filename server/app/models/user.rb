@@ -8,4 +8,5 @@ class User < ApplicationRecord
   has_many :desks, dependent: :destroy
   has_many :desk_users, dependent: :destroy
   has_many :member_desks, through: :desk_users, source: :desk
+  has_many :tasks
 end

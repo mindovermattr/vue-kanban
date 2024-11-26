@@ -6,6 +6,7 @@ FactoryBot.define do
     association :desk, factory: :desk
     association :category, factory: :category
     association :status, factory: :status
+    association :user, factory: :user
 
     trait :invalid do
       name { nil }
