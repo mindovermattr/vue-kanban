@@ -38,7 +38,7 @@ class TasksController < ApplicationController
   def publish_task!
     return if @task.errors.any?
 
-    ActionCable.server.broadcast("tasks_channel_#{@desk.id}", @task)
+    ActionCable.server.broadcast("tasks_channel_#{@desk.id}", { task: @task, category: @task.category })
   end
 
   def set_desk!
