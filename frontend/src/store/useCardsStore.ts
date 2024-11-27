@@ -87,15 +87,19 @@ export const useCardStore = defineStore('cards', {
       const statusStore = useStatusStore()
       const prevCard = this.cards.find((storeCard) => storeCard.id === card.id)
       const prevCardStatus = statusStore.status.find((el) => el.id === prevCard?.status_id)
-      const prevCardIndex = this.filtredCards[prevCardStatus!.name].findIndex(
-        (el) => el.id === prevCard?.id
-      )
 
-      this.filtredCards[prevCardStatus!.name].splice(prevCardIndex, 1)
+      if (prevCardStatus) {
+        const prevCardIndex = this.filtredCards[prevCardStatus.name].findIndex(
+          (el) => el.id === prevCard?.id
+        )
+        this.filtredCards[prevCardStatus.name].splice(prevCardIndex, 1)
+        const idx = this.cards.findIndex((el) => el.id === card.id)
+        this.cards.splice(idx, 1)
+      }
+      this.cards.push(card)
 
       const newCardStatus = statusStore.status.find((el) => el.id === card.status_id)
-
-      this.filtredCards[newCardStatus!.name].push(card)
+      if (newCardStatus) this.filtredCards[newCardStatus.name].push(card)
     },
 
     async addCard(deskId: number, card: Omit<TKanbanCard, 'id'>) {

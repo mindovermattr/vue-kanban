@@ -25,9 +25,14 @@ const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+rou
 onMounted(async () => {
   await statusStore.fetchStatus(+route.params.id)
   await cardStore.fetchCards(+route.params.id)
-  createTaskConnection(+route.params.id, (obj: TCardResponse) => {
-    cardStore.updateCardFromSocket(obj)
+  createTaskConnection(+route.params.id, (card: TCardResponse) => {
+    const newCard = {
+      ...card.task,
+      category: { ...card.category },
+    }
+    cardStore.updateCardFromSocket(newCard)
   })
+  console.log('object')
 })
 
 const createInviteLink = async () => {
