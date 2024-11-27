@@ -25,9 +25,9 @@ const logoutHandler = () => {
 
 <template>
   <header @click="closeProfile" class="header container">
-    <router-link to="/" class="header__title"
-      >Kam<span class="header__title header__title--blue">Bam</span></router-link
-    >
+    <router-link to="/" class="header__title">
+      Kam<span class="header__title header__title--blue">Bam</span>
+    </router-link>
     <div class="header__controls controls">
       <slot></slot>
       <VButton

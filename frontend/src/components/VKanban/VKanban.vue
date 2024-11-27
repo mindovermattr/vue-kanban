@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useDND } from '@/@composables/useDND'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import { createDeskLink } from '@/api/Desks.api'
 import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
+import { createTaskConnection } from '@/socket/tasks/tasks.cable'
 import { useCardStore } from '@/store/useCardsStore'
 import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
@@ -23,6 +25,9 @@ const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+rou
 onMounted(async () => {
   await statusStore.fetchStatus(+route.params.id)
   await cardStore.fetchCards(+route.params.id)
+  createTaskConnection(+route.params.id, (obj: TCardResponse) => {
+    cardStore.updateCardFromSocket(obj)
+  })
 })
 
 const createInviteLink = async () => {
@@ -90,7 +95,7 @@ provide('isDragging', isDragging)
     display: grid;
     gap: 20px;
     overflow-x: scroll;
-    grid-row: 1;
+    padding-bottom: 20px;
   }
   &--message {
     display: flex;

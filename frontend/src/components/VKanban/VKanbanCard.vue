@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
 import { inject, ref } from 'vue'
+import VDeskIcons from '../Icons/VDeskIcons.vue'
+import VButton from '../VButton.vue'
 import VCategory from '../VCategory.vue'
 import VModalUpdate from '../VModal/Update/VModalUpdate.vue'
 import VKanbanDropzone from './VKanbanDropzone.vue'
@@ -38,12 +41,22 @@ const onDragEnd = () => {
   <article v-else class="card" @dragend="onDragEnd">
     <header class="card__header">
       <VCategory :is-field="false" class="card__category" v-bind="category" />
-      <button @click="openModal" class="card__button">...</button>
+      <div class="card__controls">
+        <VButton variant="default" @click="openModal" class="card__button">...</VButton>
+      </div>
     </header>
     <h4 class="card__title">{{ name }}</h4>
     <footer class="card__footer">
-      <CalendarIcon />
-      <p class="card__date">{{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}</p>
+      <div class="card__period">
+        <CalendarIcon />
+        <p class="card__date">
+          {{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}
+        </p>
+      </div>
+
+      <VButton variant="default">
+        <VDeskIcons :icon-id="EDeskIcons.users" />
+      </VButton>
     </footer>
     <VModalUpdate
       :status-id="status_id"
@@ -62,6 +75,7 @@ const onDragEnd = () => {
   background-color: $white-color;
   padding: 13px 13px 19px 11px;
   border-radius: 10px;
+  position: relative;
 
   &__header {
     display: flex;
@@ -102,13 +116,8 @@ const onDragEnd = () => {
       color: rgb(232, 92, 92);
     }
   }
-}
-.column {
-  &__dropzone {
-    min-height: 200px;
-    border-radius: 5px;
-    border: 1px dashed #94a6be;
-    transition: all 0.5s;
+  &__controls {
+    display: flex;
   }
 }
 </style>

@@ -7,6 +7,7 @@ import {
   getCards as getCardsApi,
   updateCard as updateCardApi,
 } from '@/api/Cards.api'
+import type { AxiosResponse } from 'axios'
 import { defineStore } from 'pinia'
 import { useStatusStore } from './useStatusStore'
 
@@ -55,22 +56,22 @@ export const useCardStore = defineStore('cards', {
       selectedStatusId: number,
       itemStatusId: number,
       itemID: number
-    ) {
-      let cardIndex = 0
+    ): Promise<AxiosResponse<TCardResponse, any> | undefined> {
       const statusStore = useStatusStore()
       const initialStatuts = statusStore.status.find((el) => el.id === itemStatusId)
-      const card = this.filtredCards[initialStatuts!.name].find((card, idx) => {
-        cardIndex = idx
+      const card = this.filtredCards[initialStatuts!.name].find((card) => {
         return card.id === itemID
       })
 
-      if (cardIndex >= 0) this.filtredCards[initialStatuts!.name].splice(cardIndex, 1)
       if (card) {
-        const selectedStatus = statusStore.status.find((el) => el.id === selectedStatusId)
-        card.status_id = selectedStatusId
+        const newCard = {
+          ...card,
+          category_id: card.category.id,
+          status_id: selectedStatusId,
+        }
+        const resp = await updateCardApi(deskId, newCard)
+        if (!resp) return
 
-        this.filtredCards[selectedStatus!.name].push(card)
-        const resp = await updateCardApi(deskId, card)
         return resp
       }
     },
@@ -78,22 +79,23 @@ export const useCardStore = defineStore('cards', {
       const cards = await getCardsApi(deskId)
       if (cards) this.setCards(cards)
     },
-    async updateCard(deskId: number, card: TCardResponse, oldCard: TCardResponse) {
+    async updateCard(deskId: number, card: TCardResponse) {
       const resp = await updateCardApi(deskId, card)
-
-      const statusStore = useStatusStore()
-
-      const initialStatus = statusStore.status.find((el) => el.id === oldCard.status_id)
-      const cardIndex = this.filtredCards[initialStatus!.name].findIndex((filtredCard) => {
-        return card.id === filtredCard.id
-      })
-
-      if (cardIndex >= 0) this.filtredCards[initialStatus!.name].splice(cardIndex, 1)
-      const selectedStatus = statusStore.status.find((el) => el.id === card.status_id)
-      card.status_id = selectedStatus!.id
-
-      this.filtredCards[selectedStatus!.name].push(card)
       return resp
+    },
+    updateCardFromSocket(card: TCardResponse) {
+      const statusStore = useStatusStore()
+      const prevCard = this.cards.find((storeCard) => storeCard.id === card.id)
+      const prevCardStatus = statusStore.status.find((el) => el.id === prevCard?.status_id)
+      const prevCardIndex = this.filtredCards[prevCardStatus!.name].findIndex(
+        (el) => el.id === prevCard?.id
+      )
+
+      this.filtredCards[prevCardStatus!.name].splice(prevCardIndex, 1)
+
+      const newCardStatus = statusStore.status.find((el) => el.id === card.status_id)
+
+      this.filtredCards[newCardStatus!.name].push(card)
     },
 
     async addCard(deskId: number, card: Omit<TKanbanCard, 'id'>) {

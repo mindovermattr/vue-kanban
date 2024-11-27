@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useMobile } from '@/@composables/useMobile'
 import { useModal } from '@/@composables/useModal'
 import VButton from '@/components/VButton.vue'
 import VFlash from '@/components/VFlash/VFlash.vue'
@@ -23,14 +24,19 @@ const { closeModal: closeCategoryModalHandler, openModal: openCategoryModalHandl
   useModal(isCategoryModalVisible)
 
 const { closeModal: closeStatusModal, openModal: openStatusModal } = useModal(isStatusModalVisible)
+const { isMobile } = useMobile()
 </script>
 
 <template>
   <VLayout>
     <template #header>
       <VHeader>
-        <VButton variant="contained" @click="openCategoryModalHandler"> Создать категорию </VButton>
-        <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
+        <template v-if="!isMobile">
+          <VButton variant="contained" @click="openCategoryModalHandler">
+            Создать категорию
+          </VButton>
+          <VButton variant="contained" @click="openAddModalHandler"> Создать новую задачу </VButton>
+        </template>
       </VHeader>
     </template>
     <Vkanban @openModal="openStatusModal" />

@@ -23,12 +23,18 @@ export const addCard = async (
   }
 }
 
-export const updateCard = async (deskId: number, card: TKanbanCard) => {
+export const updateCard = async (
+  deskId: number,
+  card: TKanbanCard
+): Promise<AxiosResponse<TCardResponse> | undefined> => {
   try {
-    const resp = await protectedInstance.patch(`desks/${deskId}/tasks/${card.id}`, card)
+    const resp = await protectedInstance.patch<TCardResponse>(
+      `desks/${deskId}/tasks/${card.id}`,
+      card
+    )
     return resp
   } catch (error) {
-    return error
+    return
   }
 }
 
