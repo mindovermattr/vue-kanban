@@ -1,7 +1,7 @@
-import type { TKanbanCard } from '@/@types/TKanban'
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import { cable } from '../consumer'
 
-export const createTaskConnection = (id: number, cb: (obj: TKanbanCard) => void) =>
+export const createTaskConnection = (id: number, onReciveMessage: (obj: TCardResponse) => void) =>
   cable.subscriptions.create(
     { channel: 'TasksChannel', desk_id: id },
     {
@@ -12,7 +12,7 @@ export const createTaskConnection = (id: number, cb: (obj: TKanbanCard) => void)
         console.log('disconnected')
       },
       received(obj) {
-        cb(obj)
+        onReciveMessage(obj)
       },
     }
   )

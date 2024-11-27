@@ -60,8 +60,8 @@ const onSubmit = handleSubmit(async (values) => {
     id: values.id,
     category: values.category,
   }
-  console.log(newCard)
-  await cardsStore.updateCard(+route.params.id, newCard, currentCard.value!)
+  const resp = await cardsStore.updateCard(+route.params.id, newCard)
+  if (resp) cardsStore.updateCardFromSocket(resp.data)
   emit('closeModal')
 })
 

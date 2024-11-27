@@ -28,21 +28,6 @@ onMounted(async () => {
   createTaskConnection(+route.params.id, (obj: TCardResponse) => {
     cardStore.updateCardFromSocket(obj)
   })
-  // cable.subscriptions.create(
-  //   { channel: 'TasksChannel', desk_id: +route.params.id },
-  //   {
-  //     connected: () => {
-  //       console.log('im connected')
-  //     },
-  //     disconnected: () => {
-  //       console.log('disconnected')
-  //     },
-  //     received(obj) {
-  //       console.log(obj)
-  //       cardStore.updateCardFromSocket(obj)
-  //     },
-  //   }
-  // )
 })
 
 const createInviteLink = async () => {
