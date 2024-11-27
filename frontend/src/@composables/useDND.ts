@@ -1,5 +1,6 @@
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import { useCardStore } from '@/store/useCardsStore'
+import { useFlashStore } from '@/store/useFlashStore'
 import { reactive } from 'vue'
 
 export const useDND = (deskId: number) => {
@@ -30,11 +31,13 @@ export const useDND = (deskId: number) => {
     event.dataTransfer.setData('itemStatus', `${item.status_id}`)
   }
 
-  const onDropDragEvent = (event: DragEvent, statusSelected: number) => {
+  const onDropDragEvent = async (event: DragEvent, statusSelected: number) => {
     if (!event.dataTransfer) return
+    const flashStore = useFlashStore()
     const itemID = event.dataTransfer.getData('itemID')
     const itemStatus = event.dataTransfer.getData('itemStatus')
-    cards.replaceCard(deskId, statusSelected, +itemStatus, +itemID)
+    const resp = await cards.replaceCard(deskId, statusSelected, +itemStatus, +itemID)
+    if (!resp) flashStore.openFlash('У вас нет доступа к обновлению карточек', 1500, 'error')
     onDragEnd()
   }
 

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useDND } from '@/@composables/useDND'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
+import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import { createDeskLink } from '@/api/Desks.api'
 import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
-import { cable } from '@/socket/consumer'
+import { createTaskConnection } from '@/socket/tasks/tasks.cable'
 import { useCardStore } from '@/store/useCardsStore'
 import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
@@ -24,31 +25,24 @@ const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+rou
 onMounted(async () => {
   await statusStore.fetchStatus(+route.params.id)
   await cardStore.fetchCards(+route.params.id)
-  // const socket = new WebSocket('ws://localhost:3000/cable')
-  // socket.onopen = () => {
-  //   console.log('open')
-  // }
-  // socket.onmessage = (event) => {
-  //   console.log(event.data)
-  // }
-  // socketStore.setOnMessageFunction((event) => {
-  //   console.log(event.data)
-  // })
-  // socketStore.connect()
-  cable.subscriptions.create(
-    { channel: 'TasksChannel', desk_id: +route.params.id },
-    {
-      connected: () => {
-        console.log('im connected')
-      },
-      disconnected: () => {
-        console.log('disconnected')
-      },
-      received(obj) {
-        console.log(obj)
-      },
-    }
-  )
+  createTaskConnection(+route.params.id, (obj: TCardResponse) => {
+    cardStore.updateCardFromSocket(obj)
+  })
+  // cable.subscriptions.create(
+  //   { channel: 'TasksChannel', desk_id: +route.params.id },
+  //   {
+  //     connected: () => {
+  //       console.log('im connected')
+  //     },
+  //     disconnected: () => {
+  //       console.log('disconnected')
+  //     },
+  //     received(obj) {
+  //       console.log(obj)
+  //       cardStore.updateCardFromSocket(obj)
+  //     },
+  //   }
+  // )
 })
 
 const createInviteLink = async () => {

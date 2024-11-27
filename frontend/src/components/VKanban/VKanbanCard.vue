@@ -47,8 +47,13 @@ const onDragEnd = () => {
     </header>
     <h4 class="card__title">{{ name }}</h4>
     <footer class="card__footer">
-      <CalendarIcon />
-      <p class="card__date">{{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}</p>
+      <div class="card__period">
+        <CalendarIcon />
+        <p class="card__date">
+          {{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}
+        </p>
+      </div>
+
       <VButton variant="default">
         <VDeskIcons :icon-id="EDeskIcons.users" />
       </VButton>

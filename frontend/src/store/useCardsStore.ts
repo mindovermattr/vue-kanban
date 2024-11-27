@@ -64,13 +64,19 @@ export const useCardStore = defineStore('cards', {
         return card.id === itemID
       })
 
-      if (cardIndex >= 0) this.filtredCards[initialStatuts!.name].splice(cardIndex, 1)
       if (card) {
-        const selectedStatus = statusStore.status.find((el) => el.id === selectedStatusId)
-        card.status_id = selectedStatusId
+        const newCard = {
+          ...card,
+          category_id: card.category.id,
+          status_id: selectedStatusId,
+        }
+        const resp = await updateCardApi(deskId, newCard)
+        if (!resp) return
+        if (cardIndex >= 0) this.filtredCards[initialStatuts!.name].splice(cardIndex, 1)
 
-        this.filtredCards[selectedStatus!.name].push(card)
-        const resp = await updateCardApi(deskId, card)
+        const selectedStatus = statusStore.status.find((el) => el.id === selectedStatusId)
+
+        this.filtredCards[selectedStatus!.name].push(newCard)
         return resp
       }
     },
@@ -94,6 +100,20 @@ export const useCardStore = defineStore('cards', {
 
       this.filtredCards[selectedStatus!.name].push(card)
       return resp
+    },
+    updateCardFromSocket(card: TCardResponse) {
+      const statusStore = useStatusStore()
+      const prevCard = this.cards.find((storeCard) => storeCard.id === card.id)
+      const prevCardStatus = statusStore.status.find((el) => el.id === prevCard?.status_id)
+      const prevCardIndex = this.filtredCards[prevCardStatus!.name].findIndex(
+        (el) => el.id === prevCard?.id
+      )
+
+      this.filtredCards[prevCardStatus!.name].splice(prevCardIndex, 1)
+
+      const newCardStatus = statusStore.status.find((el) => el.id === card.status_id)
+
+      this.filtredCards[newCardStatus!.name].push(card)
     },
 
     async addCard(deskId: number, card: Omit<TKanbanCard, 'id'>) {
