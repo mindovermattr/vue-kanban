@@ -24,7 +24,7 @@ class InvitationsController < ApplicationController
 
       render json: { message: 'Пришлашение успешно принято!' }, status: :accepted
     else
-      render json: { error: 'Приглашение истекло!' }, status: :unprocessable_entity
+      render json: { errors: 'Приглашение истекло!' }, status: :unprocessable_entity
     end
   end
 
