@@ -53,10 +53,14 @@ const onDragEnd = () => {
           {{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}
         </p>
       </div>
-
-      <VButton variant="default">
-        <VDeskIcons :icon-id="EDeskIcons.users" />
-      </VButton>
+      <div class="card__users">
+        <VDeskIcons class="card__icon" :size="16" :icon-id="EDeskIcons.users" />
+        <span class="card__users-list"
+          >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga provident vitae officiis.
+          Dolor, natus hic nisi distinctio qui accusantium ex nam? Est minima exercitationem
+          architecto quae earum, unde molestias? Libero.</span
+        >
+      </div>
     </footer>
     <VModalUpdate
       :status-id="status_id"
@@ -97,8 +101,32 @@ const onDragEnd = () => {
   }
   &__footer {
     display: flex;
+    flex-direction: column;
     gap: 6px;
-    margin-top: 35px;
+    margin-top: 25px;
+  }
+  &__period {
+    display: flex;
+    gap: 6px;
+  }
+  &__users {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    overflow: hidden;
+    max-height: 18px;
+
+    &-list {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      @include font-h6();
+      color: $gray-color-100;
+    }
+  }
+  &__icon {
+    flex-shrink: 0;
   }
   &__date {
     color: rgb(148, 166, 190);
