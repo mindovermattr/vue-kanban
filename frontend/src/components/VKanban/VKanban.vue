@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDND } from '@/@composables/useDND'
+import { useRouteParams } from '@/@composables/useRouteParams'
 import { ERoles } from '@/@types/ERoles'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
@@ -11,7 +12,6 @@ import { useDeskStore } from '@/store/useDeskStore'
 import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { onMounted, provide } from 'vue'
-import { useRoute } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
 import VButton from '../VButton.vue'
 
@@ -21,26 +21,25 @@ const flashStore = useFlashStore()
 const deskStore = useDeskStore()
 const emit = defineEmits<(e: 'openModal') => void>()
 
-const route = useRoute()
+const routeParams = useRouteParams('id')
 
-const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+route.params.id)
+const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+routeParams.id)
 
 onMounted(async () => {
-  await statusStore.fetchStatus(+route.params.id)
-  await cardStore.fetchCards(+route.params.id)
-  await deskStore.fetchUsers(+route.params.id)
-  createTaskConnection(+route.params.id, (card: TCardResponse) => {
+  await statusStore.fetchStatus(+routeParams.id)
+  await cardStore.fetchCards(+routeParams.id)
+  await deskStore.fetchUsers(+routeParams.id)
+  createTaskConnection(+routeParams.id, (card: TCardResponse) => {
     const newCard = {
       ...card.task,
       category: { ...card.category },
     }
     cardStore.updateCardFromSocket(newCard)
   })
-  console.log(deskStore.users)
 })
 
 const createInviteLink = async () => {
-  const response = await createDeskLink(+route.params.id, 3)
+  const response = await createDeskLink(+routeParams.id, 3)
   if (response?.data) {
     await navigator.clipboard.writeText(
       `${window.location.hostname}:${window.location.port}${response.data.link}`
