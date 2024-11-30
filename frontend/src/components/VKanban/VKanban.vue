@@ -19,7 +19,7 @@ const cardStore = useCardStore()
 const statusStore = useStatusStore()
 const flashStore = useFlashStore()
 const deskStore = useDeskStore()
-const emit = defineEmits<(e: 'openModal') => void>()
+const emit = defineEmits<{ (e: 'openStatusModal'): void; (e: 'openUsersModal'): void }>()
 
 const routeParams = useRouteParams('id')
 
@@ -36,6 +36,7 @@ onMounted(async () => {
     }
     cardStore.updateCardFromSocket(newCard)
   })
+  console.log(deskStore.getFiltredUsers)
 })
 
 const createInviteLink = async () => {
@@ -56,7 +57,7 @@ provide('isDragging', isDragging)
     <div class="desk__wrapper">
       <h2 class="desk__title">Desk name</h2>
       <div v-if="deskStore.getRole !== ERoles.GUEST" class="desk__controls">
-        <VButton @click="emit('openModal')" variant="default"
+        <VButton @click="emit('openStatusModal')" variant="default"
           ><VDeskIcons
             class="desk__icon"
             :size="30"
@@ -74,6 +75,9 @@ provide('isDragging', isDragging)
         /></VButton>
         <VButton @click="createInviteLink" variant="default">
           <VDeskIcons class="desk__icon" :size="30" :icon-id="EDeskIcons.link" />
+        </VButton>
+        <VButton @click="emit('openUsersModal')" variant="default">
+          <VDeskIcons stroke="black" class="desk__icon" :size="30" :icon-id="EDeskIcons.users" />
         </VButton>
       </div>
     </div>
@@ -138,13 +142,15 @@ provide('isDragging', isDragging)
     opacity: 0;
     transform: translateY(25px);
     transition: all 0.5s;
+    background-color: $gray-color-40;
+    border-radius: 15px;
   }
   &__icon {
     border-radius: 25px;
     padding: 2px 5px;
     transition: all 0.5s;
     &:hover {
-      background-color: #d8d7d7bc;
+      background-color: $white-color;
     }
   }
 }

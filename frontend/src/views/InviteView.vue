@@ -8,7 +8,6 @@
 import { acceptInvite } from '@/api/Users.api'
 import VButton from '@/components/VButton.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
-import { useDeskStore } from '@/store/useDeskStore'
 import axios from 'axios'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -19,7 +18,6 @@ interface IProps {
 }
 
 const props = defineProps<IProps>()
-const deskStore = useDeskStore()
 const router = useRouter()
 
 const acceptLink = computed(() => {

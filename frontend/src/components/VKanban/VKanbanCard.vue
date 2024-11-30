@@ -47,19 +47,24 @@ const onDragEnd = () => {
     </header>
     <h4 class="card__title">{{ name }}</h4>
     <footer class="card__footer">
-      <div class="card__period">
-        <CalendarIcon />
-        <p class="card__date">
-          {{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}
-        </p>
-      </div>
       <div class="card__users">
-        <VDeskIcons class="card__icon" :size="16" :icon-id="EDeskIcons.users" />
+        <VDeskIcons
+          stroke="rgb(148, 166, 190)"
+          class="card__icon"
+          :size="16"
+          :icon-id="EDeskIcons.users"
+        />
         <span class="card__users-list"
           >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga provident vitae officiis.
           Dolor, natus hic nisi distinctio qui accusantium ex nam? Est minima exercitationem
           architecto quae earum, unde molestias? Libero.</span
         >
+      </div>
+      <div class="card__period">
+        <CalendarIcon />
+        <p class="card__date">
+          {{ `${period}${$attrs.draggable ? '' : '. Карточка просрочена '}` }}
+        </p>
       </div>
     </footer>
     <VModalUpdate
