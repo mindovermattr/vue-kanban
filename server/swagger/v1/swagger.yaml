@@ -1,3 +1,279 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
-  title: Kambam API
+  title: Vue Kanban API
+  description: API для управления канбан-досками.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Основной сервер для разработки
+
+paths:
+  /desks:
+    get:
+      summary: Получить список досок пользователя
+      tags:
+        - Desks
+      responses:
+        '200':
+          description: Список досок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Desk'
+
+    post:
+      summary: Создать новую доску
+      tags:
+        - Desks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Desk'
+      responses:
+        '201':
+          description: Доска успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desk'
+
+  /desks/{deskId}:
+    put:
+      summary: Обновить доску
+      tags:
+        - Desks
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Desk'
+      responses:
+        '200':
+          description: Доска успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desk'
+
+    delete:
+      summary: Удалить доску
+      tags:
+        - Desks
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Доска успешно удалена
+
+  /desks/{deskId}/categories:
+    get:
+      summary: Получить все категории для доски
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список категорий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+    post:
+      summary: Создать новую категорию на доске
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Категория успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+
+  /desks/{deskId}/tasks:
+    get:
+      summary: Получить список задач на доске
+      tags:
+        - Tasks
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список задач
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+    post:
+      summary: Создать новую задачу
+      tags:
+        - Tasks
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Задача успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+components:
+  schemas:
+    Desk:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        user_id:
+          type: integer
+      required:
+        - name
+        - user_id
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        main_color:
+          type: string
+        accent_color:
+          type: string
+      required:
+        - name
+        - main_color
+        - accent_color
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        body:
+          type: string
+        category_id:
+          type: integer
+        status_id:
+          type: integer
+        user_id:
+          type: integer
+        period:
+          type: string
+          format: date-time
+      required:
+        - name
+        - body
+        - period
+        - category_id
+        - status_id
+
+    DeskUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        desk_id:
+          type: integer
+        role:
+          type: string
+          enum:
+            - guest
+            - member
+            - owner
+      required:
+        - user_id
+        - desk_id
+        - role
+
+    Status:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - name
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - username
+        - email
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
