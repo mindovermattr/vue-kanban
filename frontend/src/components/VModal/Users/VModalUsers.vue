@@ -31,19 +31,25 @@ const changeHandler = (user: TUserKanban, event: Event) => {
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <form class="modal" @submit="submitHandler">
+    <div class="modal" @submit="submitHandler">
       <div class="users">
-        <div>
+        <div class="users-wrapper">
           <h3 class="users__title">Администраторы:</h3>
-          <ol class="modal__list list">
+          <TransitionGroup name="list" class="modal__list list" tag="ol">
             <li
               class="list__item"
               v-for="user in deskStore.getFiltredUsers['owner']"
               v-bind:key="user.user_id"
             >
               <p>{{ user.username }}</p>
-              <select @change="changeHandler(user, $event)" name="owners" id="">
+              <select
+                class="list__select select"
+                @change="changeHandler(user, $event)"
+                name="owners"
+                id="owners"
+              >
                 <option
+                  class="select__option"
                   v-for="role in Object.values(ERoles)"
                   v-bind:key="role"
                   :selected="user.role === role"
@@ -52,19 +58,25 @@ const changeHandler = (user: TUserKanban, event: Event) => {
                 </option>
               </select>
             </li>
-          </ol>
+          </TransitionGroup>
         </div>
         <div>
           <h3 class="users__title">Участники:</h3>
-          <ol class="modal__list list">
+          <TransitionGroup name="list" class="modal__list list" tag="ol">
             <li
               class="list__item"
               v-for="user in deskStore.getFiltredUsers['member']"
               v-bind:key="user.user_id"
             >
               <p>{{ user.username }}</p>
-              <select @change="changeHandler(user, $event)" name="members" id="">
+              <select
+                class="list__select select"
+                @change="changeHandler(user, $event)"
+                name="members"
+                id=""
+              >
                 <option
+                  class="select__option"
                   v-for="role in Object.values(ERoles)"
                   v-bind:key="role"
                   :selected="user.role === role"
@@ -73,19 +85,25 @@ const changeHandler = (user: TUserKanban, event: Event) => {
                 </option>
               </select>
             </li>
-          </ol>
+          </TransitionGroup>
         </div>
         <div>
           <h3 class="users__title">Гости:</h3>
-          <ol class="modal__list list">
+          <TransitionGroup name="list" class="modal__list list" tag="ol">
             <li
               class="list__item"
               v-for="user in deskStore.getFiltredUsers['guest']"
               v-bind:key="user.user_id"
             >
               <p>{{ user.username }}</p>
-              <select @change="changeHandler(user, $event)" name="guests" id="">
+              <select
+                class="list__select select"
+                @change="changeHandler(user, $event)"
+                name="guests"
+                id=""
+              >
                 <option
+                  class="select__option"
                   v-for="role in Object.values(ERoles)"
                   v-bind:key="role"
                   :selected="user.role === role"
@@ -94,13 +112,13 @@ const changeHandler = (user: TUserKanban, event: Event) => {
                 </option>
               </select>
             </li>
-          </ol>
+          </TransitionGroup>
         </div>
       </div>
       <VButton @click="emit('closeModal')" variant="contained" class="modal__button"
         >Сохранить</VButton
       >
-    </form>
+    </div>
   </VModal>
 </template>
 
@@ -127,11 +145,36 @@ const changeHandler = (user: TUserKanban, event: Event) => {
 }
 
 .list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
   &__item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 48px;
     @include font-h3();
   }
+}
+.select {
+  padding: 5px;
+  background-color: $blue-color;
+  color: $white-color;
+  border-radius: 5px;
+}
+
+/* apply transition to moving elements */
+.list-enter-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.list-leave-active {
+  opacity: 0;
+  position: absolute;
 }
 </style>

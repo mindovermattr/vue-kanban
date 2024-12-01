@@ -56,7 +56,7 @@ provide('isDragging', isDragging)
   <div class="container desk">
     <div class="desk__wrapper">
       <h2 class="desk__title">Desk name</h2>
-      <div v-if="deskStore.getRole !== ERoles.GUEST" class="desk__controls">
+      <div v-if="deskStore.getRole === ERoles.OWNER" class="desk__controls">
         <VButton @click="emit('openStatusModal')" variant="default"
           ><VDeskIcons
             class="desk__icon"
