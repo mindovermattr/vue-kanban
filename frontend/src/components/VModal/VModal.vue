@@ -57,4 +57,11 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   opacity: 0;
   transform: translate(-50%, -60%);
 }
+@media (max-width: $tablet-width) {
+  .modal {
+    width: 100%;
+    overflow-y: scroll;
+    top: 50%;
+  }
+}
 </style>

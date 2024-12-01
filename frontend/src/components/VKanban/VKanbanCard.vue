@@ -2,7 +2,9 @@
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
-import { inject, ref } from 'vue'
+import { useCardStore } from '@/store/useCardsStore'
+import { useDeskStore } from '@/store/useDeskStore'
+import { computed, inject, ref } from 'vue'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
 import VButton from '../VButton.vue'
 import VCategory from '../VCategory.vue'
@@ -11,13 +13,16 @@ import VKanbanDropzone from './VKanbanDropzone.vue'
 
 interface IProps extends TCardResponse {}
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 const isDragging = inject<{
   value: boolean
   id: number | null
   isHided: boolean
 }>('isDragging')!
+
+const deskStore = useDeskStore()
+const cardStore = useCardStore()
 
 const isModalVisible = ref(false)
 
@@ -34,6 +39,11 @@ const onDragEnd = () => {
   isDragging.id = null
   isDragging.isHided = false
 }
+
+const cardUser = computed(() => {
+  const user = deskStore.getUsers.value.find((el) => el.user_id === props?.user_id)
+  return user
+})
 </script>
 
 <template>
@@ -54,11 +64,9 @@ const onDragEnd = () => {
           :size="16"
           :icon-id="EDeskIcons.users"
         />
-        <span class="card__users-list"
-          >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga provident vitae officiis.
-          Dolor, natus hic nisi distinctio qui accusantium ex nam? Est minima exercitationem
-          architecto quae earum, unde molestias? Libero.</span
-        >
+        <span class="card__users-list">{{
+          `${cardUser ? cardUser.username : 'Никто не назначен'}`
+        }}</span>
       </div>
       <div class="card__period">
         <CalendarIcon />
