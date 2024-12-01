@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 <template>
   <slot name="header"></slot>
-  <main class="main">
+  <main :class="['main', $attrs.class]">
     <slot> </slot>
   </main>
   <slot name="modal"></slot>

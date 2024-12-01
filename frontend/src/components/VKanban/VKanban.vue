@@ -1,39 +1,50 @@
 <script setup lang="ts">
 import { useDND } from '@/@composables/useDND'
+import { useRouteParams } from '@/@composables/useRouteParams'
+import { ERoles } from '@/@types/ERoles'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import { createDeskLink } from '@/api/Desks.api'
 import VKanbanColumn from '@/components/VKanban/VKanbanColumn.vue'
 import { createTaskConnection } from '@/socket/tasks/tasks.cable'
 import { useCardStore } from '@/store/useCardsStore'
+import { useDeskStore } from '@/store/useDeskStore'
 import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { onMounted, provide } from 'vue'
-import { useRoute } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
 import VButton from '../VButton.vue'
 
 const cardStore = useCardStore()
 const statusStore = useStatusStore()
 const flashStore = useFlashStore()
-const emit = defineEmits<(e: 'openModal') => void>()
+const deskStore = useDeskStore()
+const emit = defineEmits<{ (e: 'openStatusModal'): void; (e: 'openUsersModal'): void }>()
 
-const route = useRoute()
+const routeParams = useRouteParams('id')
 
-const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+route.params.id)
+const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+routeParams.id)
 
 onMounted(async () => {
-  await statusStore.fetchStatus(+route.params.id)
-  await cardStore.fetchCards(+route.params.id)
-  createTaskConnection(+route.params.id, (obj: TCardResponse) => {
-    cardStore.updateCardFromSocket(obj)
+  await statusStore.fetchStatus(+routeParams.id)
+  await cardStore.fetchCards(+routeParams.id)
+  await deskStore.fetchUsers(+routeParams.id)
+  createTaskConnection(+routeParams.id, (card: TCardResponse) => {
+    const newCard = {
+      ...card.task,
+      category: { ...card.category },
+    }
+    cardStore.updateCardFromSocket(newCard)
   })
+  console.log(deskStore.getFiltredUsers)
 })
 
 const createInviteLink = async () => {
-  const response = await createDeskLink(+route.params.id, 3)
+  const response = await createDeskLink(+routeParams.id, 3)
   if (response?.data) {
-    await navigator.clipboard.writeText(response.data.link)
+    await navigator.clipboard.writeText(
+      `${window.location.hostname}:${window.location.port}${response.data.link}`
+    )
     flashStore.openFlash('Ссылка скопирована в буфер обмена!', 1500, 'success')
   }
 }
@@ -45,8 +56,8 @@ provide('isDragging', isDragging)
   <div class="container desk">
     <div class="desk__wrapper">
       <h2 class="desk__title">Desk name</h2>
-      <div class="desk__controls">
-        <VButton @click="emit('openModal')" variant="default"
+      <div v-if="deskStore.getRole === ERoles.OWNER" class="desk__controls">
+        <VButton @click="emit('openStatusModal')" variant="default"
           ><VDeskIcons
             class="desk__icon"
             :size="30"
@@ -64,6 +75,9 @@ provide('isDragging', isDragging)
         /></VButton>
         <VButton @click="createInviteLink" variant="default">
           <VDeskIcons class="desk__icon" :size="30" :icon-id="EDeskIcons.link" />
+        </VButton>
+        <VButton @click="emit('openUsersModal')" variant="default">
+          <VDeskIcons stroke="black" class="desk__icon" :size="30" :icon-id="EDeskIcons.users" />
         </VButton>
       </div>
     </div>
@@ -128,13 +142,15 @@ provide('isDragging', isDragging)
     opacity: 0;
     transform: translateY(25px);
     transition: all 0.5s;
+    background-color: $gray-color-40;
+    border-radius: 15px;
   }
   &__icon {
     border-radius: 25px;
     padding: 2px 5px;
     transition: all 0.5s;
     &:hover {
-      background-color: #d8d7d7bc;
+      background-color: $white-color;
     }
   }
 }

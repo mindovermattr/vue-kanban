@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/store/useAuthStore'
+import { useDeskStore } from '@/store/useDeskStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VButton from './VButton.vue'
 
-const isOpen = ref(false)
+const authStore = useAuthStore()
+const deskStore = useDeskStore()
+const router = useRouter()
 
-const userStore = useAuthStore()
+const isOpen = ref(false)
 
 const toggleProfile = () => {
   isOpen.value = !isOpen.value
@@ -16,9 +19,8 @@ const closeProfile = () => {
   isOpen.value = false
 }
 
-const router = useRouter()
 const logoutHandler = () => {
-  userStore.logout()
+  authStore.logout()
   router.replace({ name: 'SignIn' })
 }
 </script>
@@ -35,13 +37,16 @@ const logoutHandler = () => {
         @click.stop="toggleProfile"
         class="controls__button controls__button--text"
       >
-        {{ userStore.user?.username }}
+        {{ authStore.user?.username }}
       </VButton>
       <Transition name="profile">
         <div @click.stop v-if="isOpen" class="controls__profile profile">
           <div>
-            <p class="profile__name">{{ userStore.user?.username }}</p>
-            <p class="profile__email">{{ userStore.user?.email }}</p>
+            <p class="profile__name">{{ authStore.user?.username }}</p>
+            <p class="profile__email">{{ authStore.user?.email }}</p>
+            <p class="profile__role" v-if="deskStore.getRole">
+              Ваша роль: <span class="text-blue">{{ deskStore.getRole }}</span>
+            </p>
           </div>
           <VButton @click="logoutHandler" class="profile__button" variant="outlined">Выйти</VButton>
         </div>
@@ -111,11 +116,19 @@ const logoutHandler = () => {
     color: $gray-color-100;
     text-align: center;
   }
+  &__role {
+    @include font-h3();
+    color: $gray-color-100;
+    text-align: center;
+  }
   &__button {
     @include font-h4();
   }
 }
-
+.text-blue {
+  color: $blue-color;
+  font-weight: 700;
+}
 .profile-enter-active {
   animation: bounce-in 0.2s;
 }

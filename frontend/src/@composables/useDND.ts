@@ -38,7 +38,6 @@ export const useDND = (deskId: number) => {
     const itemStatus = event.dataTransfer.getData('itemStatus')
     const resp = await cards.replaceCard(deskId, statusSelected, +itemStatus, +itemID)
     if (!resp) flashStore.openFlash('У вас нет доступа к обновлению карточек', 1500, 'error')
-    else await cards.updateCardFromSocket(resp.data)
     onDragEnd()
   }
 

@@ -9,6 +9,7 @@ import VLayout from '@/components/VLayout/VLayout.vue'
 import VModalAddCard from '@/components/VModal/Add/Card/VModalAddCard.vue'
 import VModalAddCategory from '@/components/VModal/Add/Category/VModalAddCategory.vue'
 import VModalAddStatus from '@/components/VModal/Add/Status/VModalAddStatus.vue'
+import VModalUsers from '@/components/VModal/Users/VModalUsers.vue'
 import { ref } from 'vue'
 
 defineProps<{ id: string }>()
@@ -16,6 +17,7 @@ defineProps<{ id: string }>()
 const isAddModalVisible = ref(false)
 const isCategoryModalVisible = ref(false)
 const isStatusModalVisible = ref(false)
+const isUsersModalVisible = ref(false)
 
 const { closeModal: closeAddModalHandler, openModal: openAddModalHandler } =
   useModal(isAddModalVisible)
@@ -24,6 +26,7 @@ const { closeModal: closeCategoryModalHandler, openModal: openCategoryModalHandl
   useModal(isCategoryModalVisible)
 
 const { closeModal: closeStatusModal, openModal: openStatusModal } = useModal(isStatusModalVisible)
+const { closeModal: closeUsersModal, openModal: openUsersModal } = useModal(isUsersModalVisible)
 const { isMobile } = useMobile()
 </script>
 
@@ -39,7 +42,7 @@ const { isMobile } = useMobile()
         </template>
       </VHeader>
     </template>
-    <Vkanban @openModal="openStatusModal" />
+    <Vkanban @openStatusModal="openStatusModal" @openUsersModal="openUsersModal" />
     <template #modal>
       <VModalAddCard @closeModal="closeAddModalHandler" :is-visible="isAddModalVisible" />
       <VModalAddCategory
@@ -47,6 +50,7 @@ const { isMobile } = useMobile()
         :is-visible="isCategoryModalVisible"
       />
       <VModalAddStatus @closeModal="closeStatusModal" :is-visible="isStatusModalVisible" />
+      <VModalUsers @close-modal="closeUsersModal" :is-visible="isUsersModalVisible" />
       <VFlash />
     </template>
   </VLayout>

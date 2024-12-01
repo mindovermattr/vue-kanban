@@ -8,6 +8,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('@/views/HomeView.vue'),
+      props: true,
       meta: {
         requireAuth: true,
       },
@@ -29,6 +30,11 @@ const router = createRouter({
       meta: {
         requireAuth: false,
       },
+    },
+    {
+      path: '/desks/:deskId/invitations/:inviteHash/accept',
+      component: () => import('@/views/InviteView.vue'),
+      props: true,
     },
   ],
 })

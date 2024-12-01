@@ -5,7 +5,6 @@ import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
 import { validationSchemeCardUpdate, type IFormCardUpdate } from '@/schemes/CardScheme'
 import { useCardStore } from '@/store/useCardsStore'
-import { useCategoryStore } from '@/store/useCategoryStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { useField, useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
@@ -20,7 +19,6 @@ interface IProps {
 const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
 
-const categories = useCategoryStore()
 const statusStore = useStatusStore()
 const cardsStore = useCardStore()
 const route = useRoute()
@@ -74,7 +72,7 @@ const deleteHandler = async () => {
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
     <form @submit="onSubmit" class="modal__update update-modal">
       <div class="update-modal__header">
-        <h3 class="update-modal__title">Название задачи</h3>
+        <h3 class="update-modal__title">{{ currentCard?.name }}</h3>
         <VCategory v-bind="currentCard!.category" />
       </div>
       <div class="update-modal__status status">
@@ -120,7 +118,12 @@ const deleteHandler = async () => {
           </textarea>
         </fieldset>
         <fieldset class="input__body">
-          <VCalendar :initialDate="currentCard?.period" />
+          <VCalendar
+            :class="{
+              input__error: errors.selectedDate,
+            }"
+            :initialDate="currentCard?.period"
+          />
         </fieldset>
       </div>
       <div class="update-modal__controls controls">
@@ -206,6 +209,9 @@ const deleteHandler = async () => {
   &__title {
     @include font-h5();
     margin-bottom: 20px;
+  }
+  &__error {
+    border: 1px solid $error-color;
   }
 }
 

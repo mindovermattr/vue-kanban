@@ -68,10 +68,13 @@ onUnmounted(() => {
     min-width: 250px;
     max-width: 350px;
     min-height: 80px;
+    border-radius: 15px;
     background-color: $white-color;
+    overflow: hidden;
   }
   &__progress {
     background-color: $blue-color;
+    border-radius: 15px;
     height: 8px;
   }
   &__text {
