@@ -1,6 +1,6 @@
 import { ERoles } from '@/@types/ERoles'
 import type { TUserKanban } from '@/@types/TUserKanban'
-import { changeUserRole, getUsers } from '@/api/Users.api'
+import { changeUserRole, getUsers as getUsersApi } from '@/api/Users.api'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
@@ -16,12 +16,16 @@ export const useDeskStore = defineStore('desk', () => {
     return users.value.find((user) => user.user_id === currentUserId)?.role
   })
 
+  const getUsers = computed(() => {
+    return users
+  })
+
   const getFiltredUsers = computed(() => {
     return filtredUsers
   })
 
   const fetchUsers = async (deskId: number) => {
-    const response = await getUsers(deskId)
+    const response = await getUsersApi(deskId)
     if (!axios.isAxiosError(response)) {
       users.value = response.data
       response.data.forEach((el) => {
@@ -46,6 +50,7 @@ export const useDeskStore = defineStore('desk', () => {
 
   return {
     getRole,
+    getUsers,
     getFiltredUsers,
     fetchUsers,
     updateUserRole,

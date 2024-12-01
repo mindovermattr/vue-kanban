@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDND } from '@/@composables/useDND'
+import { useMobile } from '@/@composables/useMobile'
 import { useRouteParams } from '@/@composables/useRouteParams'
 import { ERoles } from '@/@types/ERoles'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
@@ -35,7 +36,6 @@ onMounted(async () => {
     }
     cardStore.updateCardFromSocket(newCard)
   })
-  console.log(deskStore.getFiltredUsers)
 })
 
 const createInviteLink = async () => {
@@ -47,6 +47,8 @@ const createInviteLink = async () => {
     flashStore.openFlash('Ссылка скопирована в буфер обмена!', 1500, 'success')
   }
 }
+
+const { isMobile } = useMobile()
 
 provide('isDragging', isDragging)
 </script>
@@ -64,14 +66,15 @@ provide('isDragging', isDragging)
             fill="#000"
             :iconId="EDeskIcons.plus"
         /></VButton>
-        <VButton variant="default"
-          ><VDeskIcons
+        <VButton variant="default">
+          <VDeskIcons
             class="desk__icon"
             :size="30"
             stroke="#fff"
             fill="#fff"
             :iconId="EDeskIcons.delete"
-        /></VButton>
+          />
+        </VButton>
         <VButton @click="createInviteLink" variant="default">
           <VDeskIcons class="desk__icon" :size="30" :icon-id="EDeskIcons.link" />
         </VButton>
@@ -81,7 +84,10 @@ provide('isDragging', isDragging)
       </div>
     </div>
     <div
-      :style="{ 'grid-template-columns': `repeat(${statusStore.status.length}, 220px)` }"
+      :style="{
+        'grid-template-columns': !isMobile && `repeat(${statusStore.status.length}, 220px)`,
+        'grid-template-rows': isMobile && `repeat(${statusStore.status.length}, 220px)`,
+      }"
       class="container__kanban"
       v-if="statusStore.status.length"
     >
@@ -91,7 +97,7 @@ provide('isDragging', isDragging)
         :columnId="status.id"
         :key="status.id"
         :items="cardStore.filtredCards[status.name]"
-        class="anim"
+        class="column"
         :style="{ animationDelay: `${idx * 150}ms` }"
         @onDropDragEvent="onDropDragEvent"
         @onDragStart="onStartDragEvent"
@@ -154,7 +160,7 @@ provide('isDragging', isDragging)
   }
 }
 
-.anim {
+.column {
   animation: 1s 1 forwards fadeX;
   opacity: 0;
 }
@@ -174,6 +180,9 @@ provide('isDragging', isDragging)
     display: flex;
     flex-direction: column;
     position: relative;
+  }
+  .column {
+    overflow-x: scroll;
   }
 }
 </style>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { ERoles } from '@/@types/ERoles'
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import VButton from '@/components/VButton.vue'
 import VCalendar from '@/components/VCalendar/VCalendar.vue'
 import VCategory from '@/components/VCategory.vue'
 import { validationSchemeCardUpdate, type IFormCardUpdate } from '@/schemes/CardScheme'
 import { useCardStore } from '@/store/useCardsStore'
+import { useDeskStore } from '@/store/useDeskStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { useField, useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
@@ -21,6 +23,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 
 const statusStore = useStatusStore()
 const cardsStore = useCardStore()
+const deskStore = useDeskStore()
 const route = useRoute()
 
 const initialStatus = computed(() => statusStore.status.find((el) => el.id === props.statusId))
@@ -40,6 +43,10 @@ const { value: bodyValue } = useField('body', (value) => !!value, {
   initialValue: currentCard.value!.body,
 })
 
+const { value: selectedUser } = useField('user_id', (value) => !!value, {
+  initialValue: currentCard.value!.user_id,
+})
+
 const redactingHandler = () => {
   isRedacting.value = !isRedacting.value
 }
@@ -57,6 +64,7 @@ const onSubmit = handleSubmit(async (values) => {
     status_id: values.status_id,
     id: values.id,
     category: values.category,
+    user_id: selectedUser.value,
   }
   const resp = await cardsStore.updateCard(+route.params.id, newCard)
   if (resp) cardsStore.updateCardFromSocket(resp.data)
@@ -76,32 +84,63 @@ const deleteHandler = async () => {
         <VCategory v-bind="currentCard!.category" />
       </div>
       <div class="update-modal__status status">
-        <h4 class="status__name">Статус</h4>
-        <TransitionGroup name="list" tag="fieldset" class="status__wrapper">
-          <VButton
-            type="button"
-            v-if="!isRedacting"
-            class="status__button status__button--selected"
-            variant="default"
-          >
-            {{ initialStatus!.name }}
-          </VButton>
-          <template v-else>
+        <div class="status__wrapper">
+          <h4 class="status__name">Статус</h4>
+          <TransitionGroup name="list" tag="fieldset" class="status__wrapper">
             <VButton
-              v-for="status in statusStore.status"
               type="button"
-              :key="status.name"
-              class="status__button"
-              :class="{
-                'status__button--selected': selectedStatus === status.id,
-              }"
-              @click="changeStatus(status.id)"
+              v-if="!isRedacting"
+              class="status__button status__button--selected"
               variant="default"
             >
-              {{ status.name }}
+              {{ initialStatus!.name }}
             </VButton>
-          </template>
-        </TransitionGroup>
+            <template v-else>
+              <VButton
+                v-for="status in statusStore.status"
+                type="button"
+                :key="status.name"
+                class="status__button"
+                :class="{
+                  'status__button--selected': selectedStatus === status.id,
+                }"
+                @click="changeStatus(status.id)"
+                variant="default"
+              >
+                {{ status.name }}
+              </VButton>
+            </template>
+          </TransitionGroup>
+        </div>
+        <div>
+          <h4 class="status__name">Назначен на выполнение:</h4>
+          <fieldset>
+            <select class="status__select" :disabled="!isRedacting" v-model="selectedUser">
+              <option class="status__option" disabled>Администраторы</option>
+              <option
+                class="status__option"
+                :value="user.user_id"
+                v-for="user in deskStore.getFiltredUsers[ERoles.OWNER]"
+                :selected="user.user_id === currentCard?.user_id"
+                v-bind:key="user.user_id"
+              >
+                {{ user.username }}
+              </option>
+              <option class="status__option" disabled>Участники</option>
+              <option
+                class="status__option"
+                :value="user.user_id"
+                v-for="user in deskStore.getFiltredUsers[ERoles.MEMBER]"
+                :selected="user.user_id === currentCard?.user_id"
+                v-bind:key="user.user_id"
+              >
+                {{ user.username }}
+              </option>
+              <option disabled>Никто</option>
+              <option :selected="currentCard?.user_id === null" value="null">Никто</option>
+            </select>
+          </fieldset>
+        </div>
       </div>
       <div class="update-modal__input input">
         <fieldset class="input__body">
@@ -163,12 +202,14 @@ const deleteHandler = async () => {
 }
 .status {
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin-bottom: 20px;
   &__name {
     font-size: 1.75rem;
     font-weight: 600;
     line-height: 16px;
-    margin-bottom: 12px;
   }
   &__button {
     background-color: $gray-color-100;
@@ -184,6 +225,17 @@ const deleteHandler = async () => {
   &__wrapper {
     display: flex;
     gap: 8px;
+  }
+  &__select {
+    padding: 10px 5px;
+    @include font-h3();
+    color: $white-color;
+    border-radius: 5px;
+    background-color: $blue-color;
+  }
+  &__option {
+    @include font-h4();
+    background-color: $blue-color;
   }
 }
 
@@ -242,5 +294,25 @@ const deleteHandler = async () => {
 
 .list-leave-active {
   position: absolute;
+}
+
+@media (max-width: $tablet-width) {
+  .update-modal {
+    &__input {
+      flex-direction: column;
+    }
+  }
+  .input {
+    &__text {
+      width: 100%;
+    }
+  }
+  .status {
+    &__wrapper {
+      max-width: 100%;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
 }
 </style>
