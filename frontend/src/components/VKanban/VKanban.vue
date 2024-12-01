@@ -31,8 +31,7 @@ onMounted(async () => {
   await deskStore.fetchUsers(+routeParams.id)
   createTaskConnection(+routeParams.id, (card: TCardResponse) => {
     const newCard = {
-      ...card.task,
-      category: { ...card.category },
+      ...card,
     }
     cardStore.updateCardFromSocket(newCard)
   })
