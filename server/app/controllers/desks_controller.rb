@@ -29,7 +29,7 @@ class DesksController < ApplicationController
   end
 
   def destroy
-   @desk&.destroy
+    render json: { errors: 'Некорректный id' }, status: :unprocessable_entity unless @desk&.destroy
   end
 
   private

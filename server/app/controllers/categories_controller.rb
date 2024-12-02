@@ -29,7 +29,7 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    render json: { error: 'Некорректный id' }, status: :unprocessable_entity unless @category&.destroy
+    render json: { errors: 'Некорректный id' }, status: :unprocessable_entity unless @category&.destroy
   end
 
   private

@@ -19,7 +19,7 @@ class DeskUsersController < ApplicationController
   end
 
   def destroy
-    render json: { error: 'Некорректный id' }, status: :unprocessable_entity unless @desk_user&.destroy
+    render json: { errors: 'Некорректный id' }, status: :unprocessable_entity unless @desk_user&.destroy
   end
 
   private

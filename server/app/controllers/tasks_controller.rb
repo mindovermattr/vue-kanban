@@ -30,7 +30,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    render json: { error: 'Некорректный id' }, status: :unprocessable_entity unless @task&.destroy
+    render json: { errors: 'Некорректный id' }, status: :unprocessable_entity unless @task&.destroy
   end
 
   private
