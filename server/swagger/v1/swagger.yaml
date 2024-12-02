@@ -21,7 +21,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Desk'
+                  $ref: '#/components/schemas/DeskStats'
 
     post:
       summary: Создать новую доску
@@ -40,6 +40,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Desk'
+        '422':
+          description: Ошибка при создании доски.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
 
   /desks/{deskId}:
     put:
@@ -65,6 +77,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Desk'
+        '422':
+          description: Ошибка при изменении доски.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
 
     delete:
       summary: Удалить доску
@@ -79,6 +103,19 @@ paths:
       responses:
         '204':
           description: Доска успешно удалена
+        '422':
+          description: Ошибка при удалении доски.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
 
   /desks/{deskId}/categories:
     get:
@@ -124,6 +161,87 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+        '422':
+          description: Ошибка при создании категории.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+  /desks/{deskId}/categories/{categoryId}:
+    put:
+      summary: Изменить категорию
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Изменённая категория
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '422':
+          description: Ошибка при изменении категории.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+    delete:
+      summary: Удалить категорию
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Категория успешно удалена
+        '422':
+          description: Ошибка при удалении категории.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
 
   /desks/{deskId}/tasks:
     get:
@@ -169,6 +287,411 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
+        '422':
+          description: Ошибка при создании задачи.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+  /desks/{deskId}/tasks/{taskId}:
+    put:
+      summary: Изменить задачу
+      tags:
+        - Tasks
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Изменённая задача
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '422':
+          description: Ошибка при изменении задачи.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+    delete:
+      summary: Удалить задачу
+      tags:
+        - Tasks
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Задача успешно удалена
+        '422':
+          description: Ошибка при удалении задачи.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+  /desks/{deskId}/desk_users:
+    get:
+      summary: Получить список участников доски
+      tags:
+        - DeskUsers
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список участников
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeskUserIndex'
+
+  /desks/{deskId}/desk_users/{deskUserId}:
+    put:
+      summary: Изменить роль участника
+      tags:
+        - DeskUsers
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: deskUserId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Изменённая роль участника
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeskUser'
+        '422':
+          description: Ошибка при изменении участника.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+    delete:
+      summary: Исключить участника
+      tags:
+        - DeskUsers
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: deskUserId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Участник успешно исключён
+        '422':
+          description: Ошибка при исключении участника.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+  /desks/{deskId}/statuses:
+    get:
+      summary: Получить список статусов
+      tags:
+        - Statuses
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список статусов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+
+    post:
+      summary: Создать новый статус
+      tags:
+        - Statuses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+      responses:
+        '201':
+          description: Статус успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '422':
+          description: Ошибка при создании статуса.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+  /desks/{deskId}/statuses/{statusId}:
+    put:
+      summary: Изменить статус
+      tags:
+        - Statuses
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: statusId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Изменённый статус
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+        '422':
+          description: Ошибка при изменении статуса.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+    delete:
+      summary: Удалить статус
+      tags:
+        - Statuses
+      parameters:
+        - in: path
+          name: deskId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: statusId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Статус успешно удален
+        '422':
+          description: Ошибка при удалении статус.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
+
+  /current_user:
+    get:
+      summary: Получить пользователя
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Пользователь
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /desks/{desk_id}/invitations/{token}/accept:
+    get:
+      summary: Принять приглашение
+      description: Позволяет пользователю принять приглашение и присоединиться к доске.
+      tags:
+        - Invitations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: desk_id
+          in: path
+          required: true
+          description: ID доски, связанной с приглашением.
+          schema:
+            type: integer
+        - name: token
+          in: path
+          required: true
+          description: Уникальный токен приглашения.
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Приглашение успешно принято.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Сообщение о принятии приглашения.
+                    example: "Приглашение успешно принято!"
+        '422':
+          description: Ошибка при принятии приглашения.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Причина ошибки.
+                    example: "Приглашение истекло!"
+
+  /desks/{desk_id}/invitations:
+    post:
+      summary: Создать приглашение
+      description: Создаёт новое приглашение для доступа к доске.
+      tags:
+        - Invitations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: desk_id
+          in: path
+          required: true
+          description: ID доски, для которой создаётся приглашение.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invitation:
+                  type: object
+                  properties:
+                    max_uses:
+                      type: integer
+                      description: Максимальное количество использований приглашения.
+                      example: 5
+      responses:
+        '201':
+          description: Приглашение успешно создано.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  link:
+                    type: string
+                    description: Ссылка для принятия приглашения.
+                    example: "/desks/1/invitations/abc123/accept"
+        '422':
+          description: Ошибка при создании приглашения.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Список ошибок валидации.
 
 components:
   schemas:
@@ -181,9 +704,29 @@ components:
           type: string
         user_id:
           type: integer
-      required:
-        - name
-        - user_id
+
+    DeskStats:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+          description: Имя пользователя, полученное по `user_id`.
+        tasks:
+          type: array
+          items:
+            type: object
+        statuses:
+          type: array
+          items:
+            type: string
+        categories:
+          type: array
+          items:
+            type: string
 
     Category:
       type: object
@@ -196,10 +739,6 @@ components:
           type: string
         accent_color:
           type: string
-      required:
-        - name
-        - main_color
-        - accent_color
 
     Task:
       type: object
@@ -219,12 +758,6 @@ components:
         period:
           type: string
           format: date-time
-      required:
-        - name
-        - body
-        - period
-        - category_id
-        - status_id
 
     DeskUser:
       type: object
@@ -241,10 +774,24 @@ components:
             - guest
             - member
             - owner
-      required:
-        - user_id
-        - desk_id
-        - role
+
+    DeskUserIndex:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+          description: Имя пользователя, полученное по `user_id`.
+        user_id:
+          type: integer
+        desk_id:
+          type: integer
+        role:
+          enum:
+            - guest
+            - member
+            - owner
 
     Status:
       type: object
@@ -253,8 +800,6 @@ components:
           type: integer
         name:
           type: string
-      required:
-        - name
 
     User:
       type: object
@@ -265,12 +810,11 @@ components:
           type: string
         email:
           type: string
-        created_at:
+          format: email
+        created_date:
           type: string
-          format: date-time
-      required:
-        - username
-        - email
+          format: date
+          description: Дата создания пользователя в формате MM/DD/YYYY.
 
   securitySchemes:
     BearerAuth:
