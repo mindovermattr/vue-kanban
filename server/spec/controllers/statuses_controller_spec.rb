@@ -144,7 +144,7 @@ describe 'Statuses', type: :request do
 
       it 'returns an error message' do
         delete invalid_path, headers: headers
-        expect(json['error']).to eq('Некорректный id')
+        expect(json['errors']).to eq('Некорректный id')
       end
     end
   end
