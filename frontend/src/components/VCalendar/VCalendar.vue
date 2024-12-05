@@ -36,6 +36,7 @@
             ]"
             type="button"
             @click="dayClickHandler(item)"
+            :data-testid="item.date"
           >
             {{ item.date }}
           </button>

@@ -2,7 +2,6 @@
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
-import { useCardStore } from '@/store/useCardsStore'
 import { useDeskStore } from '@/store/useDeskStore'
 import { computed, inject, ref } from 'vue'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
@@ -22,7 +21,6 @@ const isDragging = inject<{
 }>('isDragging')!
 
 const deskStore = useDeskStore()
-const cardStore = useCardStore()
 
 const isModalVisible = ref(false)
 

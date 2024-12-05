@@ -41,4 +41,8 @@ export default defineConfig({
     },
     host: true,
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
 })
