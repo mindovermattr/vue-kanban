@@ -86,7 +86,7 @@ const deleteHandler = async () => {
       <div class="update-modal__status status">
         <div class="status__wrapper">
           <h4 class="status__name">Статус</h4>
-          <TransitionGroup name="list" tag="fieldset" class="status__wrapper">
+          <TransitionGroup name="list" tag="fieldset" class="status__list">
             <VButton
               type="button"
               v-if="!isRedacting"
@@ -224,6 +224,11 @@ const deleteHandler = async () => {
   }
   &__wrapper {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  &__list {
+    display: flex;
     gap: 8px;
   }
   &__select {
@@ -311,7 +316,16 @@ const deleteHandler = async () => {
     &__wrapper {
       max-width: 100%;
       flex-wrap: wrap;
-      align-items: center;
+    }
+    &__list {
+      flex-wrap: wrap;
+    }
+  }
+  .controls {
+    flex-direction: column;
+    gap: 8px;
+    &__wrapper {
+      flex-direction: column;
     }
   }
 }

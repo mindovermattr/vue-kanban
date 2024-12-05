@@ -199,4 +199,15 @@ const { handleChange } = useField('selectedDate', undefined, {
     }
   }
 }
+@media (max-width: $tablet-width) {
+  .content {
+    margin-top: 14px;
+  }
+  .layout {
+    &__item--day {
+      padding: 10px 16px;
+      font-size: 1.5rem;
+    }
+  }
+}
 </style>
