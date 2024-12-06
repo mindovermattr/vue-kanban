@@ -22,7 +22,7 @@ const flashStore = useFlashStore()
 const deskStore = useDeskStore()
 const emit = defineEmits<{ (e: 'openStatusModal'): void; (e: 'openUsersModal'): void }>()
 
-const routeParams = useRouteParams('id')
+const routeParams = useRouteParams('id', 'desk_id')
 
 const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+routeParams.id)
 

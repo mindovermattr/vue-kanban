@@ -81,7 +81,7 @@ const deleteHandler = async () => {
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <form @click="console.log(props)" @submit="onSubmit" class="modal__update update-modal">
+    <form @submit="onSubmit" class="modal__update update-modal">
       <div class="update-modal__header">
         <h3 class="update-modal__title">{{ props?.card.name }}</h3>
         <VCategory v-bind="props!.card.category" />
