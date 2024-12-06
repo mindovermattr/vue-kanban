@@ -73,12 +73,7 @@ const cardUser = computed(() => {
         </p>
       </div>
     </footer>
-    <VModalUpdate
-      :status-id="status_id"
-      :cardId="id"
-      :is-visible="isModalVisible"
-      @closeModal="closeModal"
-    />
+    <VModalUpdate :card="props" :is-visible="isModalVisible" @closeModal="closeModal" />
   </article>
 </template>
 
