@@ -35,7 +35,7 @@ const formScheme = computed(() => {
     return object<TFormValues>({
       userName: string().required('Поле имя обязательно к заполнению'),
       email: string()
-        .required('Поле email пароль к заполнению')
+        .required('Поле email обязательно к заполнению')
         .email('В поле email некорректная почта'),
       password: string()
         .required('Поле пароль обязательно к заполнению')
@@ -87,14 +87,27 @@ const onSubmit = handleSubmit(async (values) => {
       <div class="form__fields">
         <template v-if="signUp">
           <fieldset class="form__field">
-            <VField name="userName" type="text" :isError="!!errors.userName" placeholder="Имя" />
+            <VField
+              data-testid="userName"
+              name="userName"
+              type="text"
+              :isError="!!errors.userName"
+              placeholder="Имя"
+            />
           </fieldset>
         </template>
         <fieldset class="form__field">
-          <VField name="email" type="email" :isError="!!errors.email" placeholder="Эл. почта" />
+          <VField
+            data-testid="email"
+            name="email"
+            type="email"
+            :isError="!!errors.email"
+            placeholder="Эл. почта"
+          />
         </fieldset>
         <fieldset class="form__field">
           <VField
+            data-testid="password"
             name="password"
             type="password"
             :isError="!!errors.password"
@@ -103,6 +116,7 @@ const onSubmit = handleSubmit(async (values) => {
         </fieldset>
         <fieldset v-if="signUp" class="form__field">
           <VField
+            data-testid="passwordConfirm"
             name="passwordConfirm"
             type="password"
             :isError="!!errors.passwordConfirm"

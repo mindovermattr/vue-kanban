@@ -52,16 +52,19 @@ const emit = defineEmits<(e: 'closeModal') => void>()
   transition: all 0.5s ease;
 }
 
-.fade-enter-from .modal,
-.fade-leave-to .modal {
-  opacity: 0;
-  transform: translate(-50%, -60%);
-}
 @media (max-width: $tablet-width) {
   .modal {
-    width: 100%;
+    width: 100vw;
+    height: 100vh;
     overflow-y: scroll;
-    top: 50%;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+  .fade-enter-from .modal,
+  .fade-leave-to .modal {
+    opacity: 0;
+    transform: translate(-50%, 0);
   }
 }
 </style>

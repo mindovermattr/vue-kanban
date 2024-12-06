@@ -104,11 +104,6 @@ export const useCardStore = defineStore('cards', {
 
     async addCard(deskId: number, card: Omit<TKanbanCard, 'id'>) {
       const resp = await addCardApi(deskId, card)
-      const statusStore = useStatusStore()
-      if (resp) {
-        this.cards.push(resp.data)
-        this.filtredCards[statusStore.status[0].name].push(resp.data)
-      }
     },
     async deleteCard(deskId: number, cardId: number, statusId: number) {
       const statusStore = useStatusStore()

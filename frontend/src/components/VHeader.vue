@@ -144,4 +144,18 @@ const logoutHandler = () => {
     transform: scale(1);
   }
 }
+
+@media (max-width: $tablet-width) {
+  .header {
+    overflow: visible;
+  }
+  .controls {
+    &__profile {
+      right: 15px;
+    }
+  }
+  .profile__role {
+    white-space: nowrap;
+  }
+}
 </style>

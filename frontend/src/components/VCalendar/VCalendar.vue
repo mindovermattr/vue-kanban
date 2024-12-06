@@ -36,6 +36,7 @@
             ]"
             type="button"
             @click="dayClickHandler(item)"
+            :data-testid="item.date"
           >
             {{ item.date }}
           </button>
@@ -195,6 +196,17 @@ const { handleChange } = useField('selectedDate', undefined, {
     &--bold {
       font-weight: 600;
       color: black;
+    }
+  }
+}
+@media (max-width: $tablet-width) {
+  .content {
+    margin-top: 14px;
+  }
+  .layout {
+    &__item--day {
+      padding: 10px 16px;
+      font-size: 1.5rem;
     }
   }
 }

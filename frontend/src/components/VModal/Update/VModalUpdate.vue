@@ -9,14 +9,13 @@ import { useCardStore } from '@/store/useCardsStore'
 import { useDeskStore } from '@/store/useDeskStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { useField, useForm } from 'vee-validate'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import VModal from '../VModal.vue'
 
 interface IProps {
+  card: TCardResponse
   isVisible: boolean
-  cardId: number
-  statusId: number
 }
 const props = defineProps<IProps>()
 const emit = defineEmits<(e: 'closeModal') => void>()
@@ -26,8 +25,9 @@ const cardsStore = useCardStore()
 const deskStore = useDeskStore()
 const route = useRoute()
 
-const initialStatus = computed(() => statusStore.status.find((el) => el.id === props.statusId))
-const currentCard = computed(() => cardsStore.cards.find((el) => el.id === props.cardId))
+const initialStatus = computed(() =>
+  statusStore.status.find((el) => el.id === props.card.status_id)
+)
 
 const selectedStatus = ref(initialStatus.value!.id)
 const isRedacting = ref(false)
@@ -35,16 +35,19 @@ const isRedacting = ref(false)
 const { handleSubmit, errors, setFieldValue } = useForm<IFormCardUpdate>({
   validationSchema: validationSchemeCardUpdate,
   initialValues: {
-    ...currentCard.value,
+    ...props.card,
   },
 })
-
-const { value: bodyValue } = useField('body', (value) => !!value, {
-  initialValue: currentCard.value!.body,
+const { value, setValue } = useField('body', (value) => !!value, {
+  initialValue: props.card.body,
 })
 
 const { value: selectedUser } = useField('user_id', (value) => !!value, {
-  initialValue: currentCard.value!.user_id,
+  initialValue: props.card.user_id,
+})
+
+watch([props.card], () => {
+  setValue(props.card.body)
 })
 
 const redactingHandler = () => {
@@ -72,21 +75,21 @@ const onSubmit = handleSubmit(async (values) => {
 })
 
 const deleteHandler = async () => {
-  await cardsStore.deleteCard(+route.params.id, props.cardId, props.statusId)
+  await cardsStore.deleteCard(+route.params.id, props.card.id, props.card.status_id)
 }
 </script>
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <form @submit="onSubmit" class="modal__update update-modal">
+    <form @click="console.log(props)" @submit="onSubmit" class="modal__update update-modal">
       <div class="update-modal__header">
-        <h3 class="update-modal__title">{{ currentCard?.name }}</h3>
-        <VCategory v-bind="currentCard!.category" />
+        <h3 class="update-modal__title">{{ props?.card.name }}</h3>
+        <VCategory v-bind="props!.card.category" />
       </div>
       <div class="update-modal__status status">
         <div class="status__wrapper">
           <h4 class="status__name">Статус</h4>
-          <TransitionGroup name="list" tag="fieldset" class="status__wrapper">
+          <TransitionGroup name="list" tag="fieldset" class="status__list">
             <VButton
               type="button"
               v-if="!isRedacting"
@@ -112,7 +115,7 @@ const deleteHandler = async () => {
             </template>
           </TransitionGroup>
         </div>
-        <div>
+        <div class="status__user">
           <h4 class="status__name">Назначен на выполнение:</h4>
           <fieldset>
             <select class="status__select" :disabled="!isRedacting" v-model="selectedUser">
@@ -121,7 +124,7 @@ const deleteHandler = async () => {
                 class="status__option"
                 :value="user.user_id"
                 v-for="user in deskStore.getFiltredUsers[ERoles.OWNER]"
-                :selected="user.user_id === currentCard?.user_id"
+                :selected="user.user_id === props.card.user_id"
                 v-bind:key="user.user_id"
               >
                 {{ user.username }}
@@ -131,13 +134,13 @@ const deleteHandler = async () => {
                 class="status__option"
                 :value="user.user_id"
                 v-for="user in deskStore.getFiltredUsers[ERoles.MEMBER]"
-                :selected="user.user_id === currentCard?.user_id"
+                :selected="user.user_id === props.card.user_id"
                 v-bind:key="user.user_id"
               >
                 {{ user.username }}
               </option>
               <option disabled>Никто</option>
-              <option :selected="currentCard?.user_id === null" value="null">Никто</option>
+              <option :selected="props.card.user_id === null" value="null">Никто</option>
             </select>
           </fieldset>
         </div>
@@ -152,7 +155,7 @@ const deleteHandler = async () => {
               'input__text--redacting': isRedacting,
             }"
             name="body"
-            v-model="bodyValue"
+            v-model="value"
           >
           </textarea>
         </fieldset>
@@ -161,7 +164,7 @@ const deleteHandler = async () => {
             :class="{
               input__error: errors.selectedDate,
             }"
-            :initialDate="currentCard?.period"
+            :initialDate="props.card.period"
           />
         </fieldset>
       </div>
@@ -222,7 +225,17 @@ const deleteHandler = async () => {
       opacity: 1;
     }
   }
+  &__user {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
   &__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  &__list {
     display: flex;
     gap: 8px;
   }
@@ -311,7 +324,16 @@ const deleteHandler = async () => {
     &__wrapper {
       max-width: 100%;
       flex-wrap: wrap;
-      align-items: center;
+    }
+    &__list {
+      flex-wrap: wrap;
+    }
+  }
+  .controls {
+    flex-direction: column;
+    gap: 8px;
+    &__wrapper {
+      flex-direction: column;
     }
   }
 }

@@ -30,6 +30,7 @@ const emit = defineEmits<{ (e: 'closeModal'): void; (e: 'addDesk', desk: TDesk):
         <VField name="name" type="text" />
       </fieldset>
       <VButton type="submit" variant="contained">Создать доску</VButton>
+      <VButton @click="$emit('closeModal')" type="button" variant="contained">Отмена</VButton>
     </form>
   </VModal>
 </template>
