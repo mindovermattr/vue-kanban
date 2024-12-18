@@ -18,7 +18,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 const deskStore = useDeskStore()
 const { id: deskId } = useRouteParams('id')
 
-const { handleSubmit, errors, meta } = useForm<IFormCard>({})
+const { handleSubmit } = useForm<IFormCard>({})
 
 const submitHandler = handleSubmit(async (values: IFormCard) => {
   emit('closeModal')
@@ -38,7 +38,7 @@ const changeHandler = (user: TUserKanban, event: Event) => {
           <TransitionGroup name="list" class="modal__list list" tag="ol">
             <li
               class="list__item"
-              v-for="user in deskStore.getFiltredUsers['owner']"
+              v-for="user in deskStore.getFiltredUsers.value[ERoles.OWNER]"
               v-bind:key="user.user_id"
             >
               <p>{{ user.username }}</p>
@@ -65,7 +65,7 @@ const changeHandler = (user: TUserKanban, event: Event) => {
           <TransitionGroup name="list" class="modal__list list" tag="ol">
             <li
               class="list__item"
-              v-for="user in deskStore.getFiltredUsers['member']"
+              v-for="user in deskStore.getFiltredUsers.value[ERoles.MEMBER]"
               v-bind:key="user.user_id"
             >
               <p>{{ user.username }}</p>
@@ -92,7 +92,7 @@ const changeHandler = (user: TUserKanban, event: Event) => {
           <TransitionGroup name="list" class="modal__list list" tag="ol">
             <li
               class="list__item"
-              v-for="user in deskStore.getFiltredUsers['guest']"
+              v-for="user in deskStore.getFiltredUsers.value[ERoles.GUEST]"
               v-bind:key="user.user_id"
             >
               <p>{{ user.username }}</p>

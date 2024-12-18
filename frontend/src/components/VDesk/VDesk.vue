@@ -131,6 +131,7 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
   display: flex;
   flex-direction: column;
   gap: 12px;
+  max-width: 320px;
   &__item {
     @include font-h6();
     font-size: 2rem;
@@ -138,6 +139,7 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
     gap: 8px;
     max-width: 100%;
     flex-wrap: wrap;
+    overflow: hidden;
   }
 }
 

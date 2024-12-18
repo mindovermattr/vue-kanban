@@ -9,7 +9,7 @@ vi.mock('vue-router', async (origImp) => {
       params: {
         id: 1,
         desk_id: 3,
-        hash: 'as',
+        hash: 'code',
       },
     })),
   }
@@ -21,7 +21,7 @@ describe('Test composable useRouteParams', () => {
 
     expect(params.id).toBe(1)
     expect(params.desk_id).toBe(3)
-    expect(params.hash).toBe('as')
+    expect(params.hash).toBe('code')
   })
   test('If param doesnt exist in router undefined', () => {
     const params = useRouteParams('id', 'a')

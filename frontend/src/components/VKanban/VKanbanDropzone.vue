@@ -16,7 +16,7 @@ defineProps<IProps>()
 
 <style lang="scss" scoped>
 .dropzone {
-  min-height: 137px;
+  min-height: 151px;
   min-width: 220px;
   border-radius: 5px;
   border: 1px dashed #94a6be;

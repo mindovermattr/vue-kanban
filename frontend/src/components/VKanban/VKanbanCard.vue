@@ -102,7 +102,7 @@ const cardUser = computed(() => {
     font-size: 1.75rem;
     font-weight: 500;
     line-height: 16px;
-
+    overflow: hidden;
     margin-top: 12px;
   }
   &__footer {

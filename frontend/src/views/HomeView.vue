@@ -10,6 +10,7 @@ import VHeader from '@/components/VHeader.vue'
 import VLayout from '@/components/VLayout/VLayout.vue'
 import VModalAddDesk from '@/components/VModal/Add/Desk/VModalAddDesk.vue'
 import { useAuthStore } from '@/store/useAuthStore'
+import { useDeskStore } from '@/store/useDeskStore'
 import { useFlashStore } from '@/store/useFlashStore'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -18,8 +19,9 @@ const desks = ref<TDesk[]>([])
 const isDeskModalOpen = ref(false)
 const isLoading = ref(true)
 const flashStore = useFlashStore()
-const route = useRoute()
 const authStore = useAuthStore()
+const deskStore = useDeskStore()
+const route = useRoute()
 
 const { openModal, closeModal } = useModal(isDeskModalOpen)
 
@@ -44,6 +46,7 @@ onMounted(async () => {
   if (response) desks.value = response.data
   isLoading.value = false
   if (route.query.message) flashStore.openFlash('Приглашение просрочено', 1500, 'error')
+  deskStore.$reset()
 })
 </script>
 <template>

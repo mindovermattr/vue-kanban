@@ -123,7 +123,7 @@ const deleteHandler = async () => {
               <option
                 class="status__option"
                 :value="user.user_id"
-                v-for="user in deskStore.getFiltredUsers[ERoles.OWNER]"
+                v-for="user in deskStore.getFiltredUsers.value[ERoles.OWNER]"
                 :selected="user.user_id === props.card.user_id"
                 v-bind:key="user.user_id"
               >
@@ -133,7 +133,7 @@ const deleteHandler = async () => {
               <option
                 class="status__option"
                 :value="user.user_id"
-                v-for="user in deskStore.getFiltredUsers[ERoles.MEMBER]"
+                v-for="user in deskStore.getFiltredUsers.value[ERoles.MEMBER]"
                 :selected="user.user_id === props.card.user_id"
                 v-bind:key="user.user_id"
               >
