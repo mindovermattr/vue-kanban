@@ -39,6 +39,7 @@ const onSubmit = handleSubmit(async (values) => {
         <legend class="modal__title">Введите имя колонки</legend>
         <VField name="name" type="text" :isError="!!errors.name" />
         <VButton type="submit" variant="contained">Создать статус</VButton>
+        <VButton type="button" @click="$emit('closeModal')" variant="contained">Закрыть</VButton>
       </fieldset>
     </form>
   </VModal>

@@ -22,7 +22,7 @@ const flashStore = useFlashStore()
 const deskStore = useDeskStore()
 const emit = defineEmits<{ (e: 'openStatusModal'): void; (e: 'openUsersModal'): void }>()
 
-const routeParams = useRouteParams('id')
+const routeParams = useRouteParams('id', 'desk_id')
 
 const { isDragging, onDragEnd, onDropDragEvent, onStartDragEvent } = useDND(+routeParams.id)
 
@@ -114,6 +114,7 @@ provide('isDragging', isDragging)
     display: grid;
     gap: 20px;
     overflow-x: scroll;
+    scrollbar-width: none;
     padding-bottom: 20px;
   }
   &--message {
@@ -183,6 +184,16 @@ provide('isDragging', isDragging)
   }
   .column {
     overflow-x: scroll;
+  }
+  .desk {
+    &__controls {
+      opacity: 1;
+      transform: translateY(0);
+      align-self: flex-start;
+    }
+    &__wrapper {
+      flex-direction: column;
+    }
   }
 }
 </style>

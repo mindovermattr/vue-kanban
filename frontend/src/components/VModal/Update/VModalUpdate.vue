@@ -81,7 +81,7 @@ const deleteHandler = async () => {
 
 <template>
   <VModal :isVisible="isVisible" @closeModal="emit('closeModal')">
-    <form @click="console.log(props)" @submit="onSubmit" class="modal__update update-modal">
+    <form @submit="onSubmit" class="modal__update update-modal">
       <div class="update-modal__header">
         <h3 class="update-modal__title">{{ props?.card.name }}</h3>
         <VCategory v-bind="props!.card.category" />
@@ -123,7 +123,7 @@ const deleteHandler = async () => {
               <option
                 class="status__option"
                 :value="user.user_id"
-                v-for="user in deskStore.getFiltredUsers[ERoles.OWNER]"
+                v-for="user in deskStore.getFiltredUsers.value[ERoles.OWNER]"
                 :selected="user.user_id === props.card.user_id"
                 v-bind:key="user.user_id"
               >
@@ -133,7 +133,7 @@ const deleteHandler = async () => {
               <option
                 class="status__option"
                 :value="user.user_id"
-                v-for="user in deskStore.getFiltredUsers[ERoles.MEMBER]"
+                v-for="user in deskStore.getFiltredUsers.value[ERoles.MEMBER]"
                 :selected="user.user_id === props.card.user_id"
                 v-bind:key="user.user_id"
               >

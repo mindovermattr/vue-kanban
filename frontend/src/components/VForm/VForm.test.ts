@@ -49,24 +49,25 @@ describe('Testing form', () => {
       expect(error.text()).toContain('некорректная почта')
     })
   })
-  test('Testing password validation', async () => {
+  test('Testing password confirm validation', async () => {
     const wrapper = mount(VFormSign, componentOptions)
 
     const passwordInput = wrapper.get('[data-testid="password"]')
     const passwordConfirmInput = wrapper.get('[data-testid="passwordConfirm"]')
 
-    await waitFor(async () => {
-      await passwordInput.setValue('123456')
-      await passwordConfirmInput.setValue('12345')
+    await waitFor(() => {
+      passwordInput.setValue('123456')
+      passwordConfirmInput.setValue('12345')
 
       const error = wrapper.get('.form__error')
       expect(error.text()).toContain('Пароли должны совпадать')
     })
 
-    await passwordInput.setValue('123456')
-    await passwordConfirmInput.setValue('123456')
+    await waitFor(() => {
+      passwordInput.setValue('123456')
+      passwordConfirmInput.setValue('123456')
 
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.form_error').exists()).false
+      expect(wrapper.find('.form__error').exists()).false
+    })
   })
 })
