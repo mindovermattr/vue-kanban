@@ -14,9 +14,26 @@ services:
     networks:
       - dev
 
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - "/var/lib/postgresql/data"
+    networks:
+      - dev
+
   backend:
     build:
       context: ./server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/postgres
     networks:
       - dev
 
