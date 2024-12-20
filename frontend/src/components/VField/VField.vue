@@ -8,11 +8,12 @@ interface IProps {
   isError?: boolean
   placeholder?: string
 }
-
+const model = defineModel()
 defineProps<IProps>()
 </script>
 <template>
   <Field
+    v-model="model"
     :name="name"
     :type="type"
     :class="[

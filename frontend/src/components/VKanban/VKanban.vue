@@ -93,8 +93,7 @@ provide('isDragging', isDragging)
     >
       <VKanbanColumn
         v-for="(status, idx) in statusStore.status"
-        :columnName="status.name"
-        :columnId="status.id"
+        :status="status"
         :key="status.id"
         :items="cardStore.filtredCards[status.name]"
         class="column"
