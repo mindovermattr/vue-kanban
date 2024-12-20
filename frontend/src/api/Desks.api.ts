@@ -29,6 +29,18 @@ export const deleteDesk = async (deskId: number) => {
   }
 }
 
+export const updateDesk = async (desk: TDesk) => {
+  try {
+    const newDesk = {
+      name: desk.name,
+    }
+    const response = await protectedInstance.put(`desks/${desk.id}`, newDesk)
+    return response
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const createDeskLink = async (
   deskId: number,
   maxUses: number

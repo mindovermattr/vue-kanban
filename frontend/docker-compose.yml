@@ -3,6 +3,6 @@ services:
   frontend:
     build: .
     ports:
-      - '4000:4000'
+      - '4000:80'
     volumes:
       - '/app/dist'

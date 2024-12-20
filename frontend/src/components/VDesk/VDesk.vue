@@ -1,16 +1,25 @@
 <script setup lang="ts">
+import { useModal } from '@/@composables/useModal'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import type { TDesk } from '@/@types/TDesk'
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
 import VButton from '../VButton.vue'
+import VModalUpdateDesk from '../VModal/Update/VModalUpdateDesk.vue'
 
 interface IProps extends TDesk {
   index: number
 }
 
-defineProps<IProps>()
-const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
+const props = defineProps<IProps>()
+const emit = defineEmits<{
+  (e: 'deleteDesk', deskId: number): void
+}>()
+
+const isVisible = ref(false)
+
+const { openModal, closeModal } = useModal(isVisible)
 </script>
 <template>
   <article :style="{ animationDelay: `${index * 200}ms` }" class="desk">
@@ -21,7 +30,7 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
       </div>
       <ul class="desk__stats stats">
         <li class="stats__item">
-          <VButton class="stats__button" variant="default"
+          <VButton @click="openModal" class="stats__button" variant="default"
             ><VDeskIcons fill="black" :size="20" :icon-id="EDeskIcons.plus"
           /></VButton>
         </li>
@@ -61,6 +70,7 @@ const emit = defineEmits<(e: 'deleteDesk', deskId: number) => void>()
       </ul>
       <div class="desk__controls controls"></div>
     </div>
+    <VModalUpdateDesk :desk="{ ...$props }" :isVisible="isVisible" @closeModal="closeModal" />
   </article>
 </template>
 

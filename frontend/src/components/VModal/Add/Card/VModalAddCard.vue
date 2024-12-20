@@ -8,6 +8,7 @@ import VModal from '@/components/VModal/VModal.vue'
 import { validationSchemeCard, type IFormCard } from '@/schemes/CardScheme'
 import { useCardStore } from '@/store/useCardsStore'
 import { useCategoryStore } from '@/store/useCategoryStore'
+import { useFlashStore } from '@/store/useFlashStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { ErrorMessage, Field, useForm } from 'vee-validate'
 import { onMounted } from 'vue'
@@ -24,6 +25,7 @@ const route = useRoute()
 const cards = useCardStore()
 const categories = useCategoryStore()
 const statusStore = useStatusStore()
+const flashStore = useFlashStore()
 
 const date = new Date()
 
@@ -32,6 +34,12 @@ const { handleSubmit, errors, meta } = useForm<IFormCard>({
 })
 
 const submitHandler = handleSubmit(async (values: IFormCard) => {
+  if (!statusStore.status.length) {
+    flashStore.openFlash('Сначала нужно создать хотя бы 1 колонку', 1500, 'error')
+    emit('closeModal')
+    return
+  }
+
   const newCard: Omit<TKanbanCard, 'id'> = {
     status_id: statusStore.status[0].id,
     category_id: values.category_id,

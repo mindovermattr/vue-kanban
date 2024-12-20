@@ -7,6 +7,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 export const instance = axios.create({
   baseURL: backendUrl,
+  // baseURL: 'http://localhost/api',
 })
 
 export const protectedInstance = axios.create({
