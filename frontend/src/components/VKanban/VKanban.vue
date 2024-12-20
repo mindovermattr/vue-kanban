@@ -66,7 +66,7 @@ provide('isDragging', isDragging)
             fill="#000"
             :iconId="EDeskIcons.plus"
         /></VButton>
-        <VButton variant="default">
+        <!-- <VButton variant="default">
           <VDeskIcons
             class="desk__icon"
             :size="30"
@@ -74,7 +74,7 @@ provide('isDragging', isDragging)
             fill="#fff"
             :iconId="EDeskIcons.delete"
           />
-        </VButton>
+        </VButton> -->
         <VButton @click="createInviteLink" variant="default">
           <VDeskIcons class="desk__icon" :size="30" :icon-id="EDeskIcons.link" />
         </VButton>
