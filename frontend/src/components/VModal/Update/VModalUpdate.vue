@@ -60,15 +60,17 @@ const changeStatus = (statusId: number) => {
 }
 
 const onSubmit = handleSubmit(async (values) => {
-  const newCard: TCardResponse = {
+  let newCard: TCardResponse = {
     body: values.body,
     name: values.name,
     period: values.selectedDate.toDateString(),
     status_id: values.status_id,
     id: values.id,
     category: values.category,
-    user_id: selectedUser.value,
+    user_id: selectedUser.value === 0 ? null : selectedUser.value,
   }
+
+  console.log(selectedUser.value)
   const resp = await cardsStore.updateCard(+route.params.id, newCard)
   if (resp) cardsStore.updateCardFromSocket(resp.data)
   emit('closeModal')
@@ -139,8 +141,8 @@ const deleteHandler = async () => {
               >
                 {{ user.username }}
               </option>
-              <option disabled>Никто</option>
-              <option :selected="props.card.user_id === null" value="null">Никто</option>
+              <!-- <option disabled>Никто</option>
+              <option :selected="props.card.user_id === null" value="null">Никто</option> -->
             </select>
           </fieldset>
         </div>

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useModal } from '@/@composables/useModal'
 import { useRouteParams } from '@/@composables/useRouteParams'
+import { ERoles } from '@/@types/ERoles'
 import { EDeskIcons } from '@/@types/icons/EDeskIcons'
 import type { TCardResponse } from '@/@types/responses/TCardResponse'
 import type { TStatus } from '@/@types/responses/TStatusResponse'
 import VKanbanCard from '@/components/VKanban/VKanbanCard.vue'
 import { useCardStore } from '@/store/useCardsStore'
+import { useDeskStore } from '@/store/useDeskStore'
 import { useStatusStore } from '@/store/useStatusStore'
 import { inject, ref } from 'vue'
 import VDeskIcons from '../Icons/VDeskIcons.vue'
@@ -22,6 +24,7 @@ const currentDate = new Date()
 const isModalVisible = ref(false)
 const statusStore = useStatusStore()
 const { id } = useRouteParams('id')
+const deskStore = useDeskStore()
 
 const { openModal, closeModal } = useModal(isModalVisible)
 
@@ -74,7 +77,7 @@ const checkCard = (period: string) => {
     :data-section="status.name"
   >
     <div class="column__header">
-      <div class="column__toolbar">
+      <div v-if="deskStore.getRole === ERoles.OWNER" class="column__toolbar">
         <VButton class="column__button" @click="openModal" variant="default">
           <VDeskIcons :size="14" fill="black" :icon-id="EDeskIcons.plus" />
         </VButton>

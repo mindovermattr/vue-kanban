@@ -83,10 +83,11 @@ provide('isDragging', isDragging)
         </VButton>
       </div>
     </div>
+
     <div
       :style="{
         'grid-template-columns': !isMobile && `repeat(${statusStore.status.length}, 220px)`,
-        'grid-template-rows': isMobile && `repeat(${statusStore.status.length}, 220px)`,
+        'grid-template-rows': isMobile && `repeat(${statusStore.status.length}, 240px)`,
       }"
       class="container__kanban"
       v-if="statusStore.status.length"

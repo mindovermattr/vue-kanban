@@ -24,7 +24,7 @@ interface IProps {
 
 const name = ref('')
 
-const updateDesk = inject('updateDesk')
+const updateDesk = inject<Function>('updateDesk')
 
 const props = defineProps<IProps>()
 const deskStore = useDeskStore()
@@ -32,7 +32,7 @@ const emit = defineEmits<(e: 'closeModal') => void>()
 
 const updateHandler = async () => {
   const result = await deskStore.updateDeskName({ ...props.desk, name: name.value })
-  updateDesk(result?.data)
+  updateDesk!(result?.data)
   emit('closeModal')
 }
 </script>
