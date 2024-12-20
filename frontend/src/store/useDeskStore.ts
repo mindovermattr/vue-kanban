@@ -1,5 +1,7 @@
 import { ERoles } from '@/@types/ERoles'
+import type { TDesk } from '@/@types/TDesk'
 import type { TUserKanban } from '@/@types/TUserKanban'
+import { updateDesk } from '@/api/Desks.api'
 import { changeUserRole, getUsers as getUsersApi } from '@/api/Users.api'
 import axios from 'axios'
 import { defineStore } from 'pinia'
@@ -48,11 +50,17 @@ export const useDeskStore = defineStore('desk', () => {
     return response
   }
 
+  //убрать
+  const updateDeskName = async (desk: TDesk) => {
+    const result = await updateDesk(desk)
+    return result
+  }
   return {
     getRole,
     getUsers,
     getFiltredUsers,
     fetchUsers,
     updateUserRole,
+    updateDeskName,
   }
 })

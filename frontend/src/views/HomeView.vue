@@ -11,7 +11,7 @@ import VLayout from '@/components/VLayout/VLayout.vue'
 import VModalAddDesk from '@/components/VModal/Add/Desk/VModalAddDesk.vue'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useFlashStore } from '@/store/useFlashStore'
-import { onMounted, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const desks = ref<TDesk[]>([])
@@ -32,6 +32,13 @@ const addDesk = (desk: { id: number; name: string }) => {
     tasks: [],
   })
 }
+
+const updateDesk = async () => {
+  const response = await getDesks()
+  if (response) desks.value = response.data
+}
+
+provide('updateDesk', updateDesk)
 
 const deleteDeskHandler = async (deskId: number) => {
   await deleteDesk(deskId)
